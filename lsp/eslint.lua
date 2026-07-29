@@ -11,7 +11,7 @@
 ---
 --- The default `on_attach` config provides the `LspEslintFixAll` command that can be used to format a document on save:
 --- ```lua
---- local base_on_attach = vim.lsp.config.eslint.on_attach
+--- local base_on_attach = nx.lsp.get_config("eslint").on_attach
 --- nx.lsp.config("eslint", {
 ---   on_attach = function(client, bufnr)
 ---     if not base_on_attach then return end
@@ -58,7 +58,6 @@
 --- ```
 
 local util = require("nxvim-lspconfig.util")
-local lsp = vim.lsp
 
 local eslint_config_files = {
   ".eslintrc",
@@ -88,18 +87,21 @@ return {
     "htmlangular",
   },
   workspace_required = true,
-  on_attach = function(client, bufnr)
+  on_attach = function(_client, bufnr)
+    -- `:LspEslintFixAll` — fix everything eslint can fix in this buffer.
+    --
+    -- Upstream drives this through eslint's private `eslint.applyAllFixes` command,
+    -- carrying the document's version by hand and issuing it with a BLOCKING
+    -- `request_sync`. Both are neovim shapes: nxvim does no blocking I/O, and it has
+    -- no reason to hand-carry a version the engine already tracks.
+    --
+    -- The same operation is standard protocol: eslint advertises `source.fixAll.eslint`
+    -- as a code-action kind, and `apply` runs a lone match without a chooser. Same
+    -- result, over the path nxvim already implements — and it stays correct if the
+    -- server ever renames its private command.
     util.buf_command(bufnr, "LspEslintFixAll", function()
-      client:request_sync("workspace/executeCommand", {
-        command = "eslint.applyAllFixes",
-        arguments = {
-          {
-            uri = util.uri_from_buf(bufnr),
-            version = lsp.util.buf_versions[bufnr],
-          },
-        },
-      }, nil, bufnr)
-    end, {})
+      nx.lsp.code_action({ context = { only = { "source.fixAll.eslint" } }, apply = true })
+    end, { desc = "Apply every eslint autofix in this buffer" })
   end,
   root_dir = util.root_dir(function(bufnr, on_dir)
     -- The project root is where the LSP can be started from
@@ -171,7 +173,11 @@ return {
       },
     },
   },
-  before_init = function(_, config)
+  -- Async because the Yarn PnP probe below is two filesystem lookups, which upstream
+  -- does with a blocking `vim.uv.fs_stat`. `nx.lsp` awaits a `before_init` that
+  -- returns a promise before it spawns, so the decision still lands before the server
+  -- sees its `initialize`.
+  before_init = nx.async(function(_, config)
     -- The "workspaceFolder" is a VSCode concept. It limits how far the
     -- server will traverse the file system when locating the ESLint config
     -- file (e.g., .eslintrc).
@@ -181,17 +187,17 @@ return {
       config.settings = config.settings or {}
       config.settings.workspaceFolder = {
         uri = util.uri_from_path(root_dir),
-        name = vim.fn.fnamemodify(root_dir, ":t"),
+        name = util.basename(root_dir),
       }
 
       -- Support Yarn2 (PnP) projects
-      local pnp_cjs = root_dir .. "/.pnp.cjs"
-      local pnp_js = root_dir .. "/.pnp.js"
-      if type(config.cmd) == "table" and (vim.uv.fs_stat(pnp_cjs) or vim.uv.fs_stat(pnp_js)) then
+      local pnp_cjs = nx.await(util.exists(util.joinpath(root_dir, ".pnp.cjs")))
+      local pnp_js = nx.await(util.exists(util.joinpath(root_dir, ".pnp.js")))
+      if type(config.cmd) == "table" and (pnp_cjs or pnp_js) then
         config.cmd = nx.list.extend({ "yarn", "exec" }, config.cmd --[[@as table]])
       end
     end
-  end,
+  end),
   handlers = {
     ["eslint/openDoc"] = function(_, result)
       if result then

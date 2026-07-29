@@ -29,10 +29,11 @@ return {
   },
   filetypes = { "smithy" },
   root_markers = { "smithy-build.json", "build.gradle", "build.gradle.kts", ".git" },
-  -- LSP `MessageType.Log` (4): show every `window/logMessage` the server sends. nx.lsp
-  -- has no per-server message verbosity, so it reports this key and uses its own
-  -- default; the key is kept so the report keeps naming what isn't honored.
-  message_level = 4,
+  -- Upstream sets `message_level = 4` (LSP `MessageType.Log`) — a knob of its own
+  -- deleted `lspconfig` framework, for how loud the server's `window/logMessage`
+  -- stream is in the client. nxvim logs every server message at one verbosity and has
+  -- no per-server dial, so the key is dropped rather than carried: `nx.lsp` doesn't
+  -- read it, and an unread key earns a "misspelled key?" warning on every buffer open.
   init_options = {
     statusBarProvider = "show-message",
     isHttpEnabled = true,

@@ -9,6 +9,15 @@
 --- npm install -g typescript typescript-language-server
 --- ```
 ---
+--- ### The `_typescript.rename` follow-up is not intercepted
+---
+--- Some ts_ls refactors (extract function / extract type) finish by asking the editor
+--- to start a rename at the position they just created, through a server→client
+--- `_typescript.rename` request. nxvim does not route server-initiated requests into
+--- per-config `handlers` (`nx.lsp` warns about the key at load), so the refactor
+--- applies and the rename prompt does not follow — run `:LspRename` on the new name.
+--- The interception is dropped rather than kept as code that cannot run.
+---
 --- To configure typescript language server, add a
 --- [`tsconfig.json`](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html) or
 --- [`jsconfig.json`](https://code.visualstudio.com/docs/languages/jsconfig) to the root of your
@@ -109,69 +118,57 @@ return {
     -- We fallback to the current working directory if no project root is found
     on_dir(project_root or util.cwd())
   end),
-  handlers = {
-    -- handle rename request for certain code actions like extracting functions / types
-    ["_typescript.rename"] = function(_, result, ctx)
-      local client = assert(nx.lsp.client_by_id(ctx.client_id))
-      nx.lsp.show_document({
-        uri = result.textDocument.uri,
-        range = {
-          start = result.position,
-          ["end"] = result.position,
-        },
-      }, client.offset_encoding)
-      vim.lsp.buf.rename()
-      return vim.NIL
-    end,
-  },
   commands = {
+    -- `editor.action.showReferences` is a CLIENT-side command: ts_ls hands over the
+    -- references it already found and asks the editor to present them. The list goes
+    -- to the quickfix stack (nxvim's own list surface) and the cursor jumps to the
+    -- symbol the action was about.
     ["editor.action.showReferences"] = function(command, ctx)
       local client = assert(nx.lsp.client_by_id(ctx.client_id))
       local file_uri, position, references = unpack(command.arguments)
 
-      local quickfix_items =
-        vim.lsp.util.locations_to_items(references --[[@as any]], client.offset_encoding)
-      vim.fn.setqflist({}, " ", {
-        title = command.title,
-        items = quickfix_items,
-        context = {
-          command = command,
-          bufnr = ctx.bufnr,
-        },
-      })
-
-      nx.lsp.show_document({
-        uri = file_uri --[[@as string]],
-        range = {
-          start = position --[[@as lsp.Position]],
-          ["end"] = position --[[@as lsp.Position]],
-        },
-      }, client.offset_encoding)
-      ---@diagnostic enable: assign-type-mismatch
-
-      vim.cmd("botright copen")
+      -- A promise: an item quotes its source line, and a reference into a file no
+      -- buffer holds means reading it. Nothing blocks, so the jump below is sequenced
+      -- after the list rather than racing it.
+      nx.lsp
+        .locations_to_items(references, { encoding = client.offset_encoding })
+        :next(function(items)
+          nx.qf.setqflist({}, " ", {
+            title = command.title,
+            items = items,
+            context = { command = command, bufnr = ctx.bufnr },
+          })
+          nx.lsp.show_document({
+            uri = file_uri,
+            range = { start = position, ["end"] = position },
+          }, { encoding = client.offset_encoding })
+          nx.qf.open()
+        end)
+        :catch(function(err)
+          nx.notify("ts_ls: could not build the reference list: " .. tostring(err), "error")
+        end)
     end,
   },
   on_attach = function(client, bufnr)
-    -- ts_ls provides `source.*` code actions that apply to the whole file. These only appear in
-    -- `vim.lsp.buf.code_action()` if specified in `context.only`.
+    -- ts_ls's `source.*` actions apply to the whole file (organize imports, add all
+    -- missing imports, …) and a code-action request only offers them when they are
+    -- asked for by kind — an unfiltered request answers with the actions for what is
+    -- under the cursor.
+    --
+    -- `only = { "source" }` asks for the whole family. LSP action kinds are
+    -- HIERARCHICAL — `source` matches `source.organizeImports.ts` — so the one entry
+    -- says what upstream says by enumerating the server's advertised kinds and
+    -- prefix-matching them, without depending on that list being advertised at all.
     util.buf_command(bufnr, "LspTypescriptSourceAction", function()
-      local source_actions = nx.tbl.filter(function(action)
-        return nx.str.startswith(action, "source.")
-      end, client.server_capabilities.codeActionProvider.codeActionKinds)
-
-      vim.lsp.buf.code_action({
-        context = {
-          only = source_actions,
-          diagnostics = {},
-        },
-      })
-    end, {})
+      nx.lsp.code_action({ context = { only = { "source" }, diagnostics = {} } })
+    end, { desc = "Choose a whole-file source action" })
 
     -- Go to source definition command
     util.buf_command(bufnr, "LspTypescriptGoToSourceDefinition", function()
-      local win = vim.api.nvim_get_current_win()
-      local params = vim.lsp.util.make_position_params(win, client.offset_encoding)
+      local params = nx.lsp.position_params({
+        bufnr = bufnr,
+        encoding = client.offset_encoding,
+      })
       client:exec_cmd({
         command = "_typescript.goToSourceDefinition",
         title = "Go to source definition",
@@ -185,7 +182,7 @@ return {
           nx.notify("No source definition found", nx.log.levels.INFO)
           return
         end
-        nx.lsp.show_document(result[1], client.offset_encoding, { focus = true })
+        nx.lsp.show_document(result[1], { encoding = client.offset_encoding })
       end)
     end, { desc = "Go to source definition" })
   end,

@@ -15,8 +15,7 @@
 local util = require("nxvim-lspconfig.util")
 
 local function buf_build(client, bufnr)
-  local win = vim.api.nvim_get_current_win()
-  local params = vim.lsp.util.make_position_params(win, client.offset_encoding)
+  local params = nx.lsp.position_params({ encoding = client.offset_encoding })
   client:request("textDocument/build", params, function(err, result)
     if err then
       error(tostring(err))
@@ -32,8 +31,7 @@ local function buf_build(client, bufnr)
 end
 
 local function buf_search(client, bufnr)
-  local win = vim.api.nvim_get_current_win()
-  local params = vim.lsp.util.make_position_params(win, client.offset_encoding)
+  local params = nx.lsp.position_params({ encoding = client.offset_encoding })
   client:request("textDocument/forwardSearch", params, function(err, result)
     if err then
       error(tostring(err))
@@ -85,30 +83,27 @@ local function command_factory(cmd)
 end
 
 local function buf_find_envs(client, bufnr)
-  local win = vim.api.nvim_get_current_win()
   client:exec_cmd({
     command = "texlab.findEnvironments",
-    arguments = { vim.lsp.util.make_position_params(win, client.offset_encoding) },
+    arguments = { nx.lsp.position_params({ encoding = client.offset_encoding }) },
   }, { bufnr = bufnr }, function(err, result)
     if err then
       return nx.notify(err.code .. ": " .. err.message, nx.log.levels.ERROR)
     end
     local env_names = {}
-    local max_length = 1
     for _, env in ipairs(result) do
       table.insert(env_names, env.name.text)
-      max_length = math.max(max_length, string.len(env.name.text))
     end
+    -- Indent each name one step further than the one before it: the environments at
+    -- a position are NESTED, and the staircase is what shows the nesting.
     for i, name in ipairs(env_names) do
       env_names[i] = string.rep(" ", i - 1) .. name
     end
-    vim.lsp.util.open_floating_preview(env_names, "", {
-      height = #env_names,
-      width = math.max((max_length + #env_names - 1), (string.len("Environments"))),
-      focusable = false,
-      focus = false,
-      title = "Environments",
-    })
+    -- A transient content float, sized by the server's answer and dismissed by the
+    -- next key — nxvim's float owns its own geometry, so upstream's explicit
+    -- height/width (and the `focusable = false` that expressed "don't put me in
+    -- it") have nothing to set: a non-persistent `nx.ui.float` is already that.
+    nx.ui.float(env_names, { title = "Environments" })
   end)
 end
 
@@ -117,14 +112,18 @@ local function buf_change_env(client, bufnr)
     if not input or input == "" then
       return nx.notify("No environment name provided", nx.log.levels.WARN)
     end
-    local pos = vim.api.nvim_win_get_cursor(0)
+    -- The whole params shape, cursor included, in the encoding this server agreed
+    -- to — a hand-built `{ line, character }` from the cursor's BYTE column is off
+    -- by one per multi-byte character on the line, which for `\begin{…}` names in a
+    -- non-ASCII document is exactly where it matters.
+    local params = nx.lsp.position_params({ bufnr = bufnr, encoding = client.offset_encoding })
     return client:exec_cmd({
       title = "change_environment",
       command = "texlab.changeEnvironment",
       arguments = {
         {
-          textDocument = { uri = util.uri_from_buf(bufnr) },
-          position = { line = pos[1] - 1, character = pos[2] },
+          textDocument = params.textDocument,
+          position = params.position,
           newName = tostring(input),
         },
       },

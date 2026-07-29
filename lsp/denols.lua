@@ -37,6 +37,19 @@
 ---             +-- index.ts <-- a non-Deno file (ie, should use ts_ls or tsgo)
 --- ```
 ---
+--- ### `deno:` virtual documents are not opened
+---
+--- A goto into Deno's own standard library resolves to a `deno:` URI — a document that
+--- exists only inside the server, fetched with `deno/virtualTextDocument`. Upstream
+--- intercepts the goto reply and fills a scratch buffer with the fetched text.
+---
+--- nxvim does not route server *replies* through per-config `handlers` (`nx.lsp` warns
+--- about the key at load), and it has no Lua buffer-mutation API to fill such a buffer
+--- with, so that interception is gone rather than kept as code that cannot run. A goto
+--- landing on a `deno:` URI reports that it has no path instead of opening a blank
+--- buffer named after one. Everything else — diagnostics, completion, hover, the
+--- in-project gotos — is unaffected.
+---
 --- From the file being edited, we walk up to find the nearest package manager lockfile. This is PROJECT ROOT.
 --- From the file being edited, find the nearest deno.json or deno.jsonc. This is DENO ROOT.
 --- From the file being edited, find the nearest deno.lock. This is DENO LOCK ROOT
@@ -45,56 +58,6 @@
 --- Otherwise, we abort, because this is a non-Deno TS file.
 
 local util = require("nxvim-lspconfig.util")
-
-local lsp = vim.lsp
-
-local function virtual_text_document_handler(uri, res, client)
-  if not res then
-    return nil
-  end
-
-  local lines = nx.str.split(res.result, "\n")
-  local bufnr = vim.uri_to_bufnr(uri)
-
-  local current_buf = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-  if #current_buf ~= 0 then
-    return nil
-  end
-
-  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-  vim.api.nvim_set_option_value("readonly", true, { buf = bufnr })
-  vim.api.nvim_set_option_value("modified", false, { buf = bufnr })
-  vim.api.nvim_set_option_value("modifiable", false, { buf = bufnr })
-  lsp.buf_attach_client(bufnr, client.id)
-end
-
-local function virtual_text_document(uri, client)
-  local params = {
-    textDocument = {
-      uri = uri,
-    },
-  }
-  local result = client:request_sync("deno/virtualTextDocument", params)
-  virtual_text_document_handler(uri, result, client)
-end
-
-local function denols_handler(err, result, ctx, config)
-  if not result or nx.tbl.is_empty(result) then
-    return nil
-  end
-
-  local client = nx.lsp.client_by_id(ctx.client_id)
-  for _, res in pairs(result) do
-    local uri = res.uri or res.targetUri
-    if uri:match("^deno:") then
-      virtual_text_document(uri, client)
-      res["uri"] = uri
-      res["targetUri"] = uri
-    end
-  end
-
-  lsp.handlers[ctx.method](err, result, ctx, config)
-end
 
 return {
   cmd = { "deno", "lsp" },
@@ -135,11 +98,6 @@ return {
         },
       },
     },
-  },
-  handlers = {
-    ["textDocument/definition"] = denols_handler,
-    ["textDocument/typeDefinition"] = denols_handler,
-    ["textDocument/references"] = denols_handler,
   },
   on_attach = function(client, bufnr)
     util.buf_command(bufnr, "LspDenolsCache", function()

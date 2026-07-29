@@ -6,7 +6,6 @@
 --- ```
 
 local util = require("nxvim-lspconfig.util")
-local lsp = vim.lsp
 
 local stylelint_config_files = {
   ".stylelintrc",
@@ -66,18 +65,15 @@ return {
 
     on_dir(project_root)
   end),
-  on_attach = function(client, bufnr)
+  on_attach = function(_client, bufnr)
+    -- `:LspStylelintFixAll` — the same reasoning as eslint's: upstream issues
+    -- stylelint's private `stylelint.applyAutoFix` command with a hand-carried
+    -- document version over a BLOCKING `request_sync`, and the standard
+    -- `source.fixAll.stylelint` code action is the same operation over the path
+    -- nxvim already implements, without blocking anything.
     util.buf_command(bufnr, "LspStylelintFixAll", function()
-      client:request_sync("workspace/executeCommand", {
-        command = "stylelint.applyAutoFix",
-        arguments = {
-          {
-            uri = util.uri_from_buf(bufnr),
-            version = lsp.util.buf_versions[bufnr],
-          },
-        },
-      }, nil, bufnr)
-    end, {})
+      nx.lsp.code_action({ context = { only = { "source.fixAll.stylelint" } }, apply = true })
+    end, { desc = "Apply every stylelint autofix in this buffer" })
   end,
   -- Refer to https://github.com/stylelint/vscode-stylelint?tab=readme-ov-file#extension-settings for documentation.
   settings = {

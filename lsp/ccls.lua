@@ -26,7 +26,7 @@ local util = require("nxvim-lspconfig.util")
 
 local function switch_source_header(client, bufnr)
   local method_name = "textDocument/switchSourceHeader"
-  local params = vim.lsp.util.make_text_document_params(bufnr)
+  local params = nx.lsp.text_document_params(bufnr)
   client:request(method_name, params, function(err, result)
     if err then
       error(tostring(err))
@@ -35,7 +35,9 @@ local function switch_source_header(client, bufnr)
       nx.notify("corresponding file cannot be determined")
       return
     end
-    vim.cmd.edit(util.uri_to_path(result))
+    -- The native open: reuses the buffer already holding that file and honors
+    -- 'switchbuf', rather than opening a second buffer for the same header.
+    nx.lsp.show_document({ uri = result })
   end, bufnr)
 end
 

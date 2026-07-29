@@ -12,8 +12,12 @@ return {
   cmd = { "autohotkey_lsp", "--stdio" },
   filetypes = { "autohotkey" },
   root_markers = { "package.json" },
-  ---@diagnostic disable-next-line: missing-fields
-  flags = { debounce_text_changes = 500 },
+  -- Upstream sets `flags = { debounce_text_changes = 500 }` — a neovim CLIENT knob
+  -- for how long its own `didChange` sender coalesces. nxvim has no such key: it
+  -- batches the edits made during a tick and sends them once per sync, so the
+  -- coalescing that asked for is already how the document is synced. Dropped rather
+  -- than carried, since a key `nx.lsp` doesn't read only earns a "misspelled key?"
+  -- warning on every buffer open.
   --capabilities = capabilities,
   --on_attach = custom_attach,
   -- `InterpreterPath` needs the AutoHotkey interpreter's real location, which is a

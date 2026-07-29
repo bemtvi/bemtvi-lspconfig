@@ -22,7 +22,7 @@ local function switch_source_header(bufnr, client)
       ("method %s is not supported by any servers active on the current buffer"):format(method_name)
     )
   end
-  local params = vim.lsp.util.make_text_document_params(bufnr)
+  local params = nx.lsp.text_document_params(bufnr)
   ---@diagnostic disable-next-line:param-type-mismatch
   client:request(method_name, params, function(err, result)
     if err then
@@ -32,7 +32,10 @@ local function switch_source_header(bufnr, client)
       nx.notify("corresponding file cannot be determined")
       return
     end
-    vim.cmd.edit(util.uri_to_path(result))
+    -- The server answers with a URI, and `show_document` is the native open — it
+    -- reuses the buffer already holding that file (even one opened under a
+    -- cwd-relative name) instead of stranding a second one, and honors 'switchbuf'.
+    nx.lsp.show_document({ uri = result })
   end, bufnr)
 end
 
@@ -42,8 +45,7 @@ local function symbol_info(bufnr, client)
   if not client or not client:supports_method(method_name) then
     return nx.notify("Clangd client not found", nx.log.levels.ERROR)
   end
-  local win = vim.api.nvim_get_current_win()
-  local params = vim.lsp.util.make_position_params(win, client.offset_encoding)
+  local params = nx.lsp.position_params({ encoding = client.offset_encoding })
   ---@diagnostic disable-next-line:param-type-mismatch
   client:request(method_name, params, function(err, res)
     if err or #res == 0 then
@@ -52,13 +54,10 @@ local function symbol_info(bufnr, client)
     end
     local container = string.format("container: %s", res[1].containerName) ---@type string
     local name = string.format("name: %s", res[1].name) ---@type string
-    vim.lsp.util.open_floating_preview({ name, container }, "", {
-      height = 2,
-      width = math.max(string.len(name), string.len(container)),
-      focusable = false,
-      focus = false,
-      title = "Symbol Info",
-    })
+    -- Transient by construction: `nx.ui.float` without `persist` is dismissed by
+    -- the next key and sizes itself to its contents, which is everything upstream's
+    -- height / width / focusable arguments were arranging by hand.
+    nx.ui.float({ name, container }, { title = "Symbol Info" })
   end, bufnr)
 end
 

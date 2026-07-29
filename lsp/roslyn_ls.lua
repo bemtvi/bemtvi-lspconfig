@@ -115,7 +115,7 @@ end
 ---@param action table
 local function apply_action(client, action)
   if action.edit then
-    nx.lsp.apply_workspace_edit(action.edit, client.offset_encoding)
+    nx.lsp.apply_workspace_edit(action.edit, { encoding = client.offset_encoding })
   end
   if action.command then
     client:exec_cmd(action.command)
@@ -211,7 +211,7 @@ return {
             },
           },
         }
-        nx.lsp.apply_workspace_edit(workspace_edit, client.offset_encoding)
+        nx.lsp.apply_workspace_edit(workspace_edit, { encoding = client.offset_encoding })
       ---@diagnostic enable: undefined-field
       else
         nx.notify(

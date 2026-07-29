@@ -20,9 +20,11 @@ local function switch_impl_intf(bufnr, client)
       ("method %s is not supported by any servers active on the current buffer"):format(method_name)
     )
   end
-  local uri =
-    vim.lsp.util.make_given_range_params(nil, nil, bufnr, client.offset_encoding).textDocument.uri
-  if not uri then
+  -- `ocamllsp/switchImplIntf` takes just the document's URI. Upstream reached it
+  -- through a whole range-params builder and threw the range away; the URI is what
+  -- the method is about, so ask for it directly.
+  local uri = util.uri_from_buf(bufnr)
+  if uri == "" then
     return nx.notify("could not get URI for current buffer")
   end
   local params = { uri }
@@ -34,17 +36,16 @@ local function switch_impl_intf(bufnr, client)
     if not result or #result == 0 then
       nx.notify("corresponding file cannot be determined")
     elseif #result == 1 then
-      vim.cmd.edit(util.uri_to_path(result[1]))
+      nx.lsp.show_document({ uri = result[1] })
     else
-      nx.ui.select(
-        result,
-        { prompt = "Select an implementation/interface:", format_item = vim.uri_to_fname },
-        function(choice)
-          if choice then
-            vim.cmd.edit(util.uri_to_path(choice))
-          end
+      nx.ui.select(result, {
+        prompt = "Select an implementation/interface:",
+        format_item = util.uri_to_path,
+      }, function(choice)
+        if choice then
+          nx.lsp.show_document({ uri = choice })
         end
-      )
+      end)
     end
   end, bufnr)
 end
@@ -66,8 +67,9 @@ local language_id_of_ext = {
 
 local get_language_id = function(bufnr, ftype)
   if ftype == "ocaml" then
-    local path = util.bufname(bufnr)
-    local ext = vim.fn.fnamemodify(path, ":e")
+    -- `.mli` / `.mll` / `.mly` all arrive as filetype `ocaml`, and the server needs
+    -- them told apart — so the extension, not the filetype, decides the languageId.
+    local ext = nx.fname.modify(util.bufname(bufnr), ":e")
     return language_id_of_ext[ext] or language_id_of.ocaml
   else
     return language_id_of[ftype]
