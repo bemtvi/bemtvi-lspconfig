@@ -3,7 +3,7 @@ panvimdoc — run `scripts/gen-vimdoc.sh` after editing. -->
 
 Ready-made `nx.lsp` configurations for **407 language servers** — a native port of
 [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) to
-[nxvim](https://github.com/nxvim/nxvim).
+[nxvim](https://github.com/davidrios/nxvim).
 
 This is a **port, not a compatibility layer.** nxvim runs no neovim plugins; upstream's
 configs were treated as a behavioral spec and rewritten against nxvim's own `nx.*`
