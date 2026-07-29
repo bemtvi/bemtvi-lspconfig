@@ -4,9 +4,8 @@
 ---
 --- 3rd party Language Server for Selene lua linter
 
----@type vim.lsp.Config
 return {
-  cmd = { 'selene-3p-language-server' },
-  filetypes = { 'lua' },
-  root_markers = { 'selene.toml' },
+  cmd = { "selene-3p-language-server" },
+  filetypes = { "lua" },
+  root_markers = { "selene.toml" },
 }

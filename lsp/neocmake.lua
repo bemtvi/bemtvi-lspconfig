@@ -4,21 +4,22 @@
 ---
 --- CMake LSP Implementation
 ---
---- Neovim does not currently include built-in snippets. `neocmakelsp` only provides completions when snippet support is enabled. To enable completion, install a snippet plugin and add the following override to your language client capabilities during setup.
+--- `neocmakelsp` only offers completions when the client advertises snippet support.
+--- nxvim expands snippet completions natively (`nx.snippet`), but does not advertise
+--- `snippetSupport` in its base capabilities, so ask for it in this server's config.
+--- `capabilities` is deep-merged OVER nxvim's base set, so this adds to it rather
+--- than replacing it:
 ---
 --- ```lua
---- --Enable (broadcasting) snippet capability for completion
---- local capabilities = vim.lsp.protocol.make_client_capabilities()
---- capabilities.textDocument.completion.completionItem.snippetSupport = true
----
---- vim.lsp.config('neocmake', {
----   capabilities = capabilities,
+--- nx.lsp.config("neocmake", {
+---   capabilities = {
+---     textDocument = { completion = { completionItem = { snippetSupport = true } } },
+---   },
 --- })
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'neocmakelsp', 'stdio' },
-  filetypes = { 'cmake' },
-  root_markers = { '.neocmake.toml', '.git', 'build', 'cmake' },
+  cmd = { "neocmakelsp", "stdio" },
+  filetypes = { "cmake" },
+  root_markers = { ".neocmake.toml", ".git", "build", "cmake" },
 }

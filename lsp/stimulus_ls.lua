@@ -14,9 +14,8 @@
 --- yarn global add stimulus-language-server
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'stimulus-language-server', '--stdio' },
-  filetypes = { 'html', 'ruby', 'eruby', 'blade', 'php' },
-  root_markers = { 'Gemfile', '.git' },
+  cmd = { "stimulus-language-server", "--stdio" },
+  filetypes = { "html", "ruby", "eruby", "blade", "php" },
+  root_markers = { "Gemfile", ".git" },
 }

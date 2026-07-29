@@ -2,9 +2,9 @@
 ---
 --- https://github.com/nokia/ntt
 --- Installation instructions can be found [here](https://github.com/nokia/ntt#Install).
---- Can be configured by passing a "settings" object to vim.lsp.config('ntt'):
+--- Can be configured by passing a "settings" object to nx.lsp.config("ntt"):
 --- ```lua
---- vim.lsp.config('ntt', {
+--- nx.lsp.config("ntt", {
 ---     settings = {
 ---       ntt = {
 ---       }
@@ -12,9 +12,8 @@
 --- })
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'ntt', 'langserver' },
-  filetypes = { 'ttcn' },
-  root_markers = { '.git' },
+  cmd = { "ntt", "langserver" },
+  filetypes = { "ttcn" },
+  root_markers = { ".git" },
 }

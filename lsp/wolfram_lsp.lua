@@ -17,22 +17,21 @@
 --- PacletInstall["LSPServer"]
 --- ```
 
----@type vim.lsp.Config
 return {
   -- CMD is borrowed from official vscode extension:
   -- https://github.com/WolframResearch/vscode-wolfram
   cmd = {
-    'WolframKernel',
-    '-noinit',
-    '-noprompt',
-    '-nopaclet',
-    '-noicon',
-    '-nostartuppaclets',
-    '-run',
+    "WolframKernel",
+    "-noinit",
+    "-noprompt",
+    "-nopaclet",
+    "-noicon",
+    "-nostartuppaclets",
+    "-run",
     'Needs["LSPServer`"];LSPServer`StartServer[]',
   },
-  filetypes = { 'mma' },
-  root_markers = { '.git' },
+  filetypes = { "mma" },
+  root_markers = { ".git" },
   init_options = {
     -- The semantic tokens support needs to be explicitly enabled.
     -- Otherwise, there would be errors during lsp initialization such as:

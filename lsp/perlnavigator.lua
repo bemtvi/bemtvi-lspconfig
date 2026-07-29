@@ -20,9 +20,8 @@
 --- The `contributes.configuration.properties` section of `perlnavigator`'s `package.json` has all available configuration settings. All
 --- settings have a reasonable default, but, at minimum, you may want to point `perlnavigator` at your `perltidy` and `perlcritic` configurations.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'perlnavigator' },
-  filetypes = { 'perl' },
-  root_markers = { '.git' },
+  cmd = { "perlnavigator" },
+  filetypes = { "perl" },
+  root_markers = { ".git" },
 }

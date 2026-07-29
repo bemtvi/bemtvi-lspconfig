@@ -8,7 +8,7 @@
 --- Then, configure `cmd` to run the Node script at the unpacked location:
 ---
 --- ```lua
---- vim.lsp.config('lwc_ls', {
+--- nx.lsp.config("lwc_ls", {
 ---   cmd = {
 ---     'node',
 ---     '/path/to/node_modules/@salesforce/lwc-language-server/bin/lwc-language-server.js',
@@ -17,11 +17,10 @@
 --- })
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'lwc-language-server', '--stdio' },
-  filetypes = { 'javascript', 'html' },
-  root_markers = { 'sfdx-project.json' },
+  cmd = { "lwc-language-server", "--stdio" },
+  filetypes = { "javascript", "html" },
+  root_markers = { "sfdx-project.json" },
   init_options = {
     embeddedLanguages = {
       javascript = true,

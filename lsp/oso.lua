@@ -17,16 +17,13 @@
 --- or
 ---
 --- ```lua
---- vim.filetype.add({
----   pattern = {
----     ['.*/*.polar'] = 'polar',
----   },
---- })
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.polar" }, function()
+---   nx.bo.filetype = "polar"
+--- end)
 ---
 --- Alternatively, you may use a syntax plugin like https://github.com/osohq/polar.vim
 
----@type vim.lsp.Config
 return {
-  cmd = { 'oso-cloud', 'lsp' },
-  filetypes = { 'polar' },
+  cmd = { "oso-cloud", "lsp" },
+  filetypes = { "polar" },
 }

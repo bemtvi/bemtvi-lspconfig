@@ -7,15 +7,14 @@
 ---
 --- For the available text analyzer tools and their configuration, see the [GitHub](https://github.com/hangyav/textLSP) page.
 --- By default, all analyzers are disabled in textLSP, since most of them need special settings.
---- For quick testing, LanguageTool is enabled in the default `nvim-lspconfig` configuration.
+--- For quick testing, LanguageTool is enabled in the default `nxvim-lspconfig` configuration.
 ---
 --- To install run: `pip install textLSP`
 
----@type vim.lsp.Config
 return {
-  cmd = { 'textlsp' },
-  filetypes = { 'text', 'tex', 'org' },
-  root_markers = { '.git' },
+  cmd = { "textlsp" },
+  filetypes = { "text", "tex", "org" },
+  root_markers = { ".git" },
   settings = {
     textLSP = {
       analysers = {
@@ -34,9 +33,9 @@ return {
       documents = {
         org = {
           org_todo_keywords = {
-            'TODO',
-            'IN_PROGRESS',
-            'DONE',
+            "TODO",
+            "IN_PROGRESS",
+            "DONE",
           },
         },
       },

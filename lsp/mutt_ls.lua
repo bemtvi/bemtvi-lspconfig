@@ -8,10 +8,9 @@
 --- pip install mutt-language-server
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'mutt-language-server' },
-  filetypes = { 'muttrc', 'neomuttrc' },
-  root_markers = { '.git' },
+  cmd = { "mutt-language-server" },
+  filetypes = { "muttrc", "neomuttrc" },
+  root_markers = { ".git" },
   settings = {},
 }

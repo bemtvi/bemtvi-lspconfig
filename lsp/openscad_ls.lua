@@ -14,14 +14,15 @@
 --- This can be added via an autocmd:
 ---
 --- ```lua
---- vim.cmd [[ autocmd BufRead,BufNewFile *.scad set filetype=openscad ]]
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.scad" }, function()
+---   nx.bo.filetype = "openscad"
+--- end)
 --- ```
 ---
 --- or by installing a filetype plugin such as https://github.com/sirtaj/vim-openscad
 
----@type vim.lsp.Config
 return {
-  cmd = { 'openscad-language-server' },
-  filetypes = { 'openscad' },
-  root_markers = { '.git' },
+  cmd = { "openscad-language-server" },
+  filetypes = { "openscad" },
+  root_markers = { ".git" },
 }

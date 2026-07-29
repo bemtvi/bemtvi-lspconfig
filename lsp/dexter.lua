@@ -33,22 +33,21 @@
 ---
 --- Configuration example:
 --- ```lua
---- vim.lsp.config('dexter', {
+--- nx.lsp.config("dexter", {
 ---   init_options = {
 ---     followDelegates = true,  -- jump through defdelegate to the target function
 ---     -- stdlibPath = "",      -- override Elixir stdlib path (auto-detected)
 ---     -- debug = false,        -- verbose logging to stderr (view with :LspLog)
 ---   },
 --- })
---- vim.lsp.enable('dexter')
+--- nx.lsp.enable("dexter")
 --- ```
 ---
 
----@type vim.lsp.Config
 return {
-  cmd = { 'dexter', 'lsp' },
-  filetypes = { 'elixir', 'eelixir', 'heex' },
-  root_markers = { '.dexter/dexter.db', '.dexter.db', '.git', 'mix.exs' },
+  cmd = { "dexter", "lsp" },
+  filetypes = { "elixir", "eelixir", "heex" },
+  root_markers = { ".dexter/dexter.db", ".dexter.db", ".git", "mix.exs" },
   init_options = {
     followDelegates = true,
   },

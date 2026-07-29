@@ -9,9 +9,8 @@
 ---
 --- See [the docs](https://hudson-trading.github.io/slang-server/start/config/) for options.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'slang-server' },
-  filetypes = { 'systemverilog', 'verilog' },
-  root_markers = { '.git', '.slang' },
+  cmd = { "slang-server" },
+  filetypes = { "systemverilog", "verilog" },
+  root_markers = { ".git", ".slang" },
 }

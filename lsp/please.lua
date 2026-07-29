@@ -6,9 +6,8 @@
 ---
 --- The `plz` binary will automatically install the LSP for you on first run
 
----@type vim.lsp.Config
 return {
-  cmd = { 'plz', 'tool', 'lps' },
-  filetypes = { 'bzl' },
-  root_markers = { '.plzconfig' },
+  cmd = { "plz", "tool", "lps" },
+  filetypes = { "bzl" },
+  root_markers = { ".plzconfig" },
 }

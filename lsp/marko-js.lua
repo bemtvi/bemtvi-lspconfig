@@ -9,9 +9,8 @@
 --- npm i -g @marko/language-server
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'marko-language-server', '--stdio' },
-  filetypes = { 'marko' },
-  root_markers = { '.git' },
+  cmd = { "marko-language-server", "--stdio" },
+  filetypes = { "marko" },
+  root_markers = { ".git" },
 }

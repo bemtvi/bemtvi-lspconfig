@@ -7,9 +7,8 @@
 --- The default cmd assumes `ecsact_lsp_server` is in your PATH. Typically from the
 --- Ecsact SDK: https://ecsact.dev/start
 
----@type vim.lsp.Config
 return {
-  cmd = { 'ecsact_lsp_server', '--stdio' },
-  filetypes = { 'ecsact' },
-  root_markers = { '.git' },
+  cmd = { "ecsact_lsp_server", "--stdio" },
+  filetypes = { "ecsact" },
+  root_markers = { ".git" },
 }

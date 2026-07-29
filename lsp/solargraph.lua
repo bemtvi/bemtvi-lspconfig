@@ -10,16 +10,14 @@
 --- gem install --user-install solargraph
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'solargraph', 'stdio' },
-  ---@type lspconfig.settings.solargraph
+  cmd = { "solargraph", "stdio" },
   settings = {
     solargraph = {
       diagnostics = true,
     },
   },
   init_options = { formatting = true },
-  filetypes = { 'ruby' },
-  root_markers = { 'Gemfile', '.git' },
+  filetypes = { "ruby" },
+  root_markers = { "Gemfile", ".git" },
 }

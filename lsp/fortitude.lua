@@ -16,15 +16,14 @@
 ---
 --- Refer to the [documentation](https://fortitude.readthedocs.io/en/stable/editors/) for more details.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'fortitude', 'server' },
-  filetypes = { 'fortran' },
+  cmd = { "fortitude", "server" },
+  filetypes = { "fortran" },
   root_markers = {
-    'fpm.toml',
-    'fortitude.toml',
-    '.fortitude.toml',
-    '.git',
+    "fpm.toml",
+    "fortitude.toml",
+    ".fortitude.toml",
+    ".git",
   },
   settings = {},
 }

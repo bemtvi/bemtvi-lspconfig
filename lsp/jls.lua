@@ -12,19 +12,18 @@
 --- Or using the nvim-jls plugin which provides a managed installer:
 ---   https://github.com/idelice/nvim-jls
 
----@type vim.lsp.Config
 return {
-  cmd = { 'jls' },
-  filetypes = { 'java' },
+  cmd = { "jls" },
+  filetypes = { "java" },
   root_markers = {
-    'pom.xml',
-    'build.gradle',
-    'build.gradle.kts',
-    'settings.gradle',
-    'settings.gradle.kts',
-    'WORKSPACE',
-    'WORKSPACE.bazel',
-    '.java-version',
+    "pom.xml",
+    "build.gradle",
+    "build.gradle.kts",
+    "settings.gradle",
+    "settings.gradle.kts",
+    "WORKSPACE",
+    "WORKSPACE.bazel",
+    ".java-version",
   },
   settings = {},
 }

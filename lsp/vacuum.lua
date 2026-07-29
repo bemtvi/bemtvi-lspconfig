@@ -7,17 +7,16 @@
 --- The file types are not detected automatically, you can register them manually (see below) or override the filetypes:
 ---
 --- ```lua
---- vim.filetype.add {
----   pattern = {
----     ['openapi.*%.ya?ml'] = 'yaml.openapi',
----     ['openapi.*%.json'] = 'json.openapi',
----   },
---- }
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*openapi*%.ya?ml" }, function()
+---   nx.bo.filetype = "yaml.openapi"
+--- end)
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*openapi*%.json" }, function()
+---   nx.bo.filetype = "json.openapi"
+--- end)
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'vacuum', 'language-server' },
-  filetypes = { 'yaml.openapi', 'json.openapi' },
-  root_markers = { '.git' },
+  cmd = { "vacuum", "language-server" },
+  filetypes = { "yaml.openapi", "json.openapi" },
+  root_markers = { ".git" },
 }

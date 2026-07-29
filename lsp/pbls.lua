@@ -11,9 +11,8 @@
 ---
 --- pbls is a Language Server for protobuf
 
----@type vim.lsp.Config
 return {
-  cmd = { 'pbls' },
-  filetypes = { 'proto' },
-  root_markers = { '.pbls.toml', '.git' },
+  cmd = { "pbls" },
+  filetypes = { "proto" },
+  root_markers = { ".pbls.toml", ".git" },
 }

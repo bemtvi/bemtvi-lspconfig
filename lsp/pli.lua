@@ -4,9 +4,8 @@
 ---
 --- To learn how to configure the PL/I language server, see the [PL/I Language Support documentation](https://github.com/zowe/zowe-pli-language-support).
 
----@type vim.lsp.Config
 return {
-  cmd = { 'pli_language_server' },
-  filetypes = { 'pli' },
-  root_markers = { '.pliplugin' },
+  cmd = { "pli_language_server" },
+  filetypes = { "pli" },
+  root_markers = { ".pliplugin" },
 }

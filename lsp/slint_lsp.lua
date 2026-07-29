@@ -13,12 +13,13 @@
 --- This can be added via an autocmd:
 ---
 --- ```lua
---- vim.cmd [[ autocmd BufRead,BufNewFile *.slint set filetype=slint ]]
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.slint" }, function()
+---   nx.bo.filetype = "slint"
+--- end)
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'slint-lsp' },
-  filetypes = { 'slint' },
-  root_markers = { '.git' },
+  cmd = { "slint-lsp" },
+  filetypes = { "slint" },
+  root_markers = { ".git" },
 }

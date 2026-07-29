@@ -16,9 +16,8 @@
 --- cargo install --git https://github.com/vivekmalneedi/veridian.git
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'veridian' },
-  filetypes = { 'systemverilog', 'verilog' },
-  root_markers = { '.git' },
+  cmd = { "veridian" },
+  filetypes = { "systemverilog", "verilog" },
+  root_markers = { ".git" },
 }

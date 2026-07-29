@@ -8,9 +8,8 @@
 --- npm install -g basics-language-server
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'basics-language-server' },
+  cmd = { "basics-language-server" },
   settings = {
     buffer = {
       enable = true,

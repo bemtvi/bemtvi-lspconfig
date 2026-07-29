@@ -13,12 +13,13 @@
 --- Note: To activate properly nvim needs to know the jq filetype.
 --- You can add it via:
 --- ```lua
---- vim.cmd([[au BufRead,BufNewFile *.jq setfiletype jq]])
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.jq" }, function()
+---   nx.bo.filetype = "jq"
+--- end)
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'jq-lsp' },
-  filetypes = { 'jq' },
-  root_markers = { '.git' },
+  cmd = { "jq-lsp" },
+  filetypes = { "jq" },
+  root_markers = { ".git" },
 }

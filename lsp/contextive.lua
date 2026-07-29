@@ -10,8 +10,7 @@
 ---
 --- After the download unzip the Contextive.LanguageServer binary and copy the file into a folder that is included in your system's PATH.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'Contextive.LanguageServer' },
-  root_markers = { '.contextive', '.git' },
+  cmd = { "Contextive.LanguageServer" },
+  root_markers = { ".contextive", ".git" },
 }

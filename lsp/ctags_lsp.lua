@@ -15,14 +15,13 @@
 --- the languages you want it to attach to:
 ---
 --- ```lua
---- vim.lsp.config('ctags_lsp', {
+--- nx.lsp.config("ctags_lsp", {
 ---   filetypes = { 'lua', 'ruby', 'go' },
 --- })
---- vim.lsp.enable('ctags_lsp')
+--- nx.lsp.enable("ctags_lsp")
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'ctags-lsp' },
-  root_markers = { 'tags', '.tags', '.git' },
+  cmd = { "ctags-lsp" },
+  root_markers = { "tags", ".tags", ".git" },
 }

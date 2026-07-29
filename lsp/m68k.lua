@@ -10,15 +10,14 @@
 --- npm install -g m68k-lsp-server
 --- ```
 ---
---- Ensure you are using the 68k asm syntax variant in Neovim.
+--- Ensure you are using the 68k asm syntax variant in nxvim.
 ---
 --- ```lua
---- vim.g.asmsyntax = 'asm68k'
+--- nx.g.asmsyntax = 'asm68k'
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'm68k-lsp-server', '--stdio' },
-  filetypes = { 'asm68k' },
-  root_markers = { 'Makefile', '.git' },
+  cmd = { "m68k-lsp-server", "--stdio" },
+  filetypes = { "asm68k" },
+  root_markers = { "Makefile", ".git" },
 }

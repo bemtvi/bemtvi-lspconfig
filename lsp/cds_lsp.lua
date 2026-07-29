@@ -8,12 +8,11 @@
 --- npm i -g @sap/cds-lsp
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'cds-lsp', '--stdio' },
-  filetypes = { 'cds' },
+  cmd = { "cds-lsp", "--stdio" },
+  filetypes = { "cds" },
   -- init_options = { provideFormatter = true }, -- needed to enable formatting capabilities
-  root_markers = { 'package.json', 'db', 'srv' },
+  root_markers = { "package.json", "db", "srv" },
   settings = {
     cds = { validate = true },
   },

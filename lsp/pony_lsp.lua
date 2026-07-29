@@ -13,12 +13,11 @@ local function default_settings()
   }
 end
 
----@type vim.lsp.Config
 return {
-  cmd = { 'pony-lsp' },
-  filetypes = { 'pony' },
-  root_markers = { 'corral.json', '.git' },
+  cmd = { "pony-lsp" },
+  filetypes = { "pony" },
+  root_markers = { "corral.json", ".git" },
   settings = {
-    ['pony-lsp'] = default_settings(),
+    ["pony-lsp"] = default_settings(),
   },
 }

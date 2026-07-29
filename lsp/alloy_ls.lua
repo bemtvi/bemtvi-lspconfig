@@ -13,18 +13,15 @@
 --- or
 ---
 --- ```lua
---- vim.filetype.add({
----   pattern = {
----     ['.*/*.als'] = 'alloy',
----   },
---- })
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.als" }, function()
+---   nx.bo.filetype = "alloy"
+--- end)
 --- ```
 ---
 --- Alternatively, you may use a syntax plugin like https://github.com/runoshun/vim-alloy.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'alloy', 'lsp' },
-  filetypes = { 'alloy' },
-  root_markers = { '.git' },
+  cmd = { "alloy", "lsp" },
+  filetypes = { "alloy" },
+  root_markers = { ".git" },
 }

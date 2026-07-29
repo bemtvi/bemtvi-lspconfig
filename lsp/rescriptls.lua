@@ -12,7 +12,7 @@
 ---
 --- For example, in order to disable the `inlayHints` option:
 --- ```lua
---- vim.lsp.config('rescriptls', {
+--- nx.lsp.config("rescriptls", {
 ---   settings = {
 ---     rescript = {
 ---       settings = {
@@ -34,12 +34,10 @@
 --- }
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'rescript-language-server', '--stdio' },
-  filetypes = { 'rescript' },
-  root_markers = { 'bsconfig.json', 'rescript.json', '.git' },
-  ---@type lspconfig.settings.rescriptls
+  cmd = { "rescript-language-server", "--stdio" },
+  filetypes = { "rescript" },
+  root_markers = { "bsconfig.json", "rescript.json", ".git" },
   settings = {},
   init_options = {
     extensionConfiguration = {

@@ -8,9 +8,8 @@
 ---
 --- Install via `raco`: `raco pkg install racket-langserver`
 
----@type vim.lsp.Config
 return {
-  cmd = { 'racket', '--lib', 'racket-langserver' },
-  filetypes = { 'racket', 'scheme' },
-  root_markers = { '.git' },
+  cmd = { "racket", "--lib", "racket-langserver" },
+  filetypes = { "racket", "scheme" },
+  root_markers = { ".git" },
 }

@@ -7,12 +7,11 @@
 ---
 --- `vscode-home-assistant` is a language server for Home Assistant ported from the VSCode "Home Assistant Config Helper" extension.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'vscode-home-assistant', '--stdio' },
-  filetypes = { 'yaml' },
+  cmd = { "vscode-home-assistant", "--stdio" },
+  filetypes = { "yaml" },
   root_markers = {
-    'configuration.yaml',
-    'configuration.yml',
+    "configuration.yaml",
+    "configuration.yml",
   },
 }

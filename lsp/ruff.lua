@@ -15,7 +15,7 @@
 --- Server settings can be provided via:
 ---
 --- ```lua
---- vim.lsp.config('ruff', {
+--- nx.lsp.config("ruff", {
 ---   init_options = {
 ---     settings = {
 ---       -- Server settings should go here
@@ -26,10 +26,9 @@
 ---
 --- Refer to the [documentation](https://docs.astral.sh/ruff/editors/) for more details.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'ruff', 'server' },
-  filetypes = { 'python' },
-  root_markers = { 'pyproject.toml', 'ruff.toml', '.ruff.toml', '.git' },
+  cmd = { "ruff", "server" },
+  filetypes = { "python" },
+  root_markers = { "pyproject.toml", "ruff.toml", ".ruff.toml", ".git" },
   settings = {},
 }

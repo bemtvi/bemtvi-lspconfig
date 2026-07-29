@@ -9,9 +9,8 @@
 --- cargo install --features="lsp" lelwel
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'lelwel-ls' },
-  filetypes = { 'llw' },
-  root_markers = { '.git' },
+  cmd = { "lelwel-ls" },
+  filetypes = { "llw" },
+  root_markers = { ".git" },
 }

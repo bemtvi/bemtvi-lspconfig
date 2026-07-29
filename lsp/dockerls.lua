@@ -9,7 +9,7 @@
 ---
 --- Additional configuration can be applied in the following way:
 --- ```lua
---- vim.lsp.config('dockerls', {
+--- nx.lsp.config("dockerls", {
 ---     settings = {
 ---         docker = {
 --- 	    languageserver = {
@@ -22,9 +22,8 @@
 --- })
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'docker-langserver', '--stdio' },
-  filetypes = { 'dockerfile' },
-  root_markers = { 'Dockerfile' },
+  cmd = { "docker-langserver", "--stdio" },
+  filetypes = { "dockerfile" },
+  root_markers = { "Dockerfile" },
 }

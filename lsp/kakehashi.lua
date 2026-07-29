@@ -10,11 +10,11 @@
 --- when `autoInstall` is enabled (the default). This requires the
 --- `tree-sitter` CLI, a C compiler, and Git.
 ---
---- **You must specify `filetypes` in your call to `vim.lsp.config`** to
+--- **You must specify `filetypes` in your call to `nx.lsp.config`** to
 --- restrict which files activate the server:
 ---
 --- ```lua
---- vim.lsp.config('kakehashi', {
+--- nx.lsp.config("kakehashi", {
 ---   filetypes = { 'markdown', 'lua', 'rust', 'python' },
 ---   init_options = {
 ---     autoInstall = true,
@@ -34,8 +34,7 @@
 --- })
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'kakehashi' },
-  root_markers = { 'kakehashi.toml', '.git' },
+  cmd = { "kakehashi" },
+  root_markers = { "kakehashi.toml", ".git" },
 }

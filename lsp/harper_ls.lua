@@ -8,7 +8,7 @@
 ---
 --- In short, they should look something like this:
 --- ```lua
---- vim.lsp.config('harper_ls', {
+--- nx.lsp.config("harper_ls", {
 ---   settings = {
 ---     ["harper-ls"] = {
 ---       userDictPath = "~/dict.txt"
@@ -17,37 +17,36 @@
 --- })
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'harper-ls', '--stdio' },
+  cmd = { "harper-ls", "--stdio" },
   filetypes = {
-    'asciidoc',
-    'c',
-    'cpp',
-    'cs',
-    'gitcommit',
-    'go',
-    'html',
-    'java',
-    'javascript',
-    'lua',
-    'markdown',
-    'nix',
-    'python',
-    'ruby',
-    'rust',
-    'swift',
-    'tex',
-    'toml',
-    'typescript',
-    'typescriptreact',
-    'haskell',
-    'cmake',
-    'typst',
-    'php',
-    'dart',
-    'clojure',
-    'sh',
+    "asciidoc",
+    "c",
+    "cpp",
+    "cs",
+    "gitcommit",
+    "go",
+    "html",
+    "java",
+    "javascript",
+    "lua",
+    "markdown",
+    "nix",
+    "python",
+    "ruby",
+    "rust",
+    "swift",
+    "tex",
+    "toml",
+    "typescript",
+    "typescriptreact",
+    "haskell",
+    "cmake",
+    "typst",
+    "php",
+    "dart",
+    "clojure",
+    "sh",
   },
-  root_markers = { '.harper-dictionary.txt', '.git' },
+  root_markers = { ".harper-dictionary.txt", ".git" },
 }

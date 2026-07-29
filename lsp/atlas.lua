@@ -22,45 +22,47 @@
 --- or
 ---
 --- ```lua
---- vim.filetype.add({
----   filename = {
----     ['atlas.hcl'] = 'atlas-config',
----   },
----   pattern = {
----     ['.*/*.my.hcl'] = 'atlas-schema-mysql',
----     ['.*/*.pg.hcl'] = 'atlas-schema-postgresql',
----     ['.*/*.lt.hcl'] = 'atlas-schema-sqlite',
----     ['.*/*.ch.hcl'] = 'atlas-schema-clickhouse',
----     ['.*/*.ms.hcl'] = 'atlas-schema-mssql',
----     ['.*/*.rs.hcl'] = 'atlas-schema-redshift',
----     ['.*/*.test.hcl'] = 'atlas-test',
----     ['.*/*.plan.hcl'] = 'atlas-plan',
----     ['.*/*.rule.hcl'] = 'atlas-rule',
----   },
---- })
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "atlas.hcl" }, function()
+---   nx.bo.filetype = "atlas-config"
+--- end)
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.my.hcl" }, function()
+---   nx.bo.filetype = "atlas-schema-mysql"
+--- end)
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.pg.hcl" }, function()
+---   nx.bo.filetype = "atlas-schema-postgresql"
+--- end)
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.lt.hcl" }, function()
+---   nx.bo.filetype = "atlas-schema-sqlite"
+--- end)
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.ch.hcl" }, function()
+---   nx.bo.filetype = "atlas-schema-clickhouse"
+--- end)
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.ms.hcl" }, function()
+---   nx.bo.filetype = "atlas-schema-mssql"
+--- end)
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.rs.hcl" }, function()
+---   nx.bo.filetype = "atlas-schema-redshift"
+--- end)
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.test.hcl" }, function()
+---   nx.bo.filetype = "atlas-test"
+--- end)
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.plan.hcl" }, function()
+---   nx.bo.filetype = "atlas-plan"
+--- end)
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.rule.hcl" }, function()
+---   nx.bo.filetype = "atlas-rule"
+--- end)
 --- ```
 ---
---- Optionally, tell treesitter to treat Atlas filetypes as HCL for better syntax highlighting:
----
---- ```lua
---- vim.treesitter.language.register('hcl', 'atlas-config')
---- vim.treesitter.language.register('hcl', 'atlas-schema-mysql')
---- vim.treesitter.language.register('hcl', 'atlas-schema-postgresql')
---- vim.treesitter.language.register('hcl', 'atlas-schema-sqlite')
---- vim.treesitter.language.register('hcl', 'atlas-schema-clickhouse')
---- vim.treesitter.language.register('hcl', 'atlas-schema-mssql')
---- vim.treesitter.language.register('hcl', 'atlas-schema-redshift')
---- vim.treesitter.language.register('hcl', 'atlas-test')
---- vim.treesitter.language.register('hcl', 'atlas-plan')
---- vim.treesitter.language.register('hcl', 'atlas-rule')
---- ```
+--- These filetypes are all HCL. nxvim has no filetype-to-grammar alias, so they are
+--- not highlighted under their own names; `:setf hcl` in such a buffer gives HCL
+--- highlighting for that session.
 ---
 
----@type vim.lsp.Config
 return {
-  cmd = { 'atlas', 'tool', 'lsp', '--stdio' },
+  cmd = { "atlas", "tool", "lsp", "--stdio" },
   filetypes = {
-    'atlas-*',
+    "atlas-*",
   },
-  root_markers = { 'atlas.hcl' },
+  root_markers = { "atlas.hcl" },
 }

@@ -21,7 +21,7 @@
 --- Or you can modify the default `cmd` to include the full path to the Python interpreter.
 ---
 --- ```lua
---- vim.lsp.config('esbonio', {
+--- nx.lsp.config("esbonio", {
 ---   cmd = { '/path/to/virtualenv/bin/python', '-m', 'esbonio.server' }
 --- })
 --- ```
@@ -29,7 +29,7 @@
 --- Esbonio supports a number of config values passed as `init_options` on startup, for example.
 ---
 --- ```lua
---- vim.lsp.config('esbonio', {
+--- nx.lsp.config("esbonio", {
 ---   init_options = {
 ---     server = {
 ---       logLevel = "debug"
@@ -43,9 +43,8 @@
 ---
 --- A full list and explanation of the available options can be found [here](https://docs.esbon.io/en/esbonio-language-server-v0.16.4/lsp/getting-started.html?editor=neovim-lspconfig#configuration)
 
----@type vim.lsp.Config
 return {
-  cmd = { 'python3', '-m', 'esbonio.server' },
-  filetypes = { 'rst' },
-  root_markers = { '.git' },
+  cmd = { "python3", "-m", "esbonio.server" },
+  filetypes = { "rst" },
+  root_markers = { ".git" },
 }

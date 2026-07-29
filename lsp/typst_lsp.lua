@@ -4,9 +4,8 @@
 ---
 --- Language server for Typst.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'typst-lsp' },
-  filetypes = { 'typst' },
-  root_markers = { '.git' },
+  cmd = { "typst-lsp" },
+  filetypes = { "typst" },
+  root_markers = { ".git" },
 }

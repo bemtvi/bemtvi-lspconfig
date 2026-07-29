@@ -9,9 +9,8 @@
 ---
 --- Do not report issues for missing features in `pyre` to `lspconfig`.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'pyre', 'persistent' },
-  filetypes = { 'python' },
-  root_markers = { '.pyre_configuration' },
+  cmd = { "pyre", "persistent" },
+  filetypes = { "python" },
+  root_markers = { ".pyre_configuration" },
 }

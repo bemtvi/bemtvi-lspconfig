@@ -7,23 +7,22 @@
 --- npm install -g @olrtg/emmet-language-server
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'emmet-language-server', '--stdio' },
+  cmd = { "emmet-language-server", "--stdio" },
   filetypes = {
-    'astro',
-    'css',
-    'eruby',
-    'html',
-    'htmlangular',
-    'htmldjango',
-    'javascriptreact',
-    'less',
-    'sass',
-    'scss',
-    'svelte',
-    'typescriptreact',
-    'vue',
+    "astro",
+    "css",
+    "eruby",
+    "html",
+    "htmlangular",
+    "htmldjango",
+    "javascriptreact",
+    "less",
+    "sass",
+    "scss",
+    "svelte",
+    "typescriptreact",
+    "vue",
   },
-  root_markers = { '.git' },
+  root_markers = { ".git" },
 }

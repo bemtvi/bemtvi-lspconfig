@@ -10,7 +10,7 @@
 --- If you have installed nextflow language server, you can set the `cmd` custom path as follow:
 ---
 --- ```lua
---- vim.lsp.config('nextflow_ls', {
+--- nx.lsp.config("nextflow_ls", {
 ---     cmd = { 'nextflow-language-server' },
 ---     filetypes = { 'nextflow' },
 ---     settings = {
@@ -23,15 +23,14 @@
 --- })
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'nextflow-language-server' },
-  filetypes = { 'nextflow' },
-  root_markers = { 'nextflow.config', '.git' },
+  cmd = { "nextflow-language-server" },
+  filetypes = { "nextflow" },
+  root_markers = { "nextflow.config", ".git" },
   settings = {
     nextflow = {
       files = {
-        exclude = { '.git', '.nf-test', 'work' },
+        exclude = { ".git", ".nf-test", "work" },
       },
     },
   },

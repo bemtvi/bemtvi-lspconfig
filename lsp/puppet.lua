@@ -15,14 +15,13 @@
 ---
 --- - Ensure you can run `puppet-languageserver` from outside the editor-services directory.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'puppet-languageserver', '--stdio' },
-  filetypes = { 'puppet' },
+  cmd = { "puppet-languageserver", "--stdio" },
+  filetypes = { "puppet" },
   root_markers = {
-    'manifests',
-    '.puppet-lint.rc',
-    'hiera.yaml',
-    '.git',
+    "manifests",
+    ".puppet-lint.rc",
+    "hiera.yaml",
+    ".git",
   },
 }

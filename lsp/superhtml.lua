@@ -11,14 +11,13 @@
 --- to your configuration:
 ---
 --- ```lua
---- vim.lsp.config('superhtml', {
+--- nx.lsp.config("superhtml", {
 ---   filetypes = { 'superhtml' }
 --- })
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'superhtml', 'lsp' },
-  filetypes = { 'superhtml', 'html' },
-  root_markers = { '.git' },
+  cmd = { "superhtml", "lsp" },
+  filetypes = { "superhtml", "html" },
+  root_markers = { ".git" },
 }

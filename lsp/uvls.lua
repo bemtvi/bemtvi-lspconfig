@@ -12,12 +12,13 @@
 --- Note: To activate properly nvim needs to know the uvl filetype.
 --- You can add it via:
 --- ```lua
---- vim.cmd([[au BufRead,BufNewFile *.uvl setfiletype uvl]])
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.uvl" }, function()
+---   nx.bo.filetype = "uvl"
+--- end)
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'uvls' },
-  filetypes = { 'uvl' },
-  root_markers = { '.git' },
+  cmd = { "uvls" },
+  filetypes = { "uvl" },
+  root_markers = { ".git" },
 }

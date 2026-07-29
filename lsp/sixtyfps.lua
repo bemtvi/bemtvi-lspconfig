@@ -13,13 +13,14 @@
 --- This can be added via an autocmd:
 ---
 --- ```lua
---- vim.cmd [[ autocmd BufRead,BufNewFile *.60 set filetype=sixtyfps ]]
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.60" }, function()
+---   nx.bo.filetype = "sixtyfps"
+--- end)
 --- ```
 ---
 --- or by installing a filetype plugin such as https://github.com/RustemB/sixtyfps-vim
 
----@type vim.lsp.Config
 return {
-  cmd = { 'sixtyfps-lsp' },
-  filetypes = { 'sixtyfps' },
+  cmd = { "sixtyfps-lsp" },
+  filetypes = { "sixtyfps" },
 }

@@ -10,9 +10,8 @@
 --- or via your system package manager (`nixpkgs`, AUR, `pipx install panache-cli`,
 --- `npm install -g @panache-cli/panache`).
 
----@type vim.lsp.Config
 return {
-  cmd = { 'panache', 'lsp' },
-  filetypes = { 'markdown', 'quarto', 'rmd' },
-  root_markers = { '.panache.toml', 'panache.toml', '_quarto.yml', '_bookdown.yml', '.git' },
+  cmd = { "panache", "lsp" },
+  filetypes = { "markdown", "quarto", "rmd" },
+  root_markers = { ".panache.toml", "panache.toml", "_quarto.yml", "_bookdown.yml", ".git" },
 }

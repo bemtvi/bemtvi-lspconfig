@@ -13,15 +13,14 @@
 --- - Code actions (quick fixes) to add missing fixture parameters
 --- - Supports fixture overriding and pytest's fixture priority rules
 --- - Character-position aware for self-referencing fixtures
----@type vim.lsp.Config
 return {
-  cmd = { 'pytest-language-server' },
-  filetypes = { 'python' },
+  cmd = { "pytest-language-server" },
+  filetypes = { "python" },
   root_markers = {
-    'pytest.ini',
-    'pyproject.toml',
-    'setup.py',
-    'setup.cfg',
-    '.git',
+    "pytest.ini",
+    "pyproject.toml",
+    "setup.py",
+    "setup.cfg",
+    ".git",
   },
 }

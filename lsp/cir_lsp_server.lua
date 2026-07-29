@@ -6,9 +6,8 @@
 ---
 --- `cir-lsp-server` can be installed at the llvm-project repository (https://github.com/llvm/llvm-project)
 
----@type vim.lsp.Config
 return {
-  cmd = { 'cir-lsp-server' },
-  filetypes = { 'cir' },
-  root_markers = { '.git' },
+  cmd = { "cir-lsp-server" },
+  filetypes = { "cir" },
+  root_markers = { ".git" },
 }

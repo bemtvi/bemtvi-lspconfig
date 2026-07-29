@@ -4,9 +4,8 @@
 ---
 --- you can install thriftls by mason or download binary here: https://github.com/joyme123/thrift-ls/releases
 
----@type vim.lsp.Config
 return {
-  cmd = { 'thriftls' },
-  filetypes = { 'thrift' },
-  root_markers = { '.thrift' },
+  cmd = { "thriftls" },
+  filetypes = { "thrift" },
+  root_markers = { ".thrift" },
 }

@@ -9,27 +9,19 @@
 --- detected automatically; register it manually (see below) or override the filetypes:
 ---
 --- ```lua
---- vim.filetype.add({
----   filename = {
----     ['buf.yaml'] = 'buf-config',
----     ['buf.gen.yaml'] = 'buf-config',
----     ['buf.policy.yaml'] = 'buf-config',
----     ['buf.lock'] = 'buf-config',
----   },
---- })
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = { "buf.yaml", "buf.gen.yaml", "buf.policy.yaml", "buf.lock" } }, function()
+---   nx.bo.filetype = "buf-config"
+--- end)
 --- ```
 ---
---- Optionally, tell treesitter to treat buf config files as YAML for syntax highlighting:
----
---- ```lua
---- vim.treesitter.language.register('yaml', 'buf-config')
---- ```
+--- Buf config files are YAML. nxvim has no filetype-to-grammar alias, so they are not
+--- highlighted under the `buf-config` filetype; `:setf yaml` in such a buffer gives
+--- YAML highlighting for that session.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'buf', 'lsp', 'serve', '--log-format=text' },
-  filetypes = { 'proto', 'buf-config' },
-  root_markers = { 'buf.yaml', '.git' },
+  cmd = { "buf", "lsp", "serve", "--log-format=text" },
+  filetypes = { "proto", "buf-config" },
+  root_markers = { "buf.yaml", ".git" },
   reuse_client = function(client, config)
     -- `buf lsp serve` is meant to be used with multiple workspaces.
     return client.name == config.name

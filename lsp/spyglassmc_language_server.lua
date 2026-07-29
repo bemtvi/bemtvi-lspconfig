@@ -16,9 +16,8 @@
 ---
 --- This is automatically done by [CrystalAlpha358/vim-mcfunction](https://github.com/CrystalAlpha358/vim-mcfunction), which also provide syntax highlight.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'spyglassmc-language-server', '--stdio' },
-  filetypes = { 'mcfunction' },
-  root_markers = { 'pack.mcmeta' },
+  cmd = { "spyglassmc-language-server", "--stdio" },
+  filetypes = { "mcfunction" },
+  root_markers = { "pack.mcmeta" },
 }

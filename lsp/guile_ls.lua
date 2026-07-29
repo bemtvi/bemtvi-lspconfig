@@ -11,11 +11,10 @@
 ---
 --- Note: This LSP will start on `scheme.guile` filetype. You can set this file type using `:help modeline` or adding https://gitlab.com/HiPhish/guile.vim to your plugins to automatically set it.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'guile-lsp-server' },
+  cmd = { "guile-lsp-server" },
   filetypes = {
-    'scheme.guile',
+    "scheme.guile",
   },
-  root_markers = { 'guix.scm', '.git' },
+  root_markers = { "guix.scm", ".git" },
 }

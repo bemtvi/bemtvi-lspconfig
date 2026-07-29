@@ -11,28 +11,26 @@
 --- You can override the default command by manually configuring it like this:
 ---
 --- ```lua
---- vim.lsp.config('vespa_ls', {
+--- nx.lsp.config("vespa_ls", {
 ---   cmd = { 'java', '-jar', '/path/to/vespa-language-server.jar' },
 --- })
 --- ```
 ---
 --- The project root is determined based on the presence of a `.git` directory.
 ---
---- To make Neovim recognize the proper filetypes, add the following setting in `init.lua`:
+--- To make nxvim recognize the proper filetypes, add the following setting in `init.lua`:
 ---
----     vim.filetype.add {
----       extension = {
----         profile = 'sd',
----         sd = 'sd',
----         yql = 'yql',
----       },
----     }
+---     nx.on({ "BufReadPost", "BufNewFile" }, { pattern = { "*.profile", "*.sd" } }, function()
+---       nx.bo.filetype = "sd"
+---     end)
+---     nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.yql" }, function()
+---       nx.bo.filetype = "yql"
+---     end)
 
----@type vim.lsp.Config
 return {
-  cmd = { 'java', '-jar', 'vespa-language-server.jar' },
-  filetypes = { 'sd', 'profile', 'yql' },
+  cmd = { "java", "-jar", "vespa-language-server.jar" },
+  filetypes = { "sd", "profile", "yql" },
   root_markers = {
-    '.git',
+    ".git",
   },
 }

@@ -4,23 +4,22 @@
 ---
 --- Pluggable and configurable code formatting platform written in Rust.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'dprint', 'lsp' },
+  cmd = { "dprint", "lsp" },
   filetypes = {
-    'javascript',
-    'javascriptreact',
-    'typescript',
-    'typescriptreact',
-    'json',
-    'jsonc',
-    'markdown',
-    'python',
-    'toml',
-    'rust',
-    'roslyn',
-    'graphql',
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "json",
+    "jsonc",
+    "markdown",
+    "python",
+    "toml",
+    "rust",
+    "roslyn",
+    "graphql",
   },
-  root_markers = { 'dprint.json', '.dprint.json', 'dprint.jsonc', '.dprint.jsonc' },
+  root_markers = { "dprint.json", ".dprint.json", "dprint.jsonc", ".dprint.jsonc" },
   settings = {},
 }

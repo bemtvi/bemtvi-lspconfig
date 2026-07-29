@@ -5,9 +5,8 @@
 --- supporting new dialects defined in buddy-mlir.
 --- `buddy-lsp-server` can be installed at the buddy-mlir repository (buddy-compiler/buddy-mlir)
 
----@type vim.lsp.Config
 return {
-  cmd = { 'buddy-lsp-server' },
-  filetypes = { 'mlir' },
-  root_markers = { '.git' },
+  cmd = { "buddy-lsp-server" },
+  filetypes = { "mlir" },
+  root_markers = { ".git" },
 }

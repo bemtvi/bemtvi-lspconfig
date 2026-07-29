@@ -12,7 +12,7 @@
 ---
 --- By default `azure-pipelines-ls` will only work in files named `azure-pipelines.yml`, this can be changed by providing additional settings like so:
 --- ```lua
---- vim.lsp.config('azure_pipelines_ls', {
+--- nx.lsp.config("azure_pipelines_ls", {
 ---   ... -- other configuration
 ---   settings = {
 ---       yaml = {
@@ -30,10 +30,9 @@
 --- ```
 --- The Azure Pipelines LSP is a fork of `yaml-language-server` and as such the same settings can be passed to it as `yaml-language-server`.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'azure-pipelines-language-server', '--stdio' },
-  filetypes = { 'yaml' },
-  root_markers = { 'azure-pipelines.yml' },
+  cmd = { "azure-pipelines-language-server", "--stdio" },
+  filetypes = { "yaml" },
+  root_markers = { "azure-pipelines.yml" },
   settings = {},
 }

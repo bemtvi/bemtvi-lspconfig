@@ -4,9 +4,8 @@
 ---
 --- The Pact language server
 
----@type vim.lsp.Config
 return {
-  cmd = { 'pact-lsp' },
-  filetypes = { 'pact' },
-  root_markers = { '.git' },
+  cmd = { "pact-lsp" },
+  filetypes = { "pact" },
+  root_markers = { ".git" },
 }

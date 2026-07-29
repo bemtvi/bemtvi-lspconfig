@@ -6,15 +6,14 @@
 ---
 --- Then enable Cairo Language Server in your Lua configuration.
 --- ```lua
---- vim.lsp.enable('cairo_ls')
+--- nx.lsp.enable("cairo_ls")
 --- ```
 ---
 --- *cairo-language-server is still under active development, some features might not work yet !*
 
----@type vim.lsp.Config
 return {
-  init_options = { hostInfo = 'neovim' },
-  cmd = { 'scarb', 'cairo-language-server', '/C', '--node-ipc' },
-  filetypes = { 'cairo' },
-  root_markers = { 'Scarb.toml', 'cairo_project.toml', '.git' },
+  init_options = { hostInfo = "neovim" },
+  cmd = { "scarb", "cairo-language-server", "/C", "--node-ipc" },
+  filetypes = { "cairo" },
+  root_markers = { "Scarb.toml", "cairo_project.toml", ".git" },
 }

@@ -12,11 +12,10 @@
 --- https://www.devicetree.org/
 --- https://docs.zephyrproject.org/latest/build/dts/index.html
 
----@type vim.lsp.Config
 return {
-  name = 'dts_lsp',
-  cmd = { 'dts-lsp' },
-  filetypes = { 'dts', 'dtsi', 'overlay' },
-  root_markers = { '.git' },
+  name = "dts_lsp",
+  cmd = { "dts-lsp" },
+  filetypes = { "dts", "dtsi", "overlay" },
+  root_markers = { ".git" },
   settings = {},
 }

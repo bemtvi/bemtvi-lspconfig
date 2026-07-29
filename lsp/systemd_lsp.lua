@@ -13,8 +13,7 @@
 ---
 --- A language server implementation for Systemd unit files made in Rust.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'systemd-lsp' },
-  filetypes = { 'systemd' },
+  cmd = { "systemd-lsp" },
+  filetypes = { "systemd" },
 }

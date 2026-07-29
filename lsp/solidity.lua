@@ -33,10 +33,9 @@
 ---
 --- You can omit the node_modules as well.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'solidity-ls', '--stdio' },
-  filetypes = { 'solidity' },
-  root_markers = { '.git', 'package.json' },
-  settings = { solidity = { includePath = '', remapping = {} } },
+  cmd = { "solidity-ls", "--stdio" },
+  filetypes = { "solidity" },
+  root_markers = { ".git", "package.json" },
+  settings = { solidity = { includePath = "", remapping = {} } },
 }

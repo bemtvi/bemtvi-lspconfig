@@ -8,18 +8,17 @@
 --- launching the language server on single files.
 ---
 --- Note: In order for neovim's built-in language server client to send the appropriate `languageId` to EFM, **you must
---- specify `filetypes` in your call to `vim.lsp.config`**. Otherwise the server will be launch on the `BufEnter` instead
+--- specify `filetypes` in your call to `nx.lsp.config`**. Otherwise the server will be launch on the `BufEnter` instead
 --- of the `FileType` autocommand, and the `filetype` variable used to populate the `languageId` will not yet be set.
 ---
 --- ```lua
---- vim.lsp.config('efm', {
+--- nx.lsp.config("efm", {
 ---   filetypes = { 'python','cpp','lua' }
 ---   settings = ..., -- You must populate this according to the EFM readme
 --- })
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'efm-langserver' },
-  root_markers = { '.git' },
+  cmd = { "efm-langserver" },
+  root_markers = { ".git" },
 }

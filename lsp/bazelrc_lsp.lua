@@ -7,16 +7,13 @@
 --- The `.bazelrc` file type is not detected automatically, you can register it manually (see below) or override the filetypes:
 ---
 --- ```lua
---- vim.filetype.add {
----   pattern = {
----     ['.*.bazelrc'] = 'bazelrc',
----   },
---- }
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.bazelrc" }, function()
+---   nx.bo.filetype = "bazelrc"
+--- end)
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'bazelrc-lsp', 'lsp' },
-  filetypes = { 'bazelrc' },
-  root_markers = { 'WORKSPACE', 'WORKSPACE.bazel', 'MODULE.bazel' },
+  cmd = { "bazelrc-lsp", "lsp" },
+  filetypes = { "bazelrc" },
+  root_markers = { "WORKSPACE", "WORKSPACE.bazel", "MODULE.bazel" },
 }

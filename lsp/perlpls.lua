@@ -7,16 +7,14 @@
 ---
 --- To use the language server, ensure that you have PLS installed and that it is in your path
 
----@type vim.lsp.Config
 return {
-  cmd = { 'pls' },
-  ---@type lspconfig.settings.perlpls
+  cmd = { "pls" },
   settings = {
     perl = {
       perlcritic = { enabled = false },
       syntax = { enabled = true },
     },
   },
-  filetypes = { 'perl' },
-  root_markers = { '.git' },
+  filetypes = { "perl" },
+  root_markers = { ".git" },
 }

@@ -21,10 +21,9 @@
 --- cargo install glasgow
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'glasgow' },
-  filetypes = { 'wgsl' },
-  root_markers = { '.git' },
+  cmd = { "glasgow" },
+  filetypes = { "wgsl" },
+  root_markers = { ".git" },
   settings = {},
 }

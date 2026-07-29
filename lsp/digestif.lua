@@ -8,9 +8,8 @@
 ---
 --- text editor that speaks the LSP protocol.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'digestif' },
-  filetypes = { 'tex', 'plaintex', 'context' },
-  root_markers = { '.git' },
+  cmd = { "digestif" },
+  filetypes = { "tex", "plaintex", "context" },
+  root_markers = { ".git" },
 }

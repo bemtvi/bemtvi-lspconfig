@@ -19,36 +19,38 @@
 --- To support org files or R sweave, users can define a custom filetype autocommand (or use a plugin which defines these filetypes):
 ---
 --- ```lua
---- vim.cmd [[ autocmd BufRead,BufNewFile *.org set filetype=org ]]
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.org" }, function()
+---   nx.bo.filetype = "org"
+--- end)
 --- ```
 
 local language_id_mapping = {
-  bib = 'bibtex',
-  plaintex = 'tex',
-  rnoweb = 'rsweave',
-  rst = 'restructuredtext',
-  tex = 'latex',
-  pandoc = 'markdown',
-  text = 'plaintext',
+  bib = "bibtex",
+  plaintex = "tex",
+  rnoweb = "rsweave",
+  rst = "restructuredtext",
+  tex = "latex",
+  pandoc = "markdown",
+  text = "plaintext",
 }
 
 local filetypes = {
-  'bib',
-  'gitcommit',
-  'markdown',
-  'org',
-  'plaintex',
-  'rst',
-  'rnoweb',
-  'tex',
-  'pandoc',
-  'quarto',
-  'rmd',
-  'context',
-  'html',
-  'xhtml',
-  'mail',
-  'text',
+  "bib",
+  "gitcommit",
+  "markdown",
+  "org",
+  "plaintex",
+  "rst",
+  "rnoweb",
+  "tex",
+  "pandoc",
+  "quarto",
+  "rmd",
+  "context",
+  "html",
+  "xhtml",
+  "mail",
+  "text",
 }
 
 local function get_language_id(_, filetype)
@@ -71,13 +73,11 @@ do
   end
 end
 
----@type vim.lsp.Config
 return {
-  cmd = { 'ltex-ls' },
+  cmd = { "ltex-ls" },
   filetypes = filetypes,
-  root_markers = { '.git' },
+  root_markers = { ".git" },
   get_language_id = get_language_id,
-  ---@type lspconfig.settings.ltex
   settings = {
     ltex = {
       enabled = enabled_ids,

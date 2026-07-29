@@ -7,20 +7,17 @@
 --- ```sh
 --- cargo install microcad-lsp
 --- ```
---- Neovim does not detect µcad filetype automatically, so you will need to add the following to your
+--- nxvim does not detect µcad filetype automatically, so you will need to add the following to your
 ---
 --- ```lua
---- vim.filetype.add {
----   extension = {
----     µcad = 'microcad',
----   },
---- }
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.µcad" }, function()
+---   nx.bo.filetype = "microcad"
+--- end)
 --- ```
 
----@type vim.lsp.Config
 return {
-  name = 'microcad_lsp',
-  cmd = { 'microcad-lsp', '--stdio' },
-  filetypes = { 'microcad' },
-  root_markers = { '.git' },
+  name = "microcad_lsp",
+  cmd = { "microcad-lsp", "--stdio" },
+  filetypes = { "microcad" },
+  root_markers = { ".git" },
 }

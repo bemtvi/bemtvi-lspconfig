@@ -4,9 +4,8 @@
 ---
 --- Markdown Linter and Formatter written in Rust.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'rumdl', 'server' },
-  filetypes = { 'markdown' },
-  root_markers = { '.git' },
+  cmd = { "rumdl", "server" },
+  filetypes = { "markdown" },
+  root_markers = { ".git" },
 }

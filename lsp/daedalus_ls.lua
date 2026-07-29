@@ -2,26 +2,25 @@
 ---
 --- DaedalusLanguageServer
 
----@type vim.lsp.Config
 return {
-  cmd = { 'DaedalusLanguageServer' },
-  filetypes = { 'd' },
+  cmd = { "DaedalusLanguageServer" },
+  filetypes = { "d" },
   root_markers = {
-    'Gothic.src',
-    'Camera.src',
-    'Menu.src',
-    'Music.src',
-    'ParticleFX.src',
-    'SFX.src',
-    'VisualFX.src',
+    "Gothic.src",
+    "Camera.src",
+    "Menu.src",
+    "Music.src",
+    "ParticleFX.src",
+    "SFX.src",
+    "VisualFX.src",
   },
   settings = {
     DaedalusLanguageServer = {
-      loglevel = 'debug',
+      loglevel = "debug",
       inlayHints = { constants = true },
       numParserThreads = 16,
-      fileEncoding = 'Windows-1252',
-      srcFileEncoding = 'Windows-1252',
+      fileEncoding = "Windows-1252",
+      srcFileEncoding = "Windows-1252",
     },
   },
 }

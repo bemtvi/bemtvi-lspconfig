@@ -9,9 +9,8 @@
 ---
 --- A lightning fast shell linter with LSP support for bash, zsh, posix, and mksh dialects.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'shuck', 'server' },
-  filetypes = { 'bash', 'sh', 'zsh' },
-  root_markers = { '.shuck.toml', '.git' },
+  cmd = { "shuck", "server" },
+  filetypes = { "bash", "sh", "zsh" },
+  root_markers = { ".shuck.toml", ".git" },
 }

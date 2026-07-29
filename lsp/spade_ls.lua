@@ -10,9 +10,8 @@
 -- The default `cmd` assumes that `spade-language-server` binary can be
 -- found in `$PATH`.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'spade-language-server' },
-  filetypes = { 'spade' },
-  root_markers = { 'swim.toml' },
+  cmd = { "spade-language-server" },
+  filetypes = { "spade" },
+  root_markers = { "swim.toml" },
 }

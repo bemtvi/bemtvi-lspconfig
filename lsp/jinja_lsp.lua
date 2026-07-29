@@ -5,19 +5,14 @@
 --- The file types are not detected automatically, you can register them manually (see below) or override the filetypes:
 ---
 --- ```lua
---- vim.filetype.add {
----   extension = {
----     jinja = 'jinja',
----     jinja2 = 'jinja',
----     j2 = 'jinja',
----   },
---- }
+--- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = { "*.jinja", "*.jinja2", "*.j2" } }, function()
+---   nx.bo.filetype = "jinja"
+--- end)
 --- ```
 
----@type vim.lsp.Config
 return {
-  name = 'jinja_lsp',
-  cmd = { 'jinja-lsp' },
-  filetypes = { 'jinja' },
-  root_markers = { '.git' },
+  name = "jinja_lsp",
+  cmd = { "jinja-lsp" },
+  filetypes = { "jinja" },
+  root_markers = { ".git" },
 }

@@ -8,12 +8,11 @@
 ---
 --- Note: On some distros, the cmd of qmlls is `qmlls6`. You can override `cmd`:
 --- ```lua
---- vim.lsp.config('qmlls', { cmd = { 'qmlls6' } })
+--- nx.lsp.config("qmlls", { cmd = { 'qmlls6' } })
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'qmlls' },
-  filetypes = { 'qml', 'qmljs' },
-  root_markers = { '.git' },
+  cmd = { "qmlls" },
+  filetypes = { "qml", "qmljs" },
+  root_markers = { ".git" },
 }
