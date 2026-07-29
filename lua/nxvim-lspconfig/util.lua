@@ -136,6 +136,67 @@ M.root_of_path = nx.async(function(path, markers)
   return nil
 end)
 
+-- `util.root_pattern(...)` -> `function(path) -> promise of the root`. The
+-- replacement for upstream's `lspconfig.util.root_pattern`, which 33 configs use and
+-- which is the one helper `util.root` can't stand in for: its markers are **globs**
+-- (`*.cabal`, `*.ino`, `.gitlab*`), not exact filenames.
+--
+-- Matching runs through `nx.glob` — nxvim's own glob engine, compiled once per call
+-- into a single set, so testing a directory's entries against ten patterns is one
+-- pass. Markers may be passed varargs-style or as one list, matching upstream's two
+-- calling conventions:
+--
+-- ```lua
+-- root_dir = function(bufnr, on_dir)
+--   util.root_pattern("*.cabal", "stack.yaml", ".git")(util.bufname(bufnr)):next(on_dir)
+-- end,
+-- ```
+--
+-- The returned function is async: upstream's was synchronous because it stat'd the
+-- filesystem inline, which is exactly what nxvim does not do.
+function M.root_pattern(...)
+  local patterns = {}
+  local first = select(1, ...)
+  if type(first) == "table" and select("#", ...) == 1 then
+    patterns = first
+  else
+    for i = 1, select("#", ...) do
+      patterns[i] = (select(i, ...))
+    end
+  end
+  return nx.async(function(path)
+    if type(path) ~= "string" or path == "" then
+      return nil
+    end
+    for dir in M.ancestors(path) do
+      local entries = nx.await(nx.fs.readdir(dir):catch(function()
+        return {}
+      end))
+      for _, e in ipairs(entries) do
+        if nx.glob.any(patterns, e.name) then
+          return dir
+        end
+      end
+    end
+    return nil
+  end)
+end
+
+-- `util.exe(name)` -> `name` with the extension this platform's build of it carries.
+-- On Windows a language server installed as `foo` is `foo.exe` (or, for a wrapper
+-- script, `foo.bat`/`foo.cmd`); everywhere else the bare name is right. `ext`
+-- defaults to `.exe`.
+--
+-- Prefer `util.which`, which searches `$PATH` and tells you what is actually there.
+-- This is for the case upstream handles by hand: building a command name before any
+-- lookup happens.
+function M.exe(name, ext)
+  if nx.utils.is_windows() then
+    return name .. (ext or ".exe")
+  end
+  return name
+end
+
 -- `util.exists(path)` -> promise of a boolean. The replacement for
 -- `vim.uv.fs_stat(path) ~= nil` / `vim.fn.filereadable(path) == 1`. Never rejects.
 function M.exists(path)

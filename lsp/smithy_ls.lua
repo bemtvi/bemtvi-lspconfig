@@ -20,19 +20,18 @@
 ---    cs launch --contrib smithy-language-server:0.8.0
 ---    ```
 
----@type vim.lsp.Config
 return {
   cmd = {
-    'cs',
-    'launch',
-    '--contrib',
-    'smithy-language-server:0.8.0',
+    "cs",
+    "launch",
+    "--contrib",
+    "smithy-language-server:0.8.0",
   },
-  filetypes = { 'smithy' },
-  root_markers = { 'smithy-build.json', 'build.gradle', 'build.gradle.kts', '.git' },
+  filetypes = { "smithy" },
+  root_markers = { "smithy-build.json", "build.gradle", "build.gradle.kts", ".git" },
   message_level = vim.lsp.protocol.MessageType.Log,
   init_options = {
-    statusBarProvider = 'show-message',
+    statusBarProvider = "show-message",
     isHttpEnabled = true,
     compilerOptions = {
       snippetAutoIndent = false,

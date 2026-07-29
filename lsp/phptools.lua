@@ -18,19 +18,18 @@
 --- }
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'devsense-php-ls', '--stdio' },
-  filetypes = { 'php' },
+  cmd = { "devsense-php-ls", "--stdio" },
+  filetypes = { "php" },
   root_dir = function(bufnr, on_dir)
-    local fname = vim.api.nvim_buf_get_name(bufnr)
+    local fname = util.bufname(bufnr)
     local cwd = assert(vim.uv.cwd())
-    local root = vim.fs.root(fname, { 'composer.json', '.git' })
+    local root = vim.fs.root(fname, { "composer.json", ".git" })
 
     -- prefer cwd if root is a descendant
-    on_dir(root and vim.fs.relpath(cwd, root) and cwd)
+    on_dir(root and util.relpath(cwd, root) and cwd)
   end,
   init_options = {
-    ['0'] = '{}', --optional premium license validation from https://www.devsense.com/purchase/validation
+    ["0"] = "{}", --optional premium license validation from https://www.devsense.com/purchase/validation
   },
 }

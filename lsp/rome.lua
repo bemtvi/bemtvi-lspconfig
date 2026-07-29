@@ -10,24 +10,16 @@
 --- npm install [-g] rome
 --- ```
 
----@type vim.lsp.Config
+local util = require("nxvim-lspconfig.util")
+
 return {
-  cmd = function(dispatchers, config)
-    local cmd = 'rome'
-    if (config or {}).root_dir then
-      local local_cmd = vim.fs.joinpath(config.root_dir, 'node_modules/.bin', cmd)
-      if vim.fn.executable(local_cmd) == 1 then
-        cmd = local_cmd
-      end
-    end
-    return vim.lsp.rpc.start({ cmd, 'lsp-proxy' }, dispatchers)
-  end,
+  cmd = util.node_cmd("rome", { "lsp-proxy" }),
   filetypes = {
-    'javascript',
-    'javascriptreact',
-    'json',
-    'typescript',
-    'typescriptreact',
+    "javascript",
+    "javascriptreact",
+    "json",
+    "typescript",
+    "typescriptreact",
   },
-  root_markers = { 'package.json', 'node_modules', '.git' },
+  root_markers = { "package.json", "node_modules", ".git" },
 }

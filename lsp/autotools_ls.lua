@@ -9,16 +9,15 @@
 ---
 --- Language server for autoconf, automake and make using tree sitter in python.
 
-local util = require 'lspconfig.util'
+local util = require("nxvim-lspconfig.util")
 
-local root_files = { 'configure.ac', 'Makefile', 'Makefile.am', '*.mk' }
+local root_files = { "configure.ac", "Makefile", "Makefile.am", "*.mk" }
 
----@type vim.lsp.Config
 return {
-  cmd = { 'autotools-language-server' },
-  filetypes = { 'config', 'automake', 'make' },
+  cmd = { "autotools-language-server" },
+  filetypes = { "config", "automake", "make" },
   root_dir = function(bufnr, on_dir)
-    local fname = vim.api.nvim_buf_get_name(bufnr)
+    local fname = util.bufname(bufnr)
     on_dir(util.root_pattern(unpack(root_files))(fname))
   end,
 }

@@ -4,10 +4,9 @@
 ---
 --- Language server for hare.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'hare-lsp', '-S' },
-  filetypes = { 'hare' },
-  root_markers = { '.git' },
+  cmd = { "hare-lsp", "-S" },
+  filetypes = { "hare" },
+  root_markers = { ".git" },
   workspace_required = false,
 }

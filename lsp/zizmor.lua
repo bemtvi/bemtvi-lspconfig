@@ -10,21 +10,23 @@
 ---
 --- See `zizmor`'s [documentation](https://docs.zizmor.sh/) for additional documentation.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'zizmor', '--lsp' },
-  filetypes = { 'yaml' },
+  cmd = { "zizmor", "--lsp" },
+  filetypes = { "yaml" },
 
   -- `root_dir` ensures that the LSP does not attach to all yaml files
   root_dir = function(bufnr, on_dir)
-    local bufname = vim.api.nvim_buf_get_name(bufnr)
-    local parent = vim.fs.dirname(bufname)
+    local bufname = util.bufname(bufnr)
+    local parent = util.dirname(bufname)
     if
-      vim.endswith(parent, '/.github/workflows')
-      or vim.endswith(parent, '/.forgejo/workflows')
-      or vim.endswith(parent, '/.gitea/workflows')
-      or (vim.endswith(bufname, '/.github/dependabot.yml') or vim.endswith(bufname, '/.github/dependabot.yaml'))
-      or (vim.endswith(bufname, 'action.yml') or vim.endswith(bufname, 'action.yaml')) -- Composite actions can live in any repository subdirectory
+      nx.str.endswith(parent, "/.github/workflows")
+      or nx.str.endswith(parent, "/.forgejo/workflows")
+      or nx.str.endswith(parent, "/.gitea/workflows")
+      or (nx.str.endswith(bufname, "/.github/dependabot.yml") or nx.str.endswith(
+        bufname,
+        "/.github/dependabot.yaml"
+      ))
+      or (nx.str.endswith(bufname, "action.yml") or nx.str.endswith(bufname, "action.yaml")) -- Composite actions can live in any repository subdirectory
     then
       on_dir(parent)
     end

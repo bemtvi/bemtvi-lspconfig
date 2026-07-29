@@ -23,7 +23,7 @@
 --- root.
 ---
 --- ```lua
---- vim.lsp.config('yamlls', {
+--- nx.lsp.config('yamlls', {
 ---   ...
 ---   settings = {
 ---     yaml = {
@@ -45,7 +45,7 @@
 --- To override a schema to use a specific k8s schema version (for example, to use 1.18):
 ---
 --- ```lua
---- vim.lsp.config('yamlls', {
+--- nx.lsp.config('yamlls', {
 ---   ...
 ---   settings = {
 ---     yaml = {
@@ -59,21 +59,12 @@
 --- })
 --- ```
 
----@type vim.lsp.Config
+local util = require("nxvim-lspconfig.util")
+
 return {
-  cmd = function(dispatchers, config)
-    local cmd = 'yaml-language-server'
-    if (config or {}).root_dir then
-      local local_cmd = vim.fs.joinpath(config.root_dir, 'node_modules/.bin', cmd)
-      if vim.fn.executable(local_cmd) == 1 then
-        cmd = local_cmd
-      end
-    end
-    return vim.lsp.rpc.start({ cmd, '--stdio' }, dispatchers)
-  end,
-  filetypes = { 'yaml', 'yaml.docker-compose', 'yaml.gitlab', 'yaml.helm-values' },
-  root_markers = { '.git' },
-  ---@type lspconfig.settings.yamlls
+  cmd = util.node_cmd("yaml-language-server"),
+  filetypes = { "yaml", "yaml.docker-compose", "yaml.gitlab", "yaml.helm-values" },
+  root_markers = { ".git" },
   settings = {
     -- https://github.com/redhat-developer/vscode-redhat-telemetry#how-to-disable-telemetry-reporting
     redhat = { telemetry = { enabled = false } },

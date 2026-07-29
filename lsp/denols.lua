@@ -51,7 +51,7 @@ local function virtual_text_document_handler(uri, res, client)
     return nil
   end
 
-  local lines = vim.split(res.result, '\n')
+  local lines = nx.str.split(res.result, "\n")
   local bufnr = vim.uri_to_bufnr(uri)
 
   local current_buf = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
@@ -60,9 +60,9 @@ local function virtual_text_document_handler(uri, res, client)
   end
 
   vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-  vim.api.nvim_set_option_value('readonly', true, { buf = bufnr })
-  vim.api.nvim_set_option_value('modified', false, { buf = bufnr })
-  vim.api.nvim_set_option_value('modifiable', false, { buf = bufnr })
+  vim.api.nvim_set_option_value("readonly", true, { buf = bufnr })
+  vim.api.nvim_set_option_value("modified", false, { buf = bufnr })
+  vim.api.nvim_set_option_value("modifiable", false, { buf = bufnr })
   lsp.buf_attach_client(bufnr, client.id)
 end
 
@@ -72,47 +72,45 @@ local function virtual_text_document(uri, client)
       uri = uri,
     },
   }
-  local result = client:request_sync('deno/virtualTextDocument', params)
+  local result = client:request_sync("deno/virtualTextDocument", params)
   virtual_text_document_handler(uri, result, client)
 end
 
 local function denols_handler(err, result, ctx, config)
-  if not result or vim.tbl_isempty(result) then
+  if not result or nx.tbl.is_empty(result) then
     return nil
   end
 
-  local client = vim.lsp.get_client_by_id(ctx.client_id)
+  local client = nx.lsp.client_by_id(ctx.client_id)
   for _, res in pairs(result) do
     local uri = res.uri or res.targetUri
-    if uri:match '^deno:' then
+    if uri:match("^deno:") then
       virtual_text_document(uri, client)
-      res['uri'] = uri
-      res['targetUri'] = uri
+      res["uri"] = uri
+      res["targetUri"] = uri
     end
   end
 
   lsp.handlers[ctx.method](err, result, ctx, config)
 end
 
----@type vim.lsp.Config
 return {
-  cmd = { 'deno', 'lsp' },
+  cmd = { "deno", "lsp" },
   cmd_env = { NO_COLOR = true },
   filetypes = {
-    'javascript',
-    'javascriptreact',
-    'typescript',
-    'typescriptreact',
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
   },
   root_dir = function(bufnr, on_dir)
     -- The project root is where the LSP can be started from
-    local root_markers = { 'deno.lock', 'deno.json', 'deno.jsonc' }
+    local root_markers = { "deno.lock", "deno.json", "deno.jsonc" }
     -- Give the root markers equal priority by wrapping them in a table
-    root_markers = vim.fn.has('nvim-0.11.3') == 1 and { root_markers, { '.git' } }
-      or vim.list_extend(root_markers, { '.git' })
+    root_markers = { root_markers, { ".git" } }
     -- only include deno projects
-    local deno_root = vim.fs.root(bufnr, { 'deno.json', 'deno.jsonc' })
-    local deno_lock_root = vim.fs.root(bufnr, { 'deno.lock' })
+    local deno_root = vim.fs.root(bufnr, { "deno.json", "deno.jsonc" })
+    local deno_lock_root = vim.fs.root(bufnr, { "deno.lock" })
     local project_root = vim.fs.root(bufnr, root_markers)
     if
       (deno_lock_root and (not project_root or #deno_lock_root > #project_root))
@@ -124,38 +122,37 @@ return {
       on_dir(project_root or deno_lock_root or deno_root)
     end
   end,
-  ---@type lspconfig.settings.denols
   settings = {
     deno = {
       enable = true,
       suggest = {
         imports = {
           hosts = {
-            ['https://deno.land'] = true,
+            ["https://deno.land"] = true,
           },
         },
       },
     },
   },
   handlers = {
-    ['textDocument/definition'] = denols_handler,
-    ['textDocument/typeDefinition'] = denols_handler,
-    ['textDocument/references'] = denols_handler,
+    ["textDocument/definition"] = denols_handler,
+    ["textDocument/typeDefinition"] = denols_handler,
+    ["textDocument/references"] = denols_handler,
   },
   on_attach = function(client, bufnr)
-    vim.api.nvim_buf_create_user_command(bufnr, 'LspDenolsCache', function()
+    util.buf_command(bufnr, "LspDenolsCache", function()
       client:exec_cmd({
-        title = 'DenolsCache',
-        command = 'deno.cache',
-        arguments = { {}, vim.uri_from_bufnr(bufnr) },
+        title = "DenolsCache",
+        command = "deno.cache",
+        arguments = { {}, util.uri_from_buf(bufnr) },
       }, { bufnr = bufnr }, function(err, _, ctx)
         if err then
           local uri = ctx.params.arguments[2]
-          vim.notify('cache command failed for' .. vim.uri_to_fname(uri), vim.log.levels.ERROR)
+          nx.notify("cache command failed for" .. util.uri_to_path(uri), vim.log.levels.ERROR)
         end
       end)
     end, {
-      desc = 'Cache a module and all of its dependencies.',
+      desc = "Cache a module and all of its dependencies.",
     })
   end,
 }

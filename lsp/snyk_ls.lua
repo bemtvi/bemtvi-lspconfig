@@ -25,7 +25,7 @@
 --- Snyk requires you to trust directories before scanning them. To avoid being prompted every time:
 ---
 --- ```lua
---- vim.lsp.config('snyk_ls', {
+--- nx.lsp.config('snyk_ls', {
 ---   init_options = {
 ---     trustedFolders = {
 ---       '/Users/yourname/projects',  -- Trust your projects directory
@@ -50,50 +50,49 @@
 --- - `endpoint`: Custom Snyk API endpoint (e.g., `https://api.eu.snyk.io` for EU, or your single-tenant URL)
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'snyk', 'language-server', '-l', 'info' },
-  root_markers = { '.git', '.snyk' },
+  cmd = { "snyk", "language-server", "-l", "info" },
+  root_markers = { ".git", ".snyk" },
   filetypes = {
-    'apex',
-    'apexcode',
-    'c',
-    'cpp',
-    'cs',
-    'dart',
-    'dockerfile',
-    'elixir',
-    'eelixir',
-    'go',
-    'gomod',
-    'groovy',
-    'helm',
-    'java',
-    'javascript',
-    'json',
-    'kotlin',
-    'objc',
-    'objcpp',
-    'php',
-    'python',
-    'requirements',
-    'ruby',
-    'rust',
-    'scala',
-    'swift',
-    'terraform',
-    'terraform-vars',
-    'typescript',
-    'yaml',
+    "apex",
+    "apexcode",
+    "c",
+    "cpp",
+    "cs",
+    "dart",
+    "dockerfile",
+    "elixir",
+    "eelixir",
+    "go",
+    "gomod",
+    "groovy",
+    "helm",
+    "java",
+    "javascript",
+    "json",
+    "kotlin",
+    "objc",
+    "objcpp",
+    "php",
+    "python",
+    "requirements",
+    "ruby",
+    "rust",
+    "scala",
+    "swift",
+    "terraform",
+    "terraform-vars",
+    "typescript",
+    "yaml",
   },
   settings = {},
   init_options = {
-    activateSnykOpenSource = 'true', -- Scan open source dependencies
-    activateSnykCode = 'false', -- Scan your code for vulnerabilities
-    activateSnykIac = 'true', -- Scan infrastructure as code
-    integrationName = 'Neovim',
+    activateSnykOpenSource = "true", -- Scan open source dependencies
+    activateSnykCode = "false", -- Scan your code for vulnerabilities
+    activateSnykIac = "true", -- Scan infrastructure as code
+    integrationName = "Neovim",
     integrationVersion = tostring(vim.version()),
-    token = os.getenv('SNYK_TOKEN') or vim.NIL,
+    token = os.getenv("SNYK_TOKEN") or vim.NIL,
     trustedFolders = {}, -- Add your trusted directories here to avoid being prompted every time
   },
 }

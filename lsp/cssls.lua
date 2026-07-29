@@ -15,27 +15,18 @@
 --- local capabilities = vim.lsp.protocol.make_client_capabilities()
 --- capabilities.textDocument.completion.completionItem.snippetSupport = true
 ---
---- vim.lsp.config('cssls', {
+--- nx.lsp.config('cssls', {
 ---   capabilities = capabilities,
 --- })
 --- ```
 
----@type vim.lsp.Config
+local util = require("nxvim-lspconfig.util")
+
 return {
-  cmd = function(dispatchers, config)
-    local cmd = 'vscode-css-language-server'
-    if (config or {}).root_dir then
-      local local_cmd = vim.fs.joinpath(config.root_dir, 'node_modules/.bin', cmd)
-      if vim.fn.executable(local_cmd) == 1 then
-        cmd = local_cmd
-      end
-    end
-    return vim.lsp.rpc.start({ cmd, '--stdio' }, dispatchers)
-  end,
-  filetypes = { 'css', 'scss', 'less' },
+  cmd = util.node_cmd("vscode-css-language-server"),
+  filetypes = { "css", "scss", "less" },
   init_options = { provideFormatter = true }, -- needed to enable formatting capabilities
-  root_markers = { 'package.json', '.git' },
-  ---@type lspconfig.settings.cssls
+  root_markers = { "package.json", ".git" },
   settings = {
     css = { validate = true },
     scss = { validate = true },

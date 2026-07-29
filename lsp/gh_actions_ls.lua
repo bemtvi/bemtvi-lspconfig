@@ -14,31 +14,30 @@
 --- npm install -g gh-actions-language-server
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'gh-actions-language-server', '--stdio' },
-  filetypes = { 'yaml' },
+  cmd = { "gh-actions-language-server", "--stdio" },
+  filetypes = { "yaml" },
 
   -- `root_dir` ensures that the LSP does not attach to all yaml files
   root_dir = function(bufnr, on_dir)
-    local parent = vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr))
+    local parent = util.dirname(util.bufname(bufnr))
     if
-      vim.endswith(parent, '/.github/workflows')
-      or vim.endswith(parent, '/.forgejo/workflows')
-      or vim.endswith(parent, '/.gitea/workflows')
+      nx.str.endswith(parent, "/.github/workflows")
+      or nx.str.endswith(parent, "/.forgejo/workflows")
+      or nx.str.endswith(parent, "/.gitea/workflows")
     then
       on_dir(parent)
     end
   end,
   handlers = {
-    ['actions/readFile'] = function(_, result)
-      if type(result.path) ~= 'string' then
+    ["actions/readFile"] = function(_, result)
+      if type(result.path) ~= "string" then
         return nil, nil
       end
-      local file_path = vim.uri_to_fname(result.path)
+      local file_path = util.uri_to_path(result.path)
       if vim.fn.filereadable(file_path) == 1 then
-        local f = assert(io.open(file_path, 'r'))
-        local text = f:read('*a')
+        local f = assert(io.open(file_path, "r"))
+        local text = f:read("*a")
         f:close()
 
         return text, nil

@@ -25,26 +25,26 @@
 local uv = vim.uv
 local fs = vim.fs
 
-local group = vim.api.nvim_create_augroup('lspconfig.roslyn_ls', { clear = true })
+local group = nx.augroup.create("lspconfig.roslyn_ls", { clear = true })
 
 ---@param client vim.lsp.Client
 ---@param target string
 local function on_init_sln(client, target)
-  vim.notify('Initializing: ' .. target, vim.log.levels.TRACE, { title = 'roslyn_ls' })
+  nx.notify("Initializing: " .. target, vim.log.levels.TRACE, { title = "roslyn_ls" })
   ---@diagnostic disable-next-line: param-type-mismatch
-  client:notify('solution/open', {
-    solution = vim.uri_from_fname(target),
+  client:notify("solution/open", {
+    solution = util.uri_from_path(target),
   })
 end
 
 ---@param client vim.lsp.Client
 ---@param project_files string[]
 local function on_init_project(client, project_files)
-  vim.notify('Initializing: projects', vim.log.levels.TRACE, { title = 'roslyn_ls' })
+  nx.notify("Initializing: projects", vim.log.levels.TRACE, { title = "roslyn_ls" })
   ---@diagnostic disable-next-line: param-type-mismatch
-  client:notify('project/open', {
-    projects = vim.tbl_map(function(file)
-      return vim.uri_from_fname(file)
+  client:notify("project/open", {
+    projects = nx.tbl.map(function(file)
+      return util.uri_from_path(file)
     end, project_files),
   })
 end
@@ -72,17 +72,21 @@ end
 
 local function roslyn_handlers()
   return {
-    ['workspace/projectInitializationComplete'] = function(_, _, ctx)
-      vim.notify('Roslyn project initialization complete', vim.log.levels.INFO, { title = 'roslyn_ls' })
-      local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
+    ["workspace/projectInitializationComplete"] = function(_, _, ctx)
+      nx.notify(
+        "Roslyn project initialization complete",
+        vim.log.levels.INFO,
+        { title = "roslyn_ls" }
+      )
+      local client = assert(nx.lsp.client_by_id(ctx.client_id))
       refresh_diagnostics(client)
       return vim.NIL
     end,
-    ['razor/provideDynamicFileInfo'] = function(_, _, _)
-      vim.notify(
-        'Razor is not supported.\nPlease use https://github.com/seblyng/roslyn.nvim',
+    ["razor/provideDynamicFileInfo"] = function(_, _, _)
+      nx.notify(
+        "Razor is not supported.\nPlease use https://github.com/seblyng/roslyn.nvim",
         vim.log.levels.WARN,
-        { title = 'roslyn_ls' }
+        { title = "roslyn_ls" }
       )
       return vim.NIL
     end,
@@ -92,18 +96,18 @@ end
 ---@param bufname string
 ---@return boolean
 local function is_decompiled(bufname)
-  local _, endpos = bufname:find('[/\\]MetadataAsSource[/\\]')
+  local _, endpos = bufname:find("[/\\]MetadataAsSource[/\\]")
   if endpos == nil then
     return false
   end
-  return vim.fn.finddir(bufname:sub(1, endpos), uv.os_tmpdir()) ~= ''
+  return vim.fn.finddir(bufname:sub(1, endpos), uv.os_tmpdir()) ~= ""
 end
 
 ---@param client vim.lsp.Client
 ---@param action table
 local function apply_action(client, action)
   if action.edit then
-    vim.lsp.util.apply_workspace_edit(action.edit, client.offset_encoding)
+    nx.lsp.apply_workspace_edit(action.edit, client.offset_encoding)
   end
   if action.command then
     client:exec_cmd(action.command)
@@ -115,32 +119,32 @@ end
 ---@param bufnr integer
 local function handle_fix_all_action(client, command, bufnr)
   local arg = command.arguments and command.arguments[1]
-  if type(arg) ~= 'table' then
-    vim.notify('roslyn_ls: invalid fixAllCodeAction arguments', vim.log.levels.ERROR)
+  if type(arg) ~= "table" then
+    nx.notify("roslyn_ls: invalid fixAllCodeAction arguments", vim.log.levels.ERROR)
     return
   end
 
   local flavors = arg.FixAllFlavors
-  if type(flavors) ~= 'table' or vim.tbl_isempty(flavors) then
-    vim.notify('roslyn_ls: fixAllCodeAction has no FixAllFlavors', vim.log.levels.WARN)
+  if type(flavors) ~= "table" or nx.tbl.is_empty(flavors) then
+    nx.notify("roslyn_ls: fixAllCodeAction has no FixAllFlavors", vim.log.levels.WARN)
     return
   end
 
-  vim.ui.select(flavors, {
-    prompt = 'Fix All Scope:',
+  nx.ui.select(flavors, {
+    prompt = "Fix All Scope:",
   }, function(chosen_scope)
     if not chosen_scope then
       return
     end
 
-    client:request('codeAction/resolveFixAll', {
+    client:request("codeAction/resolveFixAll", {
       title = command.title,
       data = arg,
       scope = chosen_scope,
     }, function(err, resolved)
       if err then
-        vim.notify(
-          'roslyn_ls: fixAllCodeAction resolve error: ' .. (err.message or tostring(err)),
+        nx.notify(
+          "roslyn_ls: fixAllCodeAction resolve error: " .. (err.message or tostring(err)),
           vim.log.levels.ERROR
         )
         return
@@ -152,26 +156,26 @@ local function handle_fix_all_action(client, command, bufnr)
   end)
 end
 
----@type vim.lsp.Config
 return {
-  name = 'roslyn_ls',
+  name = "roslyn_ls",
   cmd = {
-    vim.fn.executable('Microsoft.CodeAnalysis.LanguageServer') == 1 and 'Microsoft.CodeAnalysis.LanguageServer'
-      or 'roslyn-language-server',
-    '--stdio',
+    vim.fn.executable("Microsoft.CodeAnalysis.LanguageServer") == 1
+        and "Microsoft.CodeAnalysis.LanguageServer"
+      or "roslyn-language-server",
+    "--stdio",
   },
 
   cmd_env = {
     -- Fixes LSP navigation in decompiled files for systems with symlinked TMPDIR (macOS)
-    TMPDIR = vim.env.TMPDIR and vim.env.TMPDIR ~= '' and vim.fn.resolve(vim.env.TMPDIR) or nil,
+    TMPDIR = vim.env.TMPDIR and vim.env.TMPDIR ~= "" and vim.fn.resolve(vim.env.TMPDIR) or nil,
   },
 
-  filetypes = { 'cs' },
+  filetypes = { "cs" },
   handlers = roslyn_handlers(),
 
   commands = {
-    ['roslyn.client.completionComplexEdit'] = function(command, ctx)
-      local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
+    ["roslyn.client.completionComplexEdit"] = function(command, ctx)
+      local client = assert(nx.lsp.client_by_id(ctx.client_id))
       local args = command.arguments or {}
       local uri, edit = args[1], args[2]
 
@@ -187,19 +191,22 @@ return {
             },
           },
         }
-        vim.lsp.util.apply_workspace_edit(workspace_edit, client.offset_encoding)
+        nx.lsp.apply_workspace_edit(workspace_edit, client.offset_encoding)
       ---@diagnostic enable: undefined-field
       else
-        vim.notify('roslyn_ls: completionComplexEdit args not understood: ' .. vim.inspect(args), vim.log.levels.WARN)
+        nx.notify(
+          "roslyn_ls: completionComplexEdit args not understood: " .. vim.inspect(args),
+          vim.log.levels.WARN
+        )
       end
     end,
 
-    ['roslyn.client.nestedCodeAction'] = function(command, ctx)
-      local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
+    ["roslyn.client.nestedCodeAction"] = function(command, ctx)
+      local client = assert(nx.lsp.client_by_id(ctx.client_id))
       local arg = command.arguments and command.arguments[1]
 
-      if type(arg) ~= 'table' then
-        vim.notify('roslyn_ls: invalid nestedCodeAction arguments', vim.log.levels.ERROR)
+      if type(arg) ~= "table" then
+        nx.notify("roslyn_ls: invalid nestedCodeAction arguments", vim.log.levels.ERROR)
         return
       end
 
@@ -209,9 +216,9 @@ return {
         end
 
         if action.data and not action.edit and not action.command then
-          client:request('codeAction/resolve', action, function(err, resolved)
+          client:request("codeAction/resolve", action, function(err, resolved)
             if err then
-              vim.notify(err.message or tostring(err), vim.log.levels.ERROR)
+              nx.notify(err.message or tostring(err), vim.log.levels.ERROR)
               return
             end
             if resolved then
@@ -222,7 +229,7 @@ return {
         end
 
         local nested = vim.islist(action) and action or action.NestedCodeActions
-        if type(nested) ~= 'table' or vim.tbl_isempty(nested) then
+        if type(nested) ~= "table" or nx.tbl.is_empty(nested) then
           apply_action(client, action)
           return
         end
@@ -232,10 +239,10 @@ return {
           return
         end
 
-        vim.ui.select(nested, {
-          prompt = action.title or 'Select code action',
+        nx.ui.select(nested, {
+          prompt = action.title or "Select code action",
           format_item = function(item)
-            return item.title or (item.command and item.command.title) or 'Unnamed action'
+            return item.title or (item.command and item.command.title) or "Unnamed action"
           end,
         }, function(choice)
           if choice then
@@ -247,26 +254,26 @@ return {
       handle(arg)
     end,
 
-    ['roslyn.client.fixAllCodeAction'] = function(command, ctx)
-      local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
+    ["roslyn.client.fixAllCodeAction"] = function(command, ctx)
+      local client = assert(nx.lsp.client_by_id(ctx.client_id))
       handle_fix_all_action(client, command, ctx.bufnr)
     end,
   },
 
   root_dir = function(bufnr, cb)
-    local bufname = vim.api.nvim_buf_get_name(bufnr)
+    local bufname = util.bufname(bufnr)
     -- don't try to find sln or csproj for files from libraries
     -- outside of the project
     if not is_decompiled(bufname) then
       -- try find solutions root first
       local root_dir = fs.root(bufnr, function(fname, _)
-        return fname:match('%.sln[x]?$') ~= nil
+        return fname:match("%.sln[x]?$") ~= nil
       end)
 
       if not root_dir then
         -- try find projects root
         root_dir = fs.root(bufnr, function(fname, _)
-          return fname:match('%.csproj$') ~= nil
+          return fname:match("%.csproj$") ~= nil
         end)
       end
 
@@ -275,9 +282,9 @@ return {
       end
     else
       -- Decompiled code (example: "/tmp/MetadataAsSource/f2bfba/DecompilationMetadataAsSourceFileProvider/d5782a/Console.cs")
-      local prev_buf = vim.fn.bufnr('#')
-      local client = vim.lsp.get_clients({
-        name = 'roslyn_ls',
+      local prev_buf = vim.fn.bufnr("#")
+      local client = nx.lsp.clients({
+        name = "roslyn_ls",
         bufnr = prev_buf ~= 1 and prev_buf or nil,
       })[1]
       if client then
@@ -291,7 +298,9 @@ return {
 
       -- try load first solution we find
       for entry, type in fs.dir(root_dir) do
-        if type == 'file' and (vim.endswith(entry, '.sln') or vim.endswith(entry, '.slnx')) then
+        if
+          type == "file" and (nx.str.endswith(entry, ".sln") or nx.str.endswith(entry, ".slnx"))
+        then
           on_init_sln(client, fs.joinpath(root_dir, entry))
           return
         end
@@ -299,7 +308,7 @@ return {
 
       -- if no solution is found load project
       for entry, type in fs.dir(root_dir) do
-        if type == 'file' and vim.endswith(entry, '.csproj') then
+        if type == "file" and nx.str.endswith(entry, ".csproj") then
           on_init_project(client, { fs.joinpath(root_dir, entry) })
         end
       end
@@ -312,13 +321,13 @@ return {
       return
     end
 
-    vim.api.nvim_create_autocmd({ 'BufWritePost', 'InsertLeave' }, {
+    nx.autocmd.create({ "BufWritePost", "InsertLeave" }, {
       group = group,
       buffer = bufnr,
       callback = function()
         refresh_diagnostics(client)
       end,
-      desc = 'roslyn_ls: refresh diagnostics',
+      desc = "roslyn_ls: refresh diagnostics",
     })
   end,
 
@@ -331,11 +340,11 @@ return {
     },
   },
   settings = {
-    ['csharp|background_analysis'] = {
-      dotnet_analyzer_diagnostics_scope = 'fullSolution',
-      dotnet_compiler_diagnostics_scope = 'fullSolution',
+    ["csharp|background_analysis"] = {
+      dotnet_analyzer_diagnostics_scope = "fullSolution",
+      dotnet_compiler_diagnostics_scope = "fullSolution",
     },
-    ['csharp|inlay_hints'] = {
+    ["csharp|inlay_hints"] = {
       csharp_enable_inlay_hints_for_implicit_object_creation = true,
       csharp_enable_inlay_hints_for_implicit_variable_types = true,
       csharp_enable_inlay_hints_for_lambda_parameter_types = true,
@@ -349,15 +358,15 @@ return {
       dotnet_suppress_inlay_hints_for_parameters_that_match_argument_name = true,
       dotnet_suppress_inlay_hints_for_parameters_that_match_method_intent = true,
     },
-    ['csharp|symbol_search'] = {
+    ["csharp|symbol_search"] = {
       dotnet_search_reference_assemblies = true,
     },
-    ['csharp|completion'] = {
+    ["csharp|completion"] = {
       dotnet_show_name_completion_suggestions = true,
       dotnet_show_completion_items_from_unimported_namespaces = true,
       dotnet_provide_regex_completions = true,
     },
-    ['csharp|code_lens'] = {
+    ["csharp|code_lens"] = {
       dotnet_enable_references_code_lens = true,
     },
   },

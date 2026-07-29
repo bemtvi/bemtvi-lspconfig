@@ -15,14 +15,13 @@
 --- export FPCTARGETCPU='x86_64'          # Target CPU for cross compiling.
 --- ```
 
-local util = require 'lspconfig.util'
+local util = require("nxvim-lspconfig.util")
 
----@type vim.lsp.Config
 return {
-  cmd = { 'pasls' },
-  filetypes = { 'pascal' },
+  cmd = { "pasls" },
+  filetypes = { "pascal" },
   root_dir = function(bufnr, on_dir)
-    local fname = vim.api.nvim_buf_get_name(bufnr)
-    on_dir(util.root_pattern('*.lpi', '*.lpk', '.git')(fname))
+    local fname = util.bufname(bufnr)
+    on_dir(util.root_pattern("*.lpi", "*.lpk", ".git")(fname))
   end,
 }

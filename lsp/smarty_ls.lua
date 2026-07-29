@@ -10,17 +10,16 @@
 --- npm i -g vscode-smarty-langserver-extracted
 --- ```
 
----@type vim.lsp.Config
 return {
-  cmd = { 'smarty-language-server', '--stdio' },
-  filetypes = { 'smarty' },
+  cmd = { "smarty-language-server", "--stdio" },
+  filetypes = { "smarty" },
   root_dir = function(bufnr, on_dir)
-    local fname = vim.api.nvim_buf_get_name(bufnr)
+    local fname = util.bufname(bufnr)
     local cwd = assert(vim.uv.cwd())
-    local root = vim.fs.root(fname, { 'composer.json', '.git' })
+    local root = vim.fs.root(fname, { "composer.json", ".git" })
 
     -- prefer cwd if root is a descendant
-    on_dir(root and vim.fs.relpath(cwd, root) and cwd)
+    on_dir(root and util.relpath(cwd, root) and cwd)
   end,
   settings = {
     smarty = {

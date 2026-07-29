@@ -34,7 +34,7 @@
 ---         },
 ---       }
 ---
----       vim.lsp.enable('astro')
+---       nx.lsp.enable('astro')
 ---
 ---       -- ...
 ---     '';
@@ -52,9 +52,9 @@
 --- `util.get_typescript_server_path`, then fall back to `npm root -g`:
 ---
 --- ```lua
---- vim.lsp.config('astro', {
+--- nx.lsp.config('astro', {
 ---   before_init = function(_, config)
----     local util = require('lspconfig.util')
+---     local util = require("nxvim-lspconfig.util")
 ---     local tsdk = util.get_typescript_server_path(config.root_dir)
 ---     if tsdk == '' then
 ---       local npm_root = vim.fn.systemlist('npm root -g')
@@ -67,7 +67,7 @@
 ---     config.init_options.typescript.tsdk = tsdk
 ---   end,
 --- })
---- vim.lsp.enable('astro')
+--- nx.lsp.enable('astro')
 --- ```
 ---
 --- For other package managers, replace `npm root -g` with:
@@ -76,27 +76,21 @@
 --- - yarn classic: `yarn global dir` .. `/node_modules`
 --- - yarn berry (>=2): globals unsupported — use a workspace-local TS instead
 
-local util = require 'lspconfig.util'
+local util = require("nxvim-lspconfig.util")
 
----@type vim.lsp.Config
 return {
-  cmd = function(dispatchers, config)
-    local cmd = 'astro-ls'
-    if (config or {}).root_dir then
-      local local_cmd = vim.fs.joinpath(config.root_dir, 'node_modules/.bin', cmd)
-      if vim.fn.executable(local_cmd) == 1 then
-        cmd = local_cmd
-      end
-    end
-    return vim.lsp.rpc.start({ cmd, '--stdio' }, dispatchers)
-  end,
-  filetypes = { 'astro' },
-  root_markers = { 'package.json', 'tsconfig.json', 'jsconfig.json', '.git' },
+  cmd = util.node_cmd("astro-ls"),
+  filetypes = { "astro" },
+  root_markers = { "package.json", "tsconfig.json", "jsconfig.json", ".git" },
   init_options = {
     typescript = {},
   },
   before_init = function(_, config)
-    if config.init_options and config.init_options.typescript and not config.init_options.typescript.tsdk then
+    if
+      config.init_options
+      and config.init_options.typescript
+      and not config.init_options.typescript.tsdk
+    then
       config.init_options.typescript.tsdk = util.get_typescript_server_path(config.root_dir)
     end
   end,

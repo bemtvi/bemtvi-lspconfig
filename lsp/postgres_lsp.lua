@@ -4,12 +4,11 @@
 ---
 --- A collection of language tools and a Language Server Protocol (LSP) implementation for Postgres, focusing on developer experience and reliable SQL tooling.
 
----@type vim.lsp.Config
 return {
-  cmd = { 'postgres-language-server', 'lsp-proxy' },
+  cmd = { "postgres-language-server", "lsp-proxy" },
   filetypes = {
-    'sql',
+    "sql",
   },
-  root_markers = { 'postgres-language-server.jsonc' },
+  root_markers = { "postgres-language-server.jsonc" },
   workspace_required = true,
 }

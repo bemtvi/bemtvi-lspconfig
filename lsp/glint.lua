@@ -14,7 +14,7 @@
 --- To use a global installation of `glint-language-server`,
 --- set the `init_options.glint.useGlobal` to `true`.
 ---
---- vim.lsp.config('glint', {
+--- nx.lsp.config('glint', {
 ---   init_options = {
 ---     glint = {
 ---       useGlobal = true,
@@ -22,13 +22,12 @@
 ---   },
 --- })
 
----@type vim.lsp.Config
 return {
   cmd = function(dispatchers, config)
-    local cmd = 'glint-language-server'
+    local cmd = "glint-language-server"
     ---@diagnostic disable-next-line: undefined-field
     if not config.init_options.glint.useGlobal and (config or {}).root_dir then
-      local local_cmd = vim.fs.joinpath(config.root_dir, 'node_modules/.bin', cmd)
+      local local_cmd = util.joinpath(config.root_dir, "node_modules/.bin", cmd)
       if vim.fn.executable(local_cmd) == 1 then
         cmd = local_cmd
       end
@@ -41,20 +40,20 @@ return {
     },
   },
   filetypes = {
-    'html.handlebars',
-    'handlebars',
-    'typescript',
-    'typescript.glimmer',
-    'javascript',
-    'javascript.glimmer',
+    "html.handlebars",
+    "handlebars",
+    "typescript",
+    "typescript.glimmer",
+    "javascript",
+    "javascript.glimmer",
   },
   root_markers = {
-    '.glintrc.yml',
-    '.glintrc',
-    '.glintrc.json',
-    '.glintrc.js',
-    'glint.config.js',
-    'package.json',
+    ".glintrc.yml",
+    ".glintrc",
+    ".glintrc.json",
+    ".glintrc.js",
+    "glint.config.js",
+    "package.json",
   },
   workspace_required = true,
 }
