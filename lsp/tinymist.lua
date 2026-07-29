@@ -11,7 +11,7 @@
 --- `LspTinymistGetDocumentMetrics`, and `LspTinymistPinMain`.
 
 ---@param command_name string
----@param client vim.lsp.Client
+---@param client nx.lsp.Client
 ---@param bufnr integer
 ---@return fun():nil run_tinymist_command, string cmd_name, string cmd_desc
 local util = require("nxvim-lspconfig.util")

@@ -26,13 +26,13 @@
 ---       astro-language-server
 ---     ];
 ---     initLua = ''
----       vim.lsp.config['astro'] = {
+---       nx.lsp.config('astro', {
 ---         init_options = {
 ---           typescript = {
----             tsdk = ${pkgs.typescript}/lib/node_modules/typescript/lib,
+---             tsdk = '${pkgs.typescript}/lib/node_modules/typescript/lib',
 ---           },
 ---         },
----       }
+---       })
 ---
 ---       nx.lsp.enable('astro')
 ---
@@ -41,7 +41,7 @@
 ---   };
 --- }
 --- ```
---- The path can also be passed via a variable, like `nx.g.tsdk = "${pkgs.typescript}/lib/node_modules/typescript/lib"` and then used in the Lua Neovim config.
+--- The path can also be passed via a variable, like `nx.g.tsdk = "${pkgs.typescript}/lib/node_modules/typescript/lib"`, and then read from the Lua config.
 ---
 --- WARNING: TypeScript 7.x dropped `tsserverlibrary.js` from its npm package, so
 --- `typescript.tsdk` cannot resolve from a local or global TS 7.x install. Pin to

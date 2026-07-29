@@ -9,15 +9,18 @@
 --- npm i -g vscode-langservers-extracted
 --- ```
 ---
---- `vscode-json-language-server` only provides completions when snippet support is enabled. If you use Neovim older than v0.10 you need to enable completion, install a snippet plugin and add the following override to your language client capabilities during setup.
+--- `vscode-json-language-server` only provides completions when the client advertises
+--- snippet support, which nxvim's base capabilities do not — turn it on per server.
+--- nxvim expands the snippets itself (`nx.snippet`); no snippet plugin is needed.
 ---
 --- ```lua
---- --Enable (broadcasting) snippet capability for completion
---- local capabilities = vim.lsp.protocol.make_client_capabilities()
---- capabilities.textDocument.completion.completionItem.snippetSupport = true
----
+--- -- Broadcast snippet support. A config's `capabilities` are deep-merged over
+--- -- nxvim's base client capabilities, so this adds the one field rather than
+--- -- rebuilding the whole table.
 --- nx.lsp.config('jsonls', {
----   capabilities = capabilities,
+---   capabilities = {
+---     textDocument = { completion = { completionItem = { snippetSupport = true } } },
+---   },
 --- })
 --- ```
 

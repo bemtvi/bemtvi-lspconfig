@@ -5,7 +5,7 @@
 --- A plain text note-taking assistant
 
 ---List notes
----@param client vim.lsp.Client
+---@param client nx.lsp.Client
 ---@param bufnr integer
 ---@param opts table
 ---@param action fun(path: string, title: string)

@@ -20,7 +20,8 @@
 --   },
 --   ```
 --   where `<my_folder>` has to be the folder you extracted the nuget package to.
--- - for all other platforms put the extracted folder to neovim's PATH (`vim.env.PATH`)
+-- - for all other platforms put the extracted folder on `$PATH` (nxvim resolves the
+--   server through it; `nx.env.get('PATH')` is what the editor sees)
 
 local util = require("nxvim-lspconfig.util")
 
@@ -31,7 +32,7 @@ local group = nx.augroup.create("lspconfig.roslyn_ls", { clear = true })
 -- diagnostics twice per save.
 local armed = {}
 
----@param client vim.lsp.Client
+---@param client nx.lsp.Client
 ---@param target string
 local function on_init_sln(client, target)
   nx.notify("Initializing: " .. target, nx.log.levels.TRACE, { title = "roslyn_ls" })
@@ -41,7 +42,7 @@ local function on_init_sln(client, target)
   })
 end
 
----@param client vim.lsp.Client
+---@param client nx.lsp.Client
 ---@param project_files string[]
 local function on_init_project(client, project_files)
   nx.notify("Initializing: projects", nx.log.levels.TRACE, { title = "roslyn_ls" })
@@ -111,7 +112,7 @@ local function is_decompiled(bufname)
   return bufname:find("[/\\]MetadataAsSource[/\\]") ~= nil
 end
 
----@param client vim.lsp.Client
+---@param client nx.lsp.Client
 ---@param action table
 local function apply_action(client, action)
   if action.edit then
@@ -122,7 +123,7 @@ local function apply_action(client, action)
   end
 end
 
----@param client vim.lsp.Client
+---@param client nx.lsp.Client
 ---@param command table
 ---@param bufnr integer
 local function handle_fix_all_action(client, command, bufnr)

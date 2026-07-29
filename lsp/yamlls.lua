@@ -19,7 +19,7 @@
 --- is the filepath relative to the filesystem root ('/' on unix systems)
 ---
 --- 2. Associated a schema url, relative , or absolute (to root of project, not to filesystem root) path to
---- the a glob pattern relative to the detected project root. Check `:checkhealth vim.lsp` to determine the resolved project
+--- the a glob pattern relative to the detected project root. Check `:LspInfo` to determine the resolved project
 --- root.
 ---
 --- ```lua

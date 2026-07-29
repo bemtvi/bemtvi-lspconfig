@@ -15,36 +15,24 @@
 --- See the emmylua_ls [configuration guide](https://github.com/EmmyLuaLs/emmylua-analyzer-rust/blob/main/docs/config/emmyrc_json_EN.md)
 --- for settings documentation.
 ---
---- If you want completions and analysis for Neovim plugins on your runtime path, try this config:
+--- ## Editing your nxvim config or a plugin
+---
+--- Point the server at the Lua nxvim actually runs, and tell it about `nx` — otherwise
+--- every `nx.*` call in your config is flagged as an undefined global. A project that
+--- ships its own `.emmyrc.json` overrides all of this, so there is nothing to guard.
 ---
 --- ```lua
 --- nx.lsp.config('emmylua_ls', {
----   on_init = function(client)
----     -- If the workspace has its own emmylua_ls/lua_ls config file, defer to it.
----     if client.workspace_folders then
----       local path = client.workspace_folders[1].name
----       if
----         path ~= vim.fn.stdpath('config')
----         and (vim.uv.fs_stat(path .. '/.emmyrc.json') or vim.uv.fs_stat(path .. '/.luarc.json'))
----       then
----         client.config.settings = {}
----       end
----     end
----   end,
 ---   settings = {
 ---     emmylua = {
----       -- Tell the server which Lua you're using (usually LuaJIT, for Neovim).
----       runtime = { version = 'LuaJIT' },
----       diagnostics = { globals = { 'vim' } },
----       -- Make the server aware of Neovim runtime files.
+---       -- nxvim's Lua is PUC 5.4, NOT LuaJIT (which nxvim dropped).
+---       runtime = { version = 'Lua 5.4' },
+---       -- `nx` is the plugin API; `vim` is the bounded compat surface.
+---       diagnostics = { globals = { 'nx', 'vim' } },
 ---       workspace = {
----         library = {
----           vim.env.VIMRUNTIME,
----           -- For LSP Settings Type Annotations: https://github.com/neovim/nvim-lspconfig#lsp-settings-type-annotations
----           nx.runtime_file('lua/lspconfig', false)[1],
----         },
----         -- Or pull in all of 'runtimepath'. May be slower! https://github.com/neovim/nvim-lspconfig/issues/3189
----         -- library = nx.runtime_file('', true),
+---         -- Every `lua/` directory on the runtimepath, so a plugin's modules
+---         -- resolve. This can be slow on a large plugin set.
+---         library = nx.runtime_file('lua', true),
 ---       },
 ---     },
 ---   },

@@ -9,7 +9,7 @@
 ---
 --- Check the readme to see how to properly setup.
 
----@param client vim.lsp.Client
+---@param client nx.lsp.Client
 ---@param bufnr integer
 ---@param cmd string
 local util = require("nxvim-lspconfig.util")

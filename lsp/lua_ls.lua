@@ -8,56 +8,39 @@
 ---
 --- The default `cmd` assumes that the `lua-language-server` binary can be found in `$PATH`.
 ---
---- If you primarily use `lua-language-server` for Neovim, and want to provide completions,
---- analysis, and location handling for plugins on runtime path, you can use the following
---- settings.
+--- ## Editing your nxvim config or a plugin
+---
+--- Point the server at the Lua nxvim actually runs, and tell it about `nx` — otherwise
+--- every `nx.*` call in your config is flagged as an undefined global.
 ---
 --- ```lua
 --- nx.lsp.config('lua_ls', {
----   on_init = function(client)
----     if client.workspace_folders then
----       local path = client.workspace_folders[1].name
----       if
----         path ~= vim.fn.stdpath('config')
----         and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc'))
----       then
----         return
----       end
----     end
----
----     client.config.settings.Lua = nx.tbl.deep_extend('force', client.config.settings.Lua, {
+---   settings = {
+---     Lua = {
+---       -- nxvim's Lua is PUC 5.4, NOT LuaJIT (which nxvim dropped).
 ---       runtime = {
----         -- Tell the language server which version of Lua you're using (most
----         -- likely LuaJIT in the case of Neovim)
----         version = 'LuaJIT',
----         -- Tell the language server how to find Lua modules same way as Neovim
----         -- (see `:h lua-module-load`)
----         path = {
----           'lua/?.lua',
----           'lua/?/init.lua',
----         },
+---         version = 'Lua 5.4',
+---         -- Resolve `require("mod")` the way nxvim's runtimepath does.
+---         path = { 'lua/?.lua', 'lua/?/init.lua' },
 ---       },
----       -- Make the server aware of Neovim runtime files
+---       diagnostics = {
+---         -- `nx` is the plugin API; `vim` is the bounded compat surface.
+---         globals = { 'nx', 'vim' },
+---       },
 ---       workspace = {
 ---         checkThirdParty = false,
----         library = {
----           vim.env.VIMRUNTIME,
----           -- For LSP Settings Type Annotations: https://github.com/neovim/nvim-lspconfig#lsp-settings-type-annotations
----           nx.runtime_file("lua/lspconfig", false)[1],
----         },
----         -- Or pull in all of 'runtimepath'.
----         -- NOTE: this is a lot slower and will cause issues when working on
----         -- your own configuration.
----         -- See https://github.com/neovim/nvim-lspconfig/issues/3189
----         -- library = nx.runtime_file('', true),
+---         -- Every `lua/` directory on the runtimepath, so a plugin's modules
+---         -- resolve. This can be slow on a large plugin set.
+---         library = nx.runtime_file('lua', true),
 ---       },
----     })
----   end,
----   settings = {
----     Lua = {},
+---     },
 ---   },
 --- })
 --- ```
+---
+--- There is no on-disk copy of the `nx.*` API to add to `workspace.library` — the
+--- prelude is compiled into the editor — so `nx` is declared a global rather than
+--- type-checked. The rendered API reference is in the book and at `:help`.
 ---
 --- See `lua-language-server`'s [documentation](https://luals.github.io/wiki/settings/) for an explanation of the above fields:
 --- * [Lua.runtime.path](https://luals.github.io/wiki/settings/#runtimepath)

@@ -53,7 +53,7 @@ nx.command("LspStart", function(o)
     if #names == 0 then
       nx.notify(
         "LspStart: no bundled server declares filetype '" .. tostring(nx.bo.filetype) .. "'",
-        vim.log.levels.WARN
+        nx.log.levels.WARN
       )
       return
     end
@@ -76,7 +76,7 @@ nx.command("LspStop", function(o)
   if #names == 0 then
     names = running_names()
     if #names == 0 then
-      nx.notify("LspStop: no language server is running", vim.log.levels.WARN)
+      nx.notify("LspStop: no language server is running", nx.log.levels.WARN)
       return
     end
   end
@@ -87,7 +87,7 @@ nx.command("LspStop", function(o)
       if n > 0 then
         nx.notify("LspStop: stopped " .. name)
       else
-        nx.notify("LspStop: '" .. name .. "' was not running", vim.log.levels.WARN)
+        nx.notify("LspStop: '" .. name .. "' was not running", nx.log.levels.WARN)
       end
     end)
   end
@@ -104,7 +104,7 @@ nx.command("LspRestart", function(o)
   if #names == 0 then
     names = running_names()
     if #names == 0 then
-      nx.notify("LspRestart: no language server is running", vim.log.levels.WARN)
+      nx.notify("LspRestart: no language server is running", nx.log.levels.WARN)
       return
     end
   end
@@ -138,7 +138,7 @@ nx.command("LspLog", function()
     if not there then
       nx.notify(
         "LspLog: no log at " .. path .. " (set $NXVIM_LSP_LOG_LEVEL=debug to produce one)",
-        vim.log.levels.WARN
+        nx.log.levels.WARN
       )
       return
     end

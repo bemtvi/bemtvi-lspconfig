@@ -24,7 +24,7 @@
 --- in the core, which is a feature rather than a config.
 
 ---@param bufnr integer,
----@param client vim.lsp.Client
+---@param client nx.lsp.Client
 local util = require("nxvim-lspconfig.util")
 
 local function sign_in(bufnr, client)
@@ -74,7 +74,7 @@ local function sign_in(bufnr, client)
   )
 end
 
----@param client vim.lsp.Client
+---@param client nx.lsp.Client
 local function sign_out(_, client)
   client:request(
     ---@diagnostic disable-next-line: param-type-mismatch

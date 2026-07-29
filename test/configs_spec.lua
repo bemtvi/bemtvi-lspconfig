@@ -53,7 +53,6 @@ local KNOWN = {
   root_dir = true,
   root_markers = true,
   workspace_required = true,
-  single_file_support = true,
   init_options = true,
   settings = true,
   capabilities = true,

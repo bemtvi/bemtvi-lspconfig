@@ -7,18 +7,20 @@
 --- npm i -g vscode-langservers-extracted
 --- ```
 ---
---- Neovim does not currently include built-in snippets. `vscode-html-language-server` only provides completions when snippet support is enabled.
---- To enable completion, install a snippet plugin and add the following override to your language client capabilities during setup.
+--- `vscode-html-language-server` only provides completions when the client advertises
+--- snippet support, which nxvim's base capabilities do not — turn it on per server.
+--- nxvim expands the snippets itself (`nx.snippet`); no snippet plugin is needed.
 ---
 --- The code-formatting feature of the lsp can be controlled with the `provideFormatter` option.
 ---
 --- ```lua
---- --Enable (broadcasting) snippet capability for completion
---- local capabilities = vim.lsp.protocol.make_client_capabilities()
---- capabilities.textDocument.completion.completionItem.snippetSupport = true
----
+--- -- Broadcast snippet support. A config's `capabilities` are deep-merged over
+--- -- nxvim's base client capabilities, so this adds the one field rather than
+--- -- rebuilding the whole table.
 --- nx.lsp.config('html', {
----   capabilities = capabilities,
+---   capabilities = {
+---     textDocument = { completion = { completionItem = { snippetSupport = true } } },
+---   },
 --- })
 --- ```
 

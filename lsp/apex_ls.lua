@@ -15,21 +15,22 @@
 --- }
 ---```
 ---
---- Example configuration using Mason:
+--- Example configuration with the jar unpacked under nxvim's data dir:
 ---
 ---```lua
 --- nx.lsp.config('apex_ls', {
----   apex_jar_path = vim.fn.stdpath('data') .. '/mason/share/apex-language-server/apex-jorje-lsp.jar',
+---   apex_jar_path = nx.stdpath('data') .. '/apex-language-server/apex-jorje-lsp.jar',
 --- }
 ---```
 ---
 --- For a complete experience, you may need to ensure the treesitter parsers for 'apex' are installed (:TSInstall apex) as well as configure the filetype for apex (*.cls) files:
 ---
 --- ```lua
---- vim.filetype.add({
----   pattern = {
----     ['.*/*.cls'] = 'apex',
----   },
+--- nx.autocmd.create({ 'BufReadPost', 'BufNewFile' }, {
+---   pattern = '*.cls',
+---   callback = function()
+---     nx.cmd('setfiletype apex')
+---   end,
 --- })
 --- ```
 

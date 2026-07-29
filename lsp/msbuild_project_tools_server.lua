@@ -13,23 +13,25 @@
 ---
 --- There's no builtin filetypes for msbuild files, would require some filetype aliases:
 ---
+--- nxvim has no filetype-table API; a filetype is set by `:setfiletype` from an
+--- autocmd, whose `pattern` is a glob matched against the buffer's path:
+---
 --- ```lua
---- vim.filetype.add({
----   extension = {
----     props = 'msbuild',
----     tasks = 'msbuild',
----     targets = 'msbuild',
----   },
----   pattern = {
----     [ [[.*\..*proj]] ] = 'msbuild',
----   },
+--- nx.autocmd.create({ 'BufReadPost', 'BufNewFile' }, {
+---   pattern = { '*.props', '*.tasks', '*.targets', '*proj' },
+---   callback = function()
+---     nx.cmd('setfiletype msbuild')
+---   end,
 --- })
 --- ```
 ---
---- Optionally tell treesitter to treat `msbuild` as `xml` so you can get syntax highlighting if you have the treesitter-xml-parser installed.
+--- For syntax highlighting, set the filetype to `xml` instead and let the msbuild
+--- server attach anyway — this config declares `msbuild`, so add `xml` to its
+--- filetypes rather than aliasing the grammar (nxvim has no filetype-to-grammar
+--- alias table):
 ---
 --- ```lua
---- vim.treesitter.language.register('xml', { 'msbuild' })
+--- nx.lsp.config('msbuild_project_tools_server', { filetypes = { 'msbuild', 'xml' } })
 --- ```
 
 local host_dll_name = "MSBuildProjectTools.LanguageServer.Host.dll"

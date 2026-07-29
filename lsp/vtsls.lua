@@ -17,14 +17,10 @@
 --- Since v3.0.0, the Vue language server requires `vtsls` to support TypeScript.
 ---
 --- ```
---- -- If you are using mason.nvim, you can get the ts_plugin_path like this
---- -- For Mason v1,
---- -- local mason_registry = require('mason-registry')
---- -- local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() .. '/node_modules/@vue/language-server'
---- -- For Mason v2,
---- -- local vue_language_server_path = vim.fn.expand '$MASON/packages' .. '/vue-language-server' .. '/node_modules/@vue/language-server'
---- -- or even
---- -- local vue_language_server_path = vim.fn.stdpath('data') .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+--- -- Point this at wherever @vue/language-server is installed. For a project-local
+--- -- copy, resolve it asynchronously rather than hard-coding a path:
+--- --   local util = require('nxvim-lspconfig.util')
+--- --   local dir = nx.await(util.find_upward(nx.buf.name(0), 'node_modules'))
 --- local vue_language_server_path = '/path/to/@vue/language-server'
 --- local vue_plugin = {
 ---   name = '@vue/typescript-plugin',
