@@ -1,229 +1,165 @@
-# nvim-lspconfig
+# nxvim-lspconfig
 
-nvim-lspconfig is a collection of LSP server configurations for the [Nvim LSP client](https://neovim.io/doc/user/lsp.html).
+Ready-made `nx.lsp` configurations for **407 language servers** — a native port of
+[nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) to
+[nxvim](https://github.com/nxvim/nxvim).
 
-View [all configs](doc/configs.md), or run `:help lspconfig-all` from Nvim.
-
-## Important ⚠️
-
-* `require('lspconfig')` (the legacy "framework" of nvim-lspconfig) [is **deprecated**](https://github.com/neovim/nvim-lspconfig/issues/3693) in favor of [vim.lsp.config](https://neovim.io/doc/user/lsp.html#lsp-config) (Nvim 0.11+).
-    * The [lspconfig.lua](./lua/lspconfig.lua) *module* will be dropped. Calls to `require('lspconfig')` will show a warning, which will later become an error.
-* nvim-lspconfig itself is **NOT deprecated**. It provides server-specific configs.
-    * The configs live in the [lsp/](./lsp/) directory. `vim.lsp.config` automatically finds them and merges them with any local `lsp/*.lua` configs defined by you or a plugin.
-    * The old configs in [lua/lspconfig/](./lua/lspconfig/) are **deprecated** and will be removed.
-
-### Migration instructions
-
-1. Upgrade to Nvim 0.11+
-2. (Optional) Use `vim.lsp.config('…')` (not `require'lspconfig'.….setup{}`) to *customize* or *define* a config.
-3. Use `vim.lsp.enable('…')` (not `require'lspconfig'.….setup{}`) to *enable* a config, so that it activates for its `filetypes`.
-
-## Support
-
-These configs are **best-effort and supported by the community (you).** See [contributions](#contributions).
-
-* Ask questions on [GitHub Discussions](https://github.com/neovim/neovim/discussions), not the issue tracker.
-* If you found a bug in Nvim LSP (`:help lsp`), [report it to Neovim core](https://github.com/neovim/neovim/issues/new?assignees=&labels=bug%2Clsp&template=lsp_bug_report.yml).
-    * **Do not** report it here. Only configuration data lives here.
+This is a **port, not a compatibility layer.** nxvim runs no neovim plugins; upstream's
+configs were treated as a behavioral spec and rewritten against nxvim's own `nx.*`
+surfaces. Everything that touches the filesystem or runs a program is asynchronous,
+because nxvim does no blocking I/O on the editor thread — ever.
 
 ## Install
 
-[![LuaRocks](https://img.shields.io/luarocks/v/neovim/nvim-lspconfig?logo=lua&color=purple)](https://luarocks.org/modules/neovim/nvim-lspconfig)
-
-* Requires Nvim 0.11.3+.
-    * Support for Nvim 0.10 [will be removed](https://github.com/neovim/nvim-lspconfig/issues/3693). Upgrade Nvim and nvim-lspconfig before reporting an issue.
-* With Nvim 0.12+, you can use the builtin `vim.pack` plugin manager:
-  ```lua
-  vim.pack.add{
-    { src = 'https://github.com/neovim/nvim-lspconfig' },
-  }
-  ```
-* Or install nvim-lspconfig using Vim's "packages" feature:
-  ```
-  git clone https://github.com/neovim/nvim-lspconfig ~/.config/nvim/pack/nvim/start/nvim-lspconfig
-  ```
-* Or use a 3rd-party plugin manager.
-
-## Quickstart
-
-1. Install a language server, e.g. [pyright](doc/configs.md#pyright)
-   ```bash
-   npm i -g pyright
-   ```
-2. Enable its config in your init.lua ([:help lsp-quickstart](https://neovim.io/doc/user/lsp.html#lsp-quickstart)).
-   ```lua
-   vim.lsp.enable('pyright')
-   ```
-3. Ensure your project/workspace contains a root marker as specified in `:help lspconfig-all`.
-4. Open a code file in Nvim. LSP will attach and provide diagnostics.
-   ```
-   nvim main.py
-   ```
-5. Run `:checkhealth vim.lsp` to see the status or to troubleshoot.
-
-See `:help lspconfig-all` for the full list of server-specific details. For
-servers not on your `$PATH` (e.g., `jdtls`, `elixirls`), you must manually set
-the `cmd` parameter:
+With the built-in package manager:
 
 ```lua
-vim.lsp.config('jdtls', {
-  cmd = { '/path/to/jdtls' },
+nx.plugins.add({ "nxvim/nxvim-lspconfig" })
+```
+
+## Use
+
+### The native path
+
+`nx.lsp` reads each server's config straight off this plugin's runtimepath
+(`lsp/<name>.lua`), so once it is installed there is nothing to require:
+
+```lua
+nx.lsp.enable("rust_analyzer")
+nx.lsp.enable({ "lua_ls", "gopls", "pyright" })
+
+-- Customize any of them; your override wins over the bundled config.
+nx.lsp.config("rust_analyzer", {
+  settings = { ["rust-analyzer"] = { check = { command = "clippy" } } },
 })
 ```
+
+### The convenience path
+
+`setup()` enables a batch, applies settings shared by every server, installs the
+extended keymap set, and takes per-server overrides inline:
+
+```lua
+require("nxvim-lspconfig").setup({
+  servers = {
+    "lua_ls", "pyright", "gopls",
+    rust_analyzer = { settings = { ["rust-analyzer"] = { checkOnSave = true } } },
+    eslint = false,                        -- skip one
+  },
+  on_attach = function(client, bufnr) end,
+  inlay_hints = true,
+})
+```
+
+| option | meaning |
+| --- | --- |
+| `servers` | `"all"` \| a name \| a list \| a map `name -> (override \| false)` |
+| `capabilities` | client capabilities broadcast to every server |
+| `settings` | settings merged into every server |
+| `root_markers` | extra root markers for every server |
+| `on_attach` | `function(client, bufnr)` run when any server attaches |
+| `keymaps` | install the extended LSP keymaps (default `true`) |
+| `inlay_hints` | enable inlay hints for capable servers (default `false`) |
 
 ## Commands
 
-* `:LspInfo` (alias to `:checkhealth vim.lsp`) shows the status of active and configured language servers.
-* `:lsp enable [<config_name>]` (`:LspStart` for Nvim 0.11 or older) Start the requested server name. Will only successfully start if the command detects a root directory matching the current config.
-* `:lsp disable [<config_name>]` (`:LspStop` for Nvim 0.11 or older) Stops the given server. Defaults to stopping all servers active on the current buffer. To force stop use `:LspStop!`
-* `:lsp restart [<client_name>]` (`:LspRestart` for Nvim 0.11 or older) Restarts the given client, and attempts to reattach to all previously attached buffers. Defaults to restarting all active servers.
+`:LspStart`, `:LspStop`, `:LspRestart` and `:LspLog` come from this plugin. Everything
+else is **native to nxvim** and works without it — `:LspInfo`, `:LspDefinition`,
+`:LspReferences`, `:LspHover`, `:LspFormat`, `:LspRename`, `:LspCodeAction`,
+`:LspDiagnostics`.
 
-## Configuration
+| command | |
+| --- | --- |
+| `:LspStart [server …]` | enable and launch; with no argument, every server for this filetype |
+| `:LspStop [server …]` | stop **and** disable; with no argument, everything running |
+| `:LspRestart [server …]` | respawn with the config in force now |
+| `:LspLog` | open nxvim's LSP log |
 
-Nvim sets default options and mappings when LSP is active in a buffer:
-* [:help lsp-defaults](https://neovim.io/doc/user/lsp.html#lsp-defaults)
-* [:help diagnostic-defaults](https://neovim.io/doc/user/diagnostic.html#diagnostic-defaults)
+`:LspStop` disables as well as stopping, because stopping alone would leave the config
+enabled and the next matching buffer would silently start it back up.
 
-To customize, see:
-* [:help lsp-attach](https://neovim.io/doc/user/lsp.html#lsp-attach)
-* [:help lsp-buf](https://neovim.io/doc/user/lsp.html#lsp-buf)
+## Keymaps
 
-Extra settings can be specified for each LSP server. With Nvim 0.11+ you can
-[extend a config](https://neovim.io/doc/user/lsp.html#lsp-config) by calling
-`vim.lsp.config('…', {…})`.
+nxvim installs the core maps itself, buffer-local, when a server attaches — `gd`, `gD`,
+`gr`, `K`, `<C-k>`. This plugin adds the rest of the standard set (opt out with
+`setup({ keymaps = false })`):
 
-```lua
-vim.lsp.config('rust_analyzer', {
-  -- Server-specific settings. See `:help lsp-quickstart`
-  settings = {
-    ['rust-analyzer'] = {},
-  },
-})
-```
+| key | |
+| --- | --- |
+| `grn` | rename |
+| `gra` | code action |
+| `grr` | references |
+| `gri` | implementation |
+| `grt` | type definition |
+| `gO` | document symbols |
+| `<leader>ls` | workspace symbols |
+| `<leader>lf` | format buffer |
+| `<leader>lh` | toggle inlay hints |
 
-### Config priority
+All are installed at the *overridable* rung, so your own mapping for the same key wins.
 
-Configs are sourced in this order:
+## What changed from upstream
 
-1. `lsp/` in 'runtimepath'
-2. `after/lsp/` in 'runtimepath'
-3. `vim.lsp.config()`
+**The `require('lspconfig').server.setup{}` framework is gone** — deleted, not aliased,
+along with `lua/lspconfig/`, `plugin/lspconfig.lua`, and the neovim-internals plumbing
+they depended on (`vim.lsp.config._configs`, `vim.uv.new_timer`, `vim.deprecate`,
+`:checkhealth`). Use `nx.lsp.enable` / `nx.lsp.config`, or `setup()` above.
 
-If you install nvim-lspconfig or similar plugins, the order that configs are applied depends on the load order. To ensure that your own config "wins" and overrides the others, use `after/lsp/` and/or `vim.lsp.config()` to override/extend the defaults.
-
-## Creating a config
-
-### As code
-
-1. Run `:lua vim.lsp.config('foo', {cmd={'true'}})`
-2. Run `:lua vim.lsp.enable('foo')`
-3. Run `:checkhealth vim.lsp`, the new config is listed under "Enabled Configurations". 😎
-
-### As a file
-
-1. Create a file `after/lsp/foo.lua` somewhere on your 'runtimepath'.
-   ```
-   :exe 'edit' stdpath('config') .. '/after/lsp/foo.lua'
-   ```
-2. Add this code to the file (or copy any of the examples from the [lsp/ directory](./lsp/) in this repo):
-   ```
-   return {
-     cmd = { 'true' },
-   }
-   ```
-3. Save the file (with `++p` to ensure its parent directory is created).
-   ```
-   :write ++p
-   ```
-4. Enable the config.
-   ```
-   :lua vim.lsp.enable('foo')
-   ```
-5. Run `:checkhealth vim.lsp`, the new config is listed under "Enabled Configurations". 🌈
-
-## LSP Settings Type Annotations
-
-`nvim-lspconfig` generates Lua type definitions for each supported LSP server.
-By manually adding annotations (e.g., `---@type lspconfig.settings.server_name`),
-you enable auto-completion and diagnostics for your server settings.
-
-**Example:**
+**Nothing blocks.** Upstream's helpers are built on `vim.fs.root`, `vim.fn.executable`,
+`vim.uv.fs_stat` and `vim.system(…):wait()`, all of which stop the editor while they
+work. Here, a config field that needs I/O returns a promise and `nx.lsp` awaits it
+before spawning:
 
 ```lua
----@type vim.lsp.Config
-local config = {
-  ---@type lspconfig.settings.lua_ls
-  settings = {
-    Lua = {
-      runtime = {
-        version = 'LuaJIT',
-      },
-      workspace = {
-        preloadFileSize = 10000,
-        library = {
-          vim.env.VIMRUNTIME,
-        }
-      },
-    },
-  },
+return {
+  -- Prefers the project's own node_modules/.bin copy, else $PATH — resolved
+  -- asynchronously, without the editor pausing.
+  cmd = util.node_cmd("typescript-language-server"),
+  filetypes = { "typescript", "typescriptreact" },
+  root_markers = { { "package-lock.json", "yarn.lock" }, { ".git" } },
 }
-
-vim.lsp.config('lua_ls', config)
 ```
 
-## Troubleshooting
+**Root markers support priority tiers.** `{ {a, b}, {".git"} }` means the first tier is
+exhausted over the whole tree before `.git` is considered anywhere — so a package inside
+a monorepo attaches at the monorepo root, not at its own nested `.git`.
 
-Start with `:checkhealth vim.lsp` to troubleshoot. The most common reasons a language server does not start or attach are:
+**Unsupported config keys are reported, not dropped.** A config carrying `handlers`,
+`reuse_client` or `offset_encoding` gets a warning naming the key and what happens
+instead. A typo'd key is named too, because a silently-ignored `filetype` (singular)
+looks exactly like a server that won't start.
 
-1. Language server is not installed. nvim-lspconfig does not install language servers for you. You should be able to run the `cmd` defined in the config from the command line and see that the language server starts. If the `cmd` is a name instead of an absolute path, ensure it is on your `$PATH`.
-2. Missing filetype plugins. Some languages are not detected by Nvim because they have not yet been added to the filetype detection system. Ensure `:set filetype?` shows the filetype and not an empty value.
-3. Not triggering root detection. Some language servers require a "workspace", which is found by looking for an ancestor directory that contains a "root marker". The most common root marker is `.git/`, but each config defines other "root marker" names. Root markers/directories are listed in `:help lspconfig-all`.
+## Writing a config
 
-   You can also explicitly set a root instead of relying on automatic detection by enabling `'exrc'` and adding an `.nvim.lua` at the desired root dir with the following code:
-   ```lua
-   vim.lsp.config('<client name>', {
-     root_dir = vim.fn.fnamemodify(debug.getinfo(1, 'S').source:sub(2), ':p:h'),
-   })
-   ```
-   Note that prior to nvim 0.12 `exrc` file is executed only if it's inside of a cwd where you start `nvim`.
+Configs are plain tables; see [`lua/nxvim-lspconfig/util.lua`](lua/nxvim-lspconfig/util.lua)
+for the helper surface. The fields `nx.lsp` reads:
 
-## Bug reports
-
-If you found a bug with LSP functionality, [report it to Neovim core](https://github.com/neovim/neovim/issues/new?assignees=&labels=bug%2Clsp&template=lsp_bug_report.yml).
-
-Before reporting a bug, check your logs and the output of `:checkhealth vim.lsp`. Add this to your init.lua to enable verbose logging:
-
-```lua
-vim.lsp.log.set_level('debug')
+```
+cmd                 argv, or a function(dispatchers, config) returning an argv
+                    or a PROMISE of one
+cmd_env             { NAME = "value" } layered over the editor's environment
+filetypes           filetypes that activate this server
+root_markers        markers to search upward for; a list of lists = priority tiers
+root_dir            function(bufnr, on_dir) — or one returning a promise; never
+                    calling on_dir declines the buffer
+workspace_required  no root: do not start, rather than start rootless
+init_options        sent at `initialize`
+settings            sent at `initialize` and via didChangeConfiguration
+capabilities        merged over nxvim's base client capabilities
+commands            client-side handlers for this server's code-action commands
+name                the client name, when it differs from the file's name
+get_language_id     function(bufnr, filetype) -> the LSP languageId
+before_init         function(init_params, config) — may return a promise
+on_init             function(client, result)
+on_attach           function(client, bufnr)
+on_exit             function(code, signal, client)
 ```
 
-Attempt to run the language server, then run `:LspLog` to open the log.
-Most of the time, the reason for failure is present in the logs.
-
-## Contributions
-
-If a language server is missing from [configs.md](doc/configs.md), contributing
-a new configuration for it helps others, especially if the server requires special setup. Follow these steps:
-
-1. Read [CONTRIBUTING.md](CONTRIBUTING.md).
-2. Create a new file at `lsp/<server_name>.lua`.
-    - Copy an [existing config](https://github.com/neovim/nvim-lspconfig/tree/master/lsp)
-      to get started. Most configs are simple. For an extensive example see
-      [texlab.lua](https://github.com/neovim/nvim-lspconfig/blob/master/lsp/texlab.lua).
-3. Ask questions on [GitHub Discussions](https://github.com/neovim/neovim/discussions) or in the [Neovim Matrix room](https://app.element.io/#/room/#neovim:matrix.org).
-
-## Release process
-
-To publish a release:
-
-- Create and push a new [tag](https://github.com/neovim/nvim-lspconfig/tags).
-- After pushing the tag, a [GitHub action](./.github/workflows/release.yml)
-  will automatically package the plugin and publish the release to LuaRocks.
+To add a server, create `lsp/<name>.lua` returning such a table. It is picked up off
+the runtimepath with no registration step.
 
 ## License
 
-Copyright Neovim contributors. All rights reserved.
+Copyright Neovim contributors and nxvim contributors. All rights reserved.
 
-nvim-lspconfig is licensed under the terms of the Apache 2.0 license.
-
-See [LICENSE.md](./LICENSE.md)
+Licensed under the terms of the Apache 2.0 license — see [LICENSE.md](LICENSE.md).
