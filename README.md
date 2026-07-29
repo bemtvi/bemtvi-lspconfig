@@ -52,16 +52,28 @@ help file:
 - In editor: `:help nxvim-lspconfig`
 - On GitHub: [doc/nxvim-lspconfig.md](./doc/nxvim-lspconfig.md) (the help source)
 
+Per-server install notes and the defaults each config sets — all 407 of them,
+generated from the configs themselves:
+
+- In editor: `:help lspconfig-all`, or one server with `:help lspconfig-clangd`
+- On GitHub: [doc/configs.md](./doc/configs.md)
+
 ## Development
 
 Run the Lua test suite from a checkout with `nxvim --test-plugin .`; format with
 `stylua .`.
 
-`doc/nxvim-lspconfig.txt` is generated from `doc/nxvim-lspconfig.md` by
-[panvimdoc](https://github.com/kdheepak/panvimdoc): `bash scripts/gen-vimdoc.sh` (needs
-`pandoc` + `git`). **Edit the `.md`, never the `.txt`.** A pre-push hook (via
-[pre-commit](https://pre-commit.com)) verifies it is current — enable it once after
-cloning with `pre-commit install --hook-type pre-push`.
+Two generated files, neither of which is edited by hand:
+
+- `doc/nxvim-lspconfig.txt` — from `doc/nxvim-lspconfig.md` via
+  [panvimdoc](https://github.com/kdheepak/panvimdoc): `bash scripts/gen-vimdoc.sh`
+  (needs `pandoc` + `git`). **Edit the `.md`.**
+- `doc/configs.md` + `doc/configs.txt` — from the `---@brief` block in each
+  `lsp/<name>.lua`, by `scripts/docgen.lua` running under nxvim itself:
+  `bash scripts/gen-configs.sh`. **Edit the config's doc comment.**
+
+A pre-push hook (via [pre-commit](https://pre-commit.com)) verifies both are current
+— enable it once after cloning with `pre-commit install --hook-type pre-push`.
 
 ## License
 

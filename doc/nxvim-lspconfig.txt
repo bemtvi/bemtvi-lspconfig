@@ -251,6 +251,10 @@ A config is a plain table. These are the fields `nx.lsp` reads:
 To add a server of your own, create `lsp/<name>.lua` anywhere on the
 runtimepath returning such a table. It is picked up with no registration step.
 
+Every bundled server's install notes and the defaults it sets are in a
+generated companion page: `:help lspconfig-all`, or one server at a time with
+`:help lspconfig-clangd`.
+
 
 PRIORITY TIERS                  *nxvim-lspconfig-config-fields-priority-tiers*
 
@@ -442,12 +446,15 @@ It loads and runs all 407 configs — every `cmd` builder, `root_dir`,
 — enters the reworked `on_attach` bodies against a recording client, and
 exercises the `util` helpers against real project trees.
 
-`doc/nxvim-lspconfig.txt` is generated from `doc/nxvim-lspconfig.md` by
-panvimdoc <https://github.com/kdheepak/panvimdoc>: run `bash
-scripts/gen-vimdoc.sh` (needs `pandoc` + `git`). **Edit the .md, never the
-.txt.** A pre-push hook (via pre-commit <https://pre-commit.com>) verifies it
-is current — enable it once after cloning with `pre-commit install
---hook-type pre-push`.
+Two sets of generated files, neither edited by hand. This page's `.txt` comes
+from its `.md` via panvimdoc <https://github.com/kdheepak/panvimdoc> (`bash
+scripts/gen-vimdoc.sh`, needs `pandoc` + `git`). The per-server reference —
+`doc/configs.md` and `doc/configs.txt` — comes from the `---@brief` block in
+each `lsp/<name>.lua`, rendered by `scripts/docgen.lua` running under nxvim
+itself (`bash scripts/gen-configs.sh`); to change what it says, edit the
+config's own doc comment. A pre-push hook (via pre-commit
+<https://pre-commit.com>) verifies both are current — enable it once after
+cloning with `pre-commit install --hook-type pre-push`.
 
 Lua is formatted with stylua <https://github.com/JohnnyMorganz/StyLua>: `stylua
 .`.
