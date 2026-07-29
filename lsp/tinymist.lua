@@ -14,6 +14,8 @@
 ---@param client vim.lsp.Client
 ---@param bufnr integer
 ---@return fun():nil run_tinymist_command, string cmd_name, string cmd_desc
+local util = require("nxvim-lspconfig.util")
+
 local function create_tinymist_command(command_name, client, bufnr)
   local export_type = command_name:match("tinymist%.export(%w+)")
   local info_type = command_name:match("tinymist%.(%w+)")
@@ -25,9 +27,9 @@ local function create_tinymist_command(command_name, client, bufnr)
     ---@type lsp.Handler
     local function handler(err, res)
       if err then
-        return nx.notify(err.code .. ": " .. err.message, vim.log.levels.ERROR)
+        return nx.notify(err.code .. ": " .. err.message, nx.log.levels.ERROR)
       end
-      nx.notify(vim.inspect(res), vim.log.levels.INFO)
+      nx.notify(nx.inspect(res), nx.log.levels.INFO)
     end
     return client:exec_cmd({
       title = title_str,

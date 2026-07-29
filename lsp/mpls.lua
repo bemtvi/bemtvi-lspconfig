@@ -4,6 +4,8 @@
 ---
 --- Markdown Preview Language Server
 
+local util = require("nxvim-lspconfig.util")
+
 return {
   cmd = {
     "mpls",

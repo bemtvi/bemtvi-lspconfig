@@ -14,6 +14,8 @@
 --- npm install -g gh-actions-language-server
 --- ```
 
+local util = require("nxvim-lspconfig.util")
+
 return {
   cmd = { "gh-actions-language-server", "--stdio" },
   filetypes = { "yaml" },
@@ -29,20 +31,19 @@ return {
       on_dir(parent)
     end
   end,
+  -- The server asks the editor to read files it can't reach itself (reusable workflows,
+  -- composite actions in another repo) through a server-initiated `actions/readFile`.
+  -- nxvim does not route server-initiated requests into Lua, so `nx.lsp` reports this
+  -- key loud and the request goes unanswered: completion and validation still work, but
+  -- stop at the boundary of the file being edited. The key is kept rather than deleted
+  -- precisely so that report keeps naming the gap.
+  --
+  -- The body cannot be carried over either — an LSP reply must be produced
+  -- synchronously, and nxvim has no synchronous file read (all fs is `nx.fs`, async).
+  -- Closing this needs server-initiated request routing in the core, not a shim here.
   handlers = {
-    ["actions/readFile"] = function(_, result)
-      if type(result.path) ~= "string" then
-        return nil, nil
-      end
-      local file_path = util.uri_to_path(result.path)
-      if vim.fn.filereadable(file_path) == 1 then
-        local f = assert(io.open(file_path, "r"))
-        local text = f:read("*a")
-        f:close()
-
-        return text, nil
-      end
-      return nil, nil
+    ["actions/readFile"] = function()
+      error("gh_actions_ls: nxvim does not route server-initiated requests into Lua")
     end,
   },
   init_options = {}, -- needs to be present https://github.com/neovim/nvim-lspconfig/pull/3713#issuecomment-2857394868

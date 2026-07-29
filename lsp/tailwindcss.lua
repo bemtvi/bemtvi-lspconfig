@@ -105,13 +105,13 @@ return {
       },
     },
   },
-  before_init = function(_, config)
+  before_init = function(_init_params, config)
     config.settings = nx.tbl.deep_extend("keep", config.settings, {
-      editor = { tabSize = vim.lsp.util.get_effective_tabstop() },
+      editor = { tabSize = util.tabsize() },
     })
   end,
   workspace_required = true,
-  root_dir = function(bufnr, on_dir)
+  root_dir = util.root_dir(function(bufnr, on_dir)
     local root_files = {
       -- Generic
       "tailwind.config.js",
@@ -132,9 +132,13 @@ return {
       ".git",
     }
     local fname = util.bufname(bufnr)
-    root_files = util.insert_package_json(root_files, "tailwindcss", fname)
-    root_files =
+    root_files = nx.await(util.insert_package_json(root_files, "tailwindcss", fname))
+    root_files = nx.await(
       util.root_markers_with_field(root_files, { "mix.lock", "Gemfile.lock" }, "tailwind", fname)
-    on_dir(util.dirname(vim.fs.find(root_files, { path = fname, upward = true })[1]))
-  end,
+    )
+    local found = nx.await(util.find_upward(fname, root_files))
+    if found then
+      on_dir(util.dirname(found))
+    end
+  end),
 }

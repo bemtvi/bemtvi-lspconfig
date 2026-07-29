@@ -12,6 +12,8 @@
 --- `LspTexlabCleanAuxiliary`, `LspTexlabFindEnvironments`,
 --- and `LspTexlabChangeEnvironment`.
 
+local util = require("nxvim-lspconfig.util")
+
 local function buf_build(client, bufnr)
   local win = vim.api.nvim_get_current_win()
   local params = vim.lsp.util.make_position_params(win, client.offset_encoding)
@@ -25,7 +27,7 @@ local function buf_build(client, bufnr)
       [2] = "Failure",
       [3] = "Cancelled",
     }
-    nx.notify("Build " .. texlab_build_status[result.status], vim.log.levels.INFO)
+    nx.notify("Build " .. texlab_build_status[result.status], nx.log.levels.INFO)
   end, bufnr)
 end
 
@@ -42,7 +44,7 @@ local function buf_search(client, bufnr)
       [2] = "Failure",
       [3] = "Unconfigured",
     }
-    nx.notify("Search " .. texlab_forward_status[result.status], vim.log.levels.INFO)
+    nx.notify("Search " .. texlab_forward_status[result.status], nx.log.levels.INFO)
   end, bufnr)
 end
 
@@ -56,9 +58,9 @@ end
 local function dependency_graph(client)
   client:exec_cmd({ command = "texlab.showDependencyGraph" }, { bufnr = 0 }, function(err, result)
     if err then
-      return nx.notify(err.code .. ": " .. err.message, vim.log.levels.ERROR)
+      return nx.notify(err.code .. ": " .. err.message, nx.log.levels.ERROR)
     end
-    nx.notify("The dependency graph has been generated:\n" .. result, vim.log.levels.INFO)
+    nx.notify("The dependency graph has been generated:\n" .. result, nx.log.levels.INFO)
   end)
 end
 
@@ -74,9 +76,9 @@ local function command_factory(cmd)
       arguments = { { uri = util.uri_from_buf(bufnr) } },
     }, { bufnr = bufnr }, function(err, _)
       if err then
-        nx.notify(("Failed to clean %s files: %s"):format(cmd, err.message), vim.log.levels.ERROR)
+        nx.notify(("Failed to clean %s files: %s"):format(cmd, err.message), nx.log.levels.ERROR)
       else
-        nx.notify(("Command %s executed successfully"):format(cmd), vim.log.levels.INFO)
+        nx.notify(("Command %s executed successfully"):format(cmd), nx.log.levels.INFO)
       end
     end)
   end
@@ -89,7 +91,7 @@ local function buf_find_envs(client, bufnr)
     arguments = { vim.lsp.util.make_position_params(win, client.offset_encoding) },
   }, { bufnr = bufnr }, function(err, result)
     if err then
-      return nx.notify(err.code .. ": " .. err.message, vim.log.levels.ERROR)
+      return nx.notify(err.code .. ": " .. err.message, nx.log.levels.ERROR)
     end
     local env_names = {}
     local max_length = 1
@@ -113,7 +115,7 @@ end
 local function buf_change_env(client, bufnr)
   nx.ui.input({ prompt = "New environment name: " }, function(input)
     if not input or input == "" then
-      return nx.notify("No environment name provided", vim.log.levels.WARN)
+      return nx.notify("No environment name provided", nx.log.levels.WARN)
     end
     local pos = vim.api.nvim_win_get_cursor(0)
     return client:exec_cmd({

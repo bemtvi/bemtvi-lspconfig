@@ -29,7 +29,10 @@ return {
   },
   filetypes = { "smithy" },
   root_markers = { "smithy-build.json", "build.gradle", "build.gradle.kts", ".git" },
-  message_level = vim.lsp.protocol.MessageType.Log,
+  -- LSP `MessageType.Log` (4): show every `window/logMessage` the server sends. nx.lsp
+  -- has no per-server message verbosity, so it reports this key and uses its own
+  -- default; the key is kept so the report keeps naming what isn't honored.
+  message_level = 4,
   init_options = {
     statusBarProvider = "show-message",
     isHttpEnabled = true,

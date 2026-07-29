@@ -15,9 +15,11 @@
 --- })
 --- ```
 
+local util = require("nxvim-lspconfig.util")
+
 local function set_python_path(command)
   local path = command.args
-  local clients = vim.lsp.get_clients({
+  local clients = nx.lsp.clients({
     bufnr = nx.buf.current(),
     name = "pyright",
   })

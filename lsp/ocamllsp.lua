@@ -10,6 +10,8 @@
 --- ```
 
 -- https://github.com/ocaml/ocaml-lsp/blob/master/ocaml-lsp-server/docs/ocamllsp/switchImplIntf-spec.md
+local util = require("nxvim-lspconfig.util")
+
 local function switch_impl_intf(bufnr, client)
   local method_name = "ocamllsp/switchImplIntf"
   ---@diagnostic disable-next-line:param-type-mismatch

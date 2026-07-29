@@ -34,8 +34,14 @@ return {
   filetypes = { "kotlin" },
   root_markers = root_files,
   cmd = { "kotlin-language-server" },
-  init_options = {
-    -- Enables caching and use project root to store cache data.
-    storagePath = vim.fs.root(vim.fn.expand("%:p:h"), root_files) --[[@as string]],
-  },
+  -- Enables caching, using the project root to store the cache data. Upstream computes
+  -- this at *load* time from whatever buffer happened to be current, which freezes one
+  -- project's path into every session; `before_init` runs once per server with the root
+  -- that server actually resolved, which is the value it wanted. With no root the key
+  -- is left unset and the server falls back to the home directory itself.
+  before_init = function(_init_params, config)
+    config.init_options = nx.tbl.deep_extend("force", config.init_options or {}, {
+      storagePath = config.root_dir,
+    })
+  end,
 }

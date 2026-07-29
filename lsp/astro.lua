@@ -41,7 +41,7 @@
 ---   };
 --- }
 --- ```
---- The path can also be passed via a variable, like `vim.g.tsdk = "${pkgs.typescript}/lib/node_modules/typescript/lib"` and then used in the Lua Neovim config.
+--- The path can also be passed via a variable, like `nx.g.tsdk = "${pkgs.typescript}/lib/node_modules/typescript/lib"` and then used in the Lua Neovim config.
 ---
 --- WARNING: TypeScript 7.x dropped `tsserverlibrary.js` from its npm package, so
 --- `typescript.tsdk` cannot resolve from a local or global TS 7.x install. Pin to
@@ -53,19 +53,19 @@
 ---
 --- ```lua
 --- nx.lsp.config('astro', {
----   before_init = function(_, config)
+---   before_init = nx.async(function(_, config)
 ---     local util = require("nxvim-lspconfig.util")
----     local tsdk = util.get_typescript_server_path(config.root_dir)
+---     local tsdk = nx.await(util.get_typescript_server_path(config.root_dir))
 ---     if tsdk == '' then
----       local npm_root = vim.fn.systemlist('npm root -g')
----       if vim.v.shell_error == 0 and npm_root[1] then
----         tsdk = npm_root[1] .. '/typescript/lib'
+---       local npm_root = nx.await(util.output({ 'npm', 'root', '-g' }))
+---       if npm_root then
+---         tsdk = util.joinpath(npm_root, 'typescript/lib')
 ---       end
 ---     end
 ---     config.init_options = config.init_options or {}
 ---     config.init_options.typescript = config.init_options.typescript or {}
 ---     config.init_options.typescript.tsdk = tsdk
----   end,
+---   end),
 --- })
 --- nx.lsp.enable('astro')
 --- ```
@@ -85,13 +85,14 @@ return {
   init_options = {
     typescript = {},
   },
-  before_init = function(_, config)
+  before_init = nx.async(function(_init_params, config)
     if
       config.init_options
       and config.init_options.typescript
       and not config.init_options.typescript.tsdk
     then
-      config.init_options.typescript.tsdk = util.get_typescript_server_path(config.root_dir)
+      config.init_options.typescript.tsdk =
+        nx.await(util.get_typescript_server_path(config.root_dir))
     end
-  end,
+  end),
 }

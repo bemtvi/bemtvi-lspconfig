@@ -9,17 +9,16 @@
 
 local util = require("nxvim-lspconfig.util")
 
-local cache_dir = vim.uv.os_homedir() .. "/.cache/gitlab-ci-ls/"
+local cache_dir = util.joinpath(util.home(), ".cache/gitlab-ci-ls")
 
 return {
   cmd = { "gitlab-ci-ls" },
   filetypes = { "yaml.gitlab" },
   root_dir = function(bufnr, on_dir)
-    local fname = util.bufname(bufnr)
-    on_dir(util.root_pattern(".git", ".gitlab*")(fname))
+    util.root_pattern(".git", ".gitlab*")(util.bufname(bufnr)):next(on_dir)
   end,
   init_options = {
     cache_path = cache_dir,
-    log_path = cache_dir .. "/log/gitlab-ci-ls.log",
+    log_path = util.joinpath(cache_dir, "log/gitlab-ci-ls.log"),
   },
 }

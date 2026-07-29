@@ -15,26 +15,28 @@
 local util = require("nxvim-lspconfig.util")
 
 return {
-  cmd = {
-    vim.fn.executable("OmniSharp") == 1 and "OmniSharp" or "omnisharp",
-    "-z", -- https://github.com/OmniSharp/omnisharp-vscode/pull/4300
-    "--hostPID",
-    tostring(vim.fn.getpid()),
-    "DotNet:enablePackageRestore=false",
-    "--encoding",
-    "utf-8",
-    "--languageserver",
-  },
+  -- The binary ships under either spelling depending on how it was installed, and
+  -- `--hostPID` is what lets OmniSharp exit when the editor does — both are lookups, so
+  -- the argv is built per server rather than at load time.
+  cmd = nx.async(function()
+    return {
+      nx.await(util.which("OmniSharp")) and "OmniSharp" or "omnisharp",
+      "-z", -- https://github.com/OmniSharp/omnisharp-vscode/pull/4300
+      "--hostPID",
+      tostring(nx.pid()),
+      "DotNet:enablePackageRestore=false",
+      "--encoding",
+      "utf-8",
+      "--languageserver",
+    }
+  end),
   filetypes = { "cs", "vb" },
   root_dir = function(bufnr, on_dir)
-    local fname = util.bufname(bufnr)
-    on_dir(
-      util.root_pattern("*.slnx")(fname)
-        or util.root_pattern("*.sln")(fname)
-        or util.root_pattern("*.csproj")(fname)
-        or util.root_pattern("omnisharp.json")(fname)
-        or util.root_pattern("function.json")(fname)
-    )
+    -- Pattern order is priority: a solution roots the server ahead of a project file
+    -- even when the project file is nearer.
+    util
+      .root_pattern("*.slnx", "*.sln", "*.csproj", "omnisharp.json", "function.json")(util.bufname(bufnr))
+      :next(on_dir)
   end,
   init_options = {},
   capabilities = {

@@ -29,18 +29,18 @@ return {
       },
     },
   },
-  root_dir = function(bufnr, on_dir)
+  root_dir = util.root_dir(function(bufnr, on_dir)
     local fname = util.bufname(bufnr)
     -- Svelte LSP only supports file:// schema. https://github.com/sveltejs/language-tools/issues/2777
-    if vim.uv.fs_stat(fname) ~= nil then
+    if nx.await(util.exists(fname)) then
       local root_markers =
         { "package-lock.json", "yarn.lock", "pnpm-lock.yaml", "bun.lockb", "bun.lock", "deno.lock" }
       root_markers = { root_markers, { ".git" } }
       -- We fallback to the current working directory if no project root is found
-      local project_root = vim.fs.root(bufnr, root_markers) or vim.fn.getcwd()
+      local project_root = nx.await(util.root(bufnr, root_markers)) or util.cwd()
       on_dir(project_root)
     end
-  end,
+  end),
   on_attach = function(client, bufnr)
     -- Workaround to trigger reloading JS/TS files
     -- See https://github.com/sveltejs/language-tools/issues/2008

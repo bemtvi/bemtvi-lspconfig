@@ -12,6 +12,8 @@
 ---   specified as compile_commands.json, see https://clangd.llvm.org/installation#compile_commandsjson
 
 -- https://clangd.llvm.org/extensions.html#switch-between-sourceheader
+local util = require("nxvim-lspconfig.util")
+
 local function switch_source_header(bufnr, client)
   local method_name = "textDocument/switchSourceHeader"
   ---@diagnostic disable-next-line:param-type-mismatch
@@ -38,7 +40,7 @@ local function symbol_info(bufnr, client)
   local method_name = "textDocument/symbolInfo"
   ---@diagnostic disable-next-line:param-type-mismatch
   if not client or not client:supports_method(method_name) then
-    return nx.notify("Clangd client not found", vim.log.levels.ERROR)
+    return nx.notify("Clangd client not found", nx.log.levels.ERROR)
   end
   local win = vim.api.nvim_get_current_win()
   local params = vim.lsp.util.make_position_params(win, client.offset_encoding)

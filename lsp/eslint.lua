@@ -101,7 +101,7 @@ return {
       }, nil, bufnr)
     end, {})
   end,
-  root_dir = function(bufnr, on_dir)
+  root_dir = util.root_dir(function(bufnr, on_dir)
     -- The project root is where the LSP can be started from
     -- As stated in the documentation above, this LSP supports monorepos and simple projects.
     -- We select then from the project root, which is identified by the presence of a package
@@ -112,12 +112,12 @@ return {
     root_markers = { root_markers, { ".git" } }
 
     -- exclude deno
-    if vim.fs.root(bufnr, { "deno.json", "deno.jsonc", "deno.lock" }) then
+    if nx.await(util.root(bufnr, { "deno.json", "deno.jsonc", "deno.lock" })) then
       return
     end
 
     -- We fallback to the current working directory if no project root is found
-    local project_root = vim.fs.root(bufnr, root_markers) or vim.fn.getcwd()
+    local project_root = nx.await(util.root(bufnr, root_markers)) or util.cwd()
 
     -- We know that the buffer is using ESLint if it has a config file
     -- in its directory tree.
@@ -126,20 +126,17 @@ return {
     -- We keep this for backward compatibility.
     local filename = util.bufname(bufnr)
     local eslint_config_files_with_package_json =
-      util.insert_package_json(eslint_config_files, "eslintConfig", filename)
-    local is_buffer_using_eslint = vim.fs.find(eslint_config_files_with_package_json, {
-      path = filename,
-      type = "file",
-      limit = 1,
-      upward = true,
-      stop = util.dirname(project_root),
-    })[1]
+      nx.await(util.insert_package_json(eslint_config_files, "eslintConfig", filename))
+    local is_buffer_using_eslint =
+      nx.await(util.find_upward(filename, eslint_config_files_with_package_json, {
+        stop = util.dirname(project_root),
+      }))
     if not is_buffer_using_eslint then
       return
     end
 
     on_dir(project_root)
-  end,
+  end),
   -- Refer to https://github.com/Microsoft/vscode-eslint#settings-options for documentation.
   settings = {
     validate = "on",
@@ -198,7 +195,7 @@ return {
   handlers = {
     ["eslint/openDoc"] = function(_, result)
       if result then
-        vim.ui.open(result.url)
+        nx.ui.open(result.url)
       end
       return {}
     end,
@@ -209,11 +206,11 @@ return {
       return 4 -- approved
     end,
     ["eslint/probeFailed"] = function()
-      nx.notify("[lspconfig] ESLint probe failed.", vim.log.levels.WARN)
+      nx.notify("[lspconfig] ESLint probe failed.", nx.log.levels.WARN)
       return {}
     end,
     ["eslint/noLibrary"] = function()
-      nx.notify("[lspconfig] Unable to find ESLint library.", vim.log.levels.WARN)
+      nx.notify("[lspconfig] Unable to find ESLint library.", nx.log.levels.WARN)
       return {}
     end,
   },

@@ -13,13 +13,8 @@
 --- ```
 
 return {
-  cmd = function(dispatchers, config)
-    return vim.lsp.rpc.start(
-      { "ruby-lsp" },
-      dispatchers,
-      config and config.root_dir and { cwd = config.cmd_cwd or config.root_dir }
-    )
-  end,
+  -- Run from the project root so the right Gemfile is in scope — nxvim's default.
+  cmd = { "ruby-lsp" },
   filetypes = { "ruby", "eruby" },
   root_markers = { "Gemfile", ".git" },
   init_options = {

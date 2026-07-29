@@ -31,7 +31,7 @@ return {
     "scss",
     "vue",
   },
-  root_dir = function(bufnr, on_dir)
+  root_dir = util.root_dir(function(bufnr, on_dir)
     -- The project root is where the LSP can be started from
     -- As stated in the documentation above, this LSP supports monorepos and simple projects.
     -- We select then from the project root, which is identified by the presence of a package
@@ -42,12 +42,12 @@ return {
     root_markers = { root_markers, { ".git" } }
 
     -- exclude deno
-    if vim.fs.root(bufnr, { "deno.json", "deno.jsonc", "deno.lock" }) then
+    if nx.await(util.root(bufnr, { "deno.json", "deno.jsonc", "deno.lock" })) then
       return
     end
 
     -- We fallback to the current working directory if no project root is found
-    local project_root = vim.fs.root(bufnr, root_markers) or vim.fn.getcwd()
+    local project_root = nx.await(util.root(bufnr, root_markers)) or util.cwd()
 
     -- We know that the buffer is using Stylelint if it has a config file
     -- in its directory tree.
@@ -55,20 +55,17 @@ return {
     -- Stylelint support package.json files as config files.
     local filename = util.bufname(bufnr)
     local stylelint_config_files_with_package_json =
-      util.insert_package_json(stylelint_config_files, "stylelintConfig", filename)
-    local is_buffer_using_stylelint = vim.fs.find(stylelint_config_files_with_package_json, {
-      path = filename,
-      type = "file",
-      limit = 1,
-      upward = true,
-      stop = util.dirname(project_root),
-    })[1]
+      nx.await(util.insert_package_json(stylelint_config_files, "stylelintConfig", filename))
+    local is_buffer_using_stylelint =
+      nx.await(util.find_upward(filename, stylelint_config_files_with_package_json, {
+        stop = util.dirname(project_root),
+      }))
     if not is_buffer_using_stylelint then
       return
     end
 
     on_dir(project_root)
-  end,
+  end),
   on_attach = function(client, bufnr)
     util.buf_command(bufnr, "LspStylelintFixAll", function()
       client:request_sync("workspace/executeCommand", {

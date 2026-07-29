@@ -29,6 +29,9 @@ return {
   root_markers = { "pyproject.toml", "ruff.toml", ".git" },
   settings = {},
   on_init = function()
-    vim.deprecate("ruff_lsp", "ruff", "3.0.0", "nvim-lspconfig", false)
+    nx.notify_once(
+      "nxvim-lspconfig: 'ruff_lsp' has been renamed to 'ruff'; enable that instead",
+      nx.log.levels.WARN
+    )
   end,
 }

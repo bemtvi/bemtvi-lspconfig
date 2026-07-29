@@ -17,11 +17,7 @@
 --- Description of your jobs should be written in `.nomad` files for the LSP client to configure the server's `root_dir` configuration option.
 
 local util = require("nxvim-lspconfig.util")
-local bin_name = "nomad-lsp"
-
-if vim.fn.has("win32") == 1 then
-  bin_name = bin_name .. ".exe"
-end
+local bin_name = util.exe("nomad-lsp")
 
 return {
   cmd = { bin_name },

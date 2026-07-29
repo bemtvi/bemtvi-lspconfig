@@ -21,7 +21,7 @@ return {
   },
   on_exit = function(code, _, _)
     nx.schedule(function()
-      nx.notify("Closing Pyrefly LSP exited with code: " .. code, vim.log.levels.INFO)
+      nx.notify("Closing Pyrefly LSP exited with code: " .. code, nx.log.levels.INFO)
     end)
   end,
 }

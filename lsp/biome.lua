@@ -30,7 +30,7 @@ return {
     "vue",
   },
   workspace_required = true,
-  root_dir = function(bufnr, on_dir)
+  root_dir = util.root_dir(function(bufnr, on_dir)
     -- The project root is where the LSP can be started from
     -- As stated in the documentation above, this LSP supports monorepos and simple projects.
     -- We select then from the project root, which is identified by the presence of a package
@@ -49,23 +49,19 @@ return {
     root_markers = { root_markers, biome_config_files, { ".git" } }
 
     -- We fallback to the current working directory if no project root is found
-    local project_root = vim.fs.root(bufnr, root_markers) or vim.fn.getcwd()
+    local project_root = nx.await(util.root(bufnr, root_markers)) or util.cwd()
 
     -- We know that the buffer is using Biome if it has a config file
     -- in its directory tree.
     local filename = util.bufname(bufnr)
-    biome_config_files = util.insert_package_json(biome_config_files, "biomejs", filename)
-    local is_buffer_using_biome = vim.fs.find(biome_config_files, {
-      path = filename,
-      type = "file",
-      limit = 1,
-      upward = true,
+    biome_config_files = nx.await(util.insert_package_json(biome_config_files, "biomejs", filename))
+    local is_buffer_using_biome = nx.await(util.find_upward(filename, biome_config_files, {
       stop = util.dirname(project_root),
-    })[1]
+    }))
     if not is_buffer_using_biome then
       return
     end
 
     on_dir(project_root)
-  end,
+  end),
 }

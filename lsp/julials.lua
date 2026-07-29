@@ -28,11 +28,13 @@
 --- Note: The julia programming language searches for global environments within the `environments/`
 --- folder of `$JULIA_DEPOT_PATH` entries. By default this simply `~/.julia/environments`
 
+local util = require("nxvim-lspconfig.util")
+
 local root_files = { "Project.toml", "JuliaProject.toml" }
 
-local function activate_env(args)
+local activate_env = nx.async(function(args)
   local bufnr = nx.buf.current()
-  local julials_clients = vim.lsp.get_clients({ bufnr = bufnr, name = "julials" })
+  local julials_clients = nx.lsp.clients({ bufnr = bufnr, name = "julials" })
   assert(
     #julials_clients > 0,
     "method julia/activateenvironment is not supported by any servers active on the current buffer"
@@ -43,48 +45,55 @@ local function activate_env(args)
         ---@diagnostic disable-next-line: param-type-mismatch
         julials_client:notify("julia/activateenvironment", { envPath = environment })
       end
-      nx.notify("Julia environment activated: \n`" .. environment .. "`", vim.log.levels.INFO)
+      nx.notify("Julia environment activated: \n`" .. environment .. "`", nx.log.levels.INFO)
     end
   end
   local path = args.args
   if path ~= nil and #path > 0 then
-    path = util.normalize(vim.fn.fnamemodify(vim.fn.expand(path), ":p"))
+    path = util.normalize(nx.fname.modify(nx.utils.expanduser(path), ":p"))
     local found_env = false
     for _, project_file in ipairs(root_files) do
-      local file = vim.uv.fs_stat(util.joinpath(path, project_file))
-      if file and file.type then
+      if nx.await(util.exists(util.joinpath(path, project_file))) then
         found_env = true
         break
       end
     end
     if not found_env then
-      nx.notify("Path is not a julia environment: \n`" .. path .. "`", vim.log.levels.WARN)
+      nx.notify("Path is not a julia environment: \n`" .. path .. "`", nx.log.levels.WARN)
       return
     end
-    _activate_env(path)
-  else
-    local depot_paths = vim.env.JULIA_DEPOT_PATH
-        and nx.str.split(vim.env.JULIA_DEPOT_PATH, vim.fn.has("win32") == 1 and ";" or ":")
-      or { vim.fn.expand("~/.julia") }
-    local environments = {}
-    nx.list.extend(
-      environments,
-      vim.fs.find(root_files, { type = "file", upward = true, limit = math.huge })
-    )
-    for _, depot_path in ipairs(depot_paths) do
-      local depot_env = util.joinpath(util.normalize(depot_path), "environments")
-      nx.list.extend(
-        environments,
-        vim.fs.find(function(name, env_path)
-          return nx.tbl.contains(root_files, name)
-            and string.sub(env_path, #depot_env + 1):match("^/[^/]*$")
-        end, { path = depot_env, type = "file", limit = math.huge })
-      )
-    end
-    environments = nx.tbl.map(vim.fs.dirname, environments)
-    nx.ui.select(environments, { prompt = "Select a Julia environment" }, _activate_env)
+    return _activate_env(path)
   end
-end
+
+  -- Every environment the user could switch to: the project ones above this buffer,
+  -- plus the global ones julia keeps in `environments/` under each depot.
+  local sep = nx.utils.is_windows() and ";" or ":"
+  local depot_paths = nx.env.get("JULIA_DEPOT_PATH")
+      and nx.str.split(nx.env.get("JULIA_DEPOT_PATH"), sep)
+    or { nx.utils.expanduser("~/.julia") }
+
+  local environments = {}
+  for _, found in ipairs(nx.await(util.find_upward_all(util.bufname(nx.buf.current()), root_files))) do
+    environments[#environments + 1] = util.dirname(found)
+  end
+  for _, depot_path in ipairs(depot_paths) do
+    local depot_env = util.joinpath(util.normalize(depot_path), "environments")
+    for _, entry in
+      ipairs(nx.await(nx.fs.readdir(depot_env):catch(function()
+        return {}
+      end)))
+    do
+      local dir = util.joinpath(depot_env, entry.name)
+      for _, project_file in ipairs(root_files) do
+        if nx.await(util.exists(util.joinpath(dir, project_file))) then
+          environments[#environments + 1] = dir
+          break
+        end
+      end
+    end
+  end
+  nx.ui.select(environments, { prompt = "Select a Julia environment" }, _activate_env)
+end)
 
 local cmd = {
   "julia",

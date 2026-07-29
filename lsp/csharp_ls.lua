@@ -11,22 +11,13 @@
 local util = require("nxvim-lspconfig.util")
 
 return {
-  cmd = function(dispatchers, config)
-    return vim.lsp.rpc.start({ "csharp-ls" }, dispatchers, {
-      -- csharp-ls attempt to locate sln, slnx or csproj files from cwd, so set cwd to root directory.
-      -- If cmd_cwd is provided, use it instead.
-      cwd = config.cmd_cwd or config.root_dir,
-      env = config.cmd_env,
-      detached = config.detached,
-    })
-  end,
+  -- csharp-ls locates the sln / slnx / csproj from its working directory, which nxvim
+  -- already sets to the resolved root for every server it spawns.
+  cmd = { "csharp-ls" },
   root_dir = function(bufnr, on_dir)
-    local fname = util.bufname(bufnr)
-    on_dir(
-      util.root_pattern("*.sln")(fname)
-        or util.root_pattern("*.slnx")(fname)
-        or util.root_pattern("*.csproj")(fname)
-    )
+    -- Pattern order is priority: a solution roots the server ahead of a project file
+    -- even when the project file is nearer.
+    util.root_pattern("*.sln", "*.slnx", "*.csproj")(util.bufname(bufnr)):next(on_dir)
   end,
   filetypes = { "cs" },
   init_options = {

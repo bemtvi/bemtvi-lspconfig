@@ -22,18 +22,21 @@
 ---   },
 --- })
 
+local util = require("nxvim-lspconfig.util")
+
 return {
-  cmd = function(dispatchers, config)
-    local cmd = "glint-language-server"
+  cmd = nx.async(function(_dispatchers, config)
+    config = config or {}
     ---@diagnostic disable-next-line: undefined-field
-    if not config.init_options.glint.useGlobal and (config or {}).root_dir then
-      local local_cmd = util.joinpath(config.root_dir, "node_modules/.bin", cmd)
-      if vim.fn.executable(local_cmd) == 1 then
-        cmd = local_cmd
+    local use_global = ((config.init_options or {}).glint or {}).useGlobal
+    if not use_global then
+      local local_cmd = nx.await(util.local_bin(config.root_dir, "glint-language-server"))
+      if local_cmd then
+        return { local_cmd }
       end
     end
-    return vim.lsp.rpc.start({ cmd }, dispatchers)
-  end,
+    return { "glint-language-server" }
+  end),
   init_options = {
     glint = {
       useGlobal = false,

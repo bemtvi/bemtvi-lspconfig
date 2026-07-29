@@ -9,6 +9,8 @@
 --- To install Erg, simply extract tarball/zip from [Erg releases](https://github.com/erg-lang/erg/releases/latest)
 --- to the the path where you want to install it, e.g. `~/.erg`.
 
+local util = require("nxvim-lspconfig.util")
+
 return {
   cmd = { "pylyzer", "--server" },
   filetypes = { "python" },
@@ -29,6 +31,6 @@ return {
     },
   },
   cmd_env = {
-    ERG_PATH = vim.env.ERG_PATH or util.joinpath(vim.uv.os_homedir(), ".erg"),
+    ERG_PATH = nx.env.get("ERG_PATH") or util.joinpath(util.home(), ".erg"),
   },
 }

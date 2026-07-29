@@ -4,7 +4,7 @@
 ---
 --- Language server for various bash scripts such as Arch PKGBUILD, Gentoo ebuild, Termux build.sh, etc.
 
-local util = require("lspconfig").util
+local util = require("nxvim-lspconfig.util")
 
 return {
   cmd = { "termux-language-server" },
@@ -24,9 +24,14 @@ return {
       "*.eclass",
     }
     local fname = util.bufname(bufnr)
-    local match = util.root_pattern(patterns)(fname)
-    if match then
-      on_dir(vim.fs.root(match, ".git") or match)
-    end
+    util.root_pattern(patterns)(fname):next(function(match)
+      if not match then
+        return
+      end
+      -- A PKGBUILD-style tree is often a subdirectory of a bigger repo; prefer the repo.
+      util.root_of_path(match, { ".git" }):next(function(git_root)
+        on_dir(git_root or match)
+      end)
+    end)
   end,
 }

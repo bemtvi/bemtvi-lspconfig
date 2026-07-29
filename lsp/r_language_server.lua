@@ -10,10 +10,14 @@
 --- install.packages("languageserver")
 --- ```
 
+local util = require("nxvim-lspconfig.util")
+
 return {
   cmd = { "R", "--no-echo", "-e", "languageserver::run()" },
   filetypes = { "r", "rmd", "quarto" },
   root_dir = function(bufnr, on_dir)
-    on_dir(vim.fs.root(bufnr, ".git") or vim.uv.os_homedir())
+    util.root(bufnr, { ".git" }):next(function(root)
+      on_dir(root or util.home())
+    end)
   end,
 }

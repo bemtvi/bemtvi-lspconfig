@@ -22,6 +22,8 @@
 --- })
 --- ```
 
+local util = require("nxvim-lspconfig.util")
+
 local function switch_source_header(client, bufnr)
   local method_name = "textDocument/switchSourceHeader"
   local params = vim.lsp.util.make_text_document_params(bufnr)

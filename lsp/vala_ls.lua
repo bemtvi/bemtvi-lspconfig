@@ -2,33 +2,40 @@
 ---
 --- https://github.com/vala-lang/vala-language-server
 
-local meson_matcher = function(path)
-  local pattern = "meson.build"
-  local f = vim.fn.glob(table.concat({ path, pattern }, "/"))
-  if f == "" then
+local util = require("nxvim-lspconfig.util")
+
+---Does `dir` hold the meson.build that DECLARES the project? A meson tree has a
+---`meson.build` in every subdirectory, but only the top one opens with `project()` —
+---the rest are includes. The first non-blank, non-comment statement decides it.
+local declares_project = nx.async(function(dir)
+  local text = nx.await(nx.fs.read_text(util.joinpath(dir, "meson.build")):catch(function()
     return nil
+  end))
+  if type(text) ~= "string" then
+    return false
   end
-  for line in io.lines(f) do
+  for line in text:gmatch("[^\n]*") do
     -- skip meson comments
     if not line:match("^%s*#.*") then
       local str = line:gsub("%s+", "")
       if str ~= "" then
-        if str:match("^project%(") then
-          return path
-        else
-          break
-        end
+        return str:match("^project%(") ~= nil
       end
     end
   end
-end
+  return false
+end)
 
 return {
   cmd = { "vala-language-server" },
   filetypes = { "vala", "genie" },
-  root_dir = function(bufnr, on_dir)
+  root_dir = nx.async(function(bufnr)
     local fname = util.bufname(bufnr)
-    local root = vim.iter(util.ancestors(fname)):find(meson_matcher)
-    on_dir(root or util.dirname(vim.fs.find(".git", { path = fname, upward = true })[1]))
-  end,
+    for dir in util.ancestors(fname) do
+      if nx.await(declares_project(dir)) then
+        return dir
+      end
+    end
+    return nx.await(util.root_of_path(fname, { ".git" }))
+  end),
 }

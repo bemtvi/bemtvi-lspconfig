@@ -21,15 +21,15 @@
 --- an example of how to use this to automatically fix all errors on write.
 local util = require("nxvim-lspconfig.util")
 
-local function oxlint_conf_mentions_typescript(root_dir)
-  local fn = util.joinpath(root_dir, ".oxlintrc.json")
-  for line in io.lines(fn) do
-    if line:find("typescript") then
-      return true
-    end
+local oxlint_conf_mentions_typescript = nx.async(function(root_dir)
+  if not root_dir then
+    return false
   end
-  return false
-end
+  local text = nx.await(nx.fs.read_text(util.joinpath(root_dir, ".oxlintrc.json")):catch(function()
+    return nil
+  end))
+  return type(text) == "string" and text:find("typescript") ~= nil
+end)
 
 return {
   cmd = util.node_cmd("oxlint", { "--lsp" }),
@@ -42,24 +42,31 @@ return {
     "svelte",
     "astro",
   },
-  root_dir = function(bufnr, on_dir)
+  root_dir = util.root_dir(function(bufnr, on_dir)
     local fname = util.bufname(bufnr)
 
-    local root_markers = util.insert_package_json(
-      { ".oxlintrc.json", ".oxlintrc.jsonc", "oxlint.config.ts" },
-      { "oxlint", "vite%-plus" },
-      fname
+    local root_markers = nx.await(
+      util.insert_package_json(
+        { ".oxlintrc.json", ".oxlintrc.jsonc", "oxlint.config.ts" },
+        { "oxlint", "vite%-plus" },
+        fname
+      )
     )
     -- find vite plus config with lint field
-    root_markers = util.root_markers_with_field(
-      root_markers,
-      { "vite.config.ts" },
-      { "vite%-plus", "lint:" },
-      fname,
-      "all"
+    root_markers = nx.await(
+      util.root_markers_with_field(
+        root_markers,
+        { "vite.config.ts" },
+        { "vite%-plus", "lint:" },
+        fname,
+        "all"
+      )
     )
-    on_dir(util.dirname(vim.fs.find(root_markers, { path = fname, upward = true })[1]))
-  end,
+    local found = nx.await(util.find_upward(fname, root_markers))
+    if found then
+      on_dir(util.dirname(found))
+    end
+  end),
   workspace_required = true,
   on_attach = function(client, bufnr)
     util.buf_command(bufnr, "LspOxlintFixAll", function()
@@ -81,16 +88,12 @@ return {
     -- disableNestedConfig = false,
     -- fixKind = 'safe_fix',
   },
-  before_init = function(init_params, config)
+  before_init = nx.async(function(init_params, config)
     local settings = config.settings or {}
-    local has_tsgolint = vim.fn.executable("tsgolint") == 1
-    if not has_tsgolint and (config or {}).root_dir then
-      local local_cmd = util.joinpath(config.root_dir, "node_modules/.bin", "tsgolint")
-      has_tsgolint = vim.fn.executable(local_cmd) == 1
-    end
+    local has_tsgolint = nx.await(util.which("tsgolint"))
+      or nx.await(util.local_bin((config or {}).root_dir, "tsgolint"))
     if settings.typeAware == nil and has_tsgolint then
-      local ok, res = pcall(oxlint_conf_mentions_typescript, config.root_dir)
-      if ok and res then
+      if nx.await(oxlint_conf_mentions_typescript(config.root_dir)) then
         settings = nx.tbl.extend("force", settings, { typeAware = true })
       end
     end
@@ -99,5 +102,5 @@ return {
       nx.tbl.extend("force", init_options.settings or {} --[[@as table]], settings)
 
     init_params.initializationOptions = init_options
-  end,
+  end),
 }

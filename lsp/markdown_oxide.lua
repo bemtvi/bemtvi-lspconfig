@@ -12,6 +12,8 @@
 ---@param client vim.lsp.Client
 ---@param bufnr integer
 ---@param cmd string
+local util = require("nxvim-lspconfig.util")
+
 local function command_factory(client, bufnr, cmd)
   return client:exec_cmd({
     title = ("Markdown-Oxide-%s"):format(cmd),

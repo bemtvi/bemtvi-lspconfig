@@ -4,11 +4,11 @@
 ---
 --- Deno's built-in language server
 ---
---- To appropriately highlight codefences returned from denols, you will need to augment vim.g.markdown_fenced languages
+--- To appropriately highlight codefences returned from denols, you will need to augment nx.g.markdown_fenced languages
 ---  in your init.lua. Example:
 ---
 --- ```lua
---- vim.g.markdown_fenced_languages = {
+--- nx.g.markdown_fenced_languages = {
 ---   "ts=typescript"
 --- }
 --- ```
@@ -43,6 +43,8 @@
 --- If DENO LOCK ROOT is found, and PROJECT ROOT is missing or shorter, then this is a deno file, and we attach.
 --- If DENO ROOT is found, and it's longer than or equal to PROJECT ROOT, then this is a Deno file, and we attach.
 --- Otherwise, we abort, because this is a non-Deno TS file.
+
+local util = require("nxvim-lspconfig.util")
 
 local lsp = vim.lsp
 
@@ -103,15 +105,15 @@ return {
     "typescript",
     "typescriptreact",
   },
-  root_dir = function(bufnr, on_dir)
+  root_dir = util.root_dir(function(bufnr, on_dir)
     -- The project root is where the LSP can be started from
     local root_markers = { "deno.lock", "deno.json", "deno.jsonc" }
     -- Give the root markers equal priority by wrapping them in a table
     root_markers = { root_markers, { ".git" } }
     -- only include deno projects
-    local deno_root = vim.fs.root(bufnr, { "deno.json", "deno.jsonc" })
-    local deno_lock_root = vim.fs.root(bufnr, { "deno.lock" })
-    local project_root = vim.fs.root(bufnr, root_markers)
+    local deno_root = nx.await(util.root(bufnr, { "deno.json", "deno.jsonc" }))
+    local deno_lock_root = nx.await(util.root(bufnr, { "deno.lock" }))
+    local project_root = nx.await(util.root(bufnr, root_markers))
     if
       (deno_lock_root and (not project_root or #deno_lock_root > #project_root))
       or (deno_root and (not project_root or #deno_root >= #project_root))
@@ -121,7 +123,7 @@ return {
       -- or deno lock or deno config path. At least one of these is always set at this point.
       on_dir(project_root or deno_lock_root or deno_root)
     end
-  end,
+  end),
   settings = {
     deno = {
       enable = true,
@@ -148,7 +150,7 @@ return {
       }, { bufnr = bufnr }, function(err, _, ctx)
         if err then
           local uri = ctx.params.arguments[2]
-          nx.notify("cache command failed for" .. util.uri_to_path(uri), vim.log.levels.ERROR)
+          nx.notify("cache command failed for" .. util.uri_to_path(uri), nx.log.levels.ERROR)
         end
       end)
     end, {

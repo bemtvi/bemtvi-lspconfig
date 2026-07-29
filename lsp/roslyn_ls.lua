@@ -22,15 +22,19 @@
 --   where `<my_folder>` has to be the folder you extracted the nuget package to.
 -- - for all other platforms put the extracted folder to neovim's PATH (`vim.env.PATH`)
 
-local uv = vim.uv
-local fs = vim.fs
+local util = require("nxvim-lspconfig.util")
 
 local group = nx.augroup.create("lspconfig.roslyn_ls", { clear = true })
+
+-- Buffers whose refresh autocmd is already armed. `on_attach` runs once per (client,
+-- buffer), and a buffer served by two roslyn instances would otherwise pull its
+-- diagnostics twice per save.
+local armed = {}
 
 ---@param client vim.lsp.Client
 ---@param target string
 local function on_init_sln(client, target)
-  nx.notify("Initializing: " .. target, vim.log.levels.TRACE, { title = "roslyn_ls" })
+  nx.notify("Initializing: " .. target, nx.log.levels.TRACE, { title = "roslyn_ls" })
   ---@diagnostic disable-next-line: param-type-mismatch
   client:notify("solution/open", {
     solution = util.uri_from_path(target),
@@ -40,7 +44,7 @@ end
 ---@param client vim.lsp.Client
 ---@param project_files string[]
 local function on_init_project(client, project_files)
-  nx.notify("Initializing: projects", vim.log.levels.TRACE, { title = "roslyn_ls" })
+  nx.notify("Initializing: projects", nx.log.levels.TRACE, { title = "roslyn_ls" })
   ---@diagnostic disable-next-line: param-type-mismatch
   client:notify("project/open", {
     projects = nx.tbl.map(function(file)
@@ -49,23 +53,24 @@ local function on_init_project(client, project_files)
   })
 end
 
----@param client vim.lsp.Client
+---Roslyn only recomputes a document's diagnostics when asked, so a pull is what makes
+---them refresh after a save or after project initialization finishes.
+---
+---Upstream enumerates the server's dynamically-registered diagnostic identifiers and
+---pulls once per identifier per attached buffer. nxvim does not model dynamic
+---capability registration, so there is no identifier list to enumerate; the pull goes
+---out without one, which is the request the server answers with its default set.
+---@param client table
 local function refresh_diagnostics(client)
-  local capabilities = vim
-    .iter(client.dynamic_capabilities.capabilities.diagnosticProvider or {})
-    :map(function(cap)
-      return cap.registerOptions.identifier
-    end)
-    :totable()
-
-  for buf, _ in pairs(client.attached_buffers) do
-    if vim.api.nvim_buf_is_loaded(buf) then
-      for _, cap in pairs(capabilities) do
-        client:request(vim.lsp.protocol.Methods.textDocument_diagnostic, {
-          identifier = cap,
-          textDocument = vim.lsp.util.make_text_document_params(buf),
-        }, nil, buf)
-      end
+  for _, buf in ipairs(nx.buf.list()) do
+    local attached = false
+    for _, c in ipairs(nx.lsp.clients({ bufnr = buf, name = client.name })) do
+      attached = attached or c.id == client.id
+    end
+    if attached and nx.buf.is_loaded(buf) then
+      client:request("textDocument/diagnostic", {
+        textDocument = { uri = util.uri_from_buf(buf) },
+      })
     end
   end
 end
@@ -75,32 +80,35 @@ local function roslyn_handlers()
     ["workspace/projectInitializationComplete"] = function(_, _, ctx)
       nx.notify(
         "Roslyn project initialization complete",
-        vim.log.levels.INFO,
+        nx.log.levels.INFO,
         { title = "roslyn_ls" }
       )
       local client = assert(nx.lsp.client_by_id(ctx.client_id))
       refresh_diagnostics(client)
-      return vim.NIL
+      return nx.json.null
     end,
     ["razor/provideDynamicFileInfo"] = function(_, _, _)
       nx.notify(
         "Razor is not supported.\nPlease use https://github.com/seblyng/roslyn.nvim",
-        vim.log.levels.WARN,
+        nx.log.levels.WARN,
         { title = "roslyn_ls" }
       )
-      return vim.NIL
+      return nx.json.null
     end,
   }
 end
 
+---Is this buffer decompiled source rather than a file in the user's project? Roslyn
+---writes those under `<tmp>/MetadataAsSource/...` when you jump into a library type,
+---and they must NOT trigger a solution search of their own.
+---
+---The path shape is the whole test here: upstream additionally confirms the directory
+---exists under the temp dir, which is a filesystem read inside a `root_dir` — and
+---answers the same question, since only Roslyn creates that path.
 ---@param bufname string
 ---@return boolean
 local function is_decompiled(bufname)
-  local _, endpos = bufname:find("[/\\]MetadataAsSource[/\\]")
-  if endpos == nil then
-    return false
-  end
-  return vim.fn.finddir(bufname:sub(1, endpos), uv.os_tmpdir()) ~= ""
+  return bufname:find("[/\\]MetadataAsSource[/\\]") ~= nil
 end
 
 ---@param client vim.lsp.Client
@@ -120,13 +128,13 @@ end
 local function handle_fix_all_action(client, command, bufnr)
   local arg = command.arguments and command.arguments[1]
   if type(arg) ~= "table" then
-    nx.notify("roslyn_ls: invalid fixAllCodeAction arguments", vim.log.levels.ERROR)
+    nx.notify("roslyn_ls: invalid fixAllCodeAction arguments", nx.log.levels.ERROR)
     return
   end
 
   local flavors = arg.FixAllFlavors
   if type(flavors) ~= "table" or nx.tbl.is_empty(flavors) then
-    nx.notify("roslyn_ls: fixAllCodeAction has no FixAllFlavors", vim.log.levels.WARN)
+    nx.notify("roslyn_ls: fixAllCodeAction has no FixAllFlavors", nx.log.levels.WARN)
     return
   end
 
@@ -145,7 +153,7 @@ local function handle_fix_all_action(client, command, bufnr)
       if err then
         nx.notify(
           "roslyn_ls: fixAllCodeAction resolve error: " .. (err.message or tostring(err)),
-          vim.log.levels.ERROR
+          nx.log.levels.ERROR
         )
         return
       end
@@ -158,17 +166,29 @@ end
 
 return {
   name = "roslyn_ls",
-  cmd = {
-    vim.fn.executable("Microsoft.CodeAnalysis.LanguageServer") == 1
-        and "Microsoft.CodeAnalysis.LanguageServer"
-      or "roslyn-language-server",
-    "--stdio",
-  },
+  -- Installed either as the nuget's own binary or as the `roslyn-language-server` dotnet
+  -- tool, so which one is present decides the argv.
+  cmd = nx.async(function()
+    return {
+      nx.await(util.which("Microsoft.CodeAnalysis.LanguageServer"))
+          and "Microsoft.CodeAnalysis.LanguageServer"
+        or "roslyn-language-server",
+      "--stdio",
+    }
+  end),
 
-  cmd_env = {
-    -- Fixes LSP navigation in decompiled files for systems with symlinked TMPDIR (macOS)
-    TMPDIR = vim.env.TMPDIR and vim.env.TMPDIR ~= "" and vim.fn.resolve(vim.env.TMPDIR) or nil,
-  },
+  -- Fixes LSP navigation in decompiled files for systems with symlinked TMPDIR (macOS):
+  -- the server writes the decompiled file under the resolved path and reports it under
+  -- the symlinked one, so the editor opens a path the server has never heard of.
+  before_init = nx.async(function(_init_params, config)
+    local tmpdir = nx.env.get("TMPDIR")
+    if tmpdir and tmpdir ~= "" then
+      local real = nx.await(nx.fs.realpath(tmpdir):catch(function()
+        return tmpdir
+      end))
+      config.cmd_env = nx.tbl.extend("force", config.cmd_env or {}, { TMPDIR = real })
+    end
+  end),
 
   filetypes = { "cs" },
   handlers = roslyn_handlers(),
@@ -195,8 +215,8 @@ return {
       ---@diagnostic enable: undefined-field
       else
         nx.notify(
-          "roslyn_ls: completionComplexEdit args not understood: " .. vim.inspect(args),
-          vim.log.levels.WARN
+          "roslyn_ls: completionComplexEdit args not understood: " .. nx.inspect(args),
+          nx.log.levels.WARN
         )
       end
     end,
@@ -206,7 +226,7 @@ return {
       local arg = command.arguments and command.arguments[1]
 
       if type(arg) ~= "table" then
-        nx.notify("roslyn_ls: invalid nestedCodeAction arguments", vim.log.levels.ERROR)
+        nx.notify("roslyn_ls: invalid nestedCodeAction arguments", nx.log.levels.ERROR)
         return
       end
 
@@ -218,7 +238,7 @@ return {
         if action.data and not action.edit and not action.command then
           client:request("codeAction/resolve", action, function(err, resolved)
             if err then
-              nx.notify(err.message or tostring(err), vim.log.levels.ERROR)
+              nx.notify(err.message or tostring(err), nx.log.levels.ERROR)
               return
             end
             if resolved then
@@ -228,7 +248,7 @@ return {
           return
         end
 
-        local nested = vim.islist(action) and action or action.NestedCodeActions
+        local nested = nx.list.is_list(action) and action or action.NestedCodeActions
         if type(nested) ~= "table" or nx.tbl.is_empty(nested) then
           apply_action(client, action)
           return
@@ -260,66 +280,61 @@ return {
     end,
   },
 
-  root_dir = function(bufnr, cb)
+  root_dir = util.root_dir(function(bufnr, cb)
     local bufname = util.bufname(bufnr)
-    -- don't try to find sln or csproj for files from libraries
-    -- outside of the project
-    if not is_decompiled(bufname) then
-      -- try find solutions root first
-      local root_dir = fs.root(bufnr, function(fname, _)
-        return fname:match("%.sln[x]?$") ~= nil
-      end)
-
-      if not root_dir then
-        -- try find projects root
-        root_dir = fs.root(bufnr, function(fname, _)
-          return fname:match("%.csproj$") ~= nil
-        end)
-      end
-
-      if root_dir then
-        cb(root_dir)
-      end
-    else
-      -- Decompiled code (example: "/tmp/MetadataAsSource/f2bfba/DecompilationMetadataAsSourceFileProvider/d5782a/Console.cs")
-      local prev_buf = vim.fn.bufnr("#")
-      local client = nx.lsp.clients({
-        name = "roslyn_ls",
-        bufnr = prev_buf ~= 1 and prev_buf or nil,
-      })[1]
+    -- Decompiled code (example: "/tmp/MetadataAsSource/f2bfba/DecompilationMetadataAsSourceFileProvider/d5782a/Console.cs")
+    -- doesn't belong to any solution of its own — it was jumped into from one. Serve it
+    -- from the server already running, and decline the buffer when there is none.
+    if is_decompiled(bufname) then
+      local client = nx.lsp.clients({ name = "roslyn_ls" })[1]
       if client then
         cb(client.config.root_dir)
       end
+      return
     end
-  end,
+
+    -- A solution roots the server ahead of a bare project, wherever each is found:
+    -- rooting at a nested .csproj inside a solution loses the cross-project references.
+    local root_dir = nx.await(util.root_pattern("*.sln", "*.slnx", "*.csproj")(bufname))
+    if root_dir then
+      cb(root_dir)
+    end
+  end),
   on_init = {
-    function(client)
+    nx.async(function(client)
       local root_dir = client.config.root_dir
+      local entries = nx.await(nx.fs.readdir(root_dir):catch(function()
+        return {}
+      end))
 
       -- try load first solution we find
-      for entry, type in fs.dir(root_dir) do
-        if
-          type == "file" and (nx.str.endswith(entry, ".sln") or nx.str.endswith(entry, ".slnx"))
-        then
-          on_init_sln(client, fs.joinpath(root_dir, entry))
-          return
+      local projects = {}
+      for _, entry in ipairs(entries) do
+        if entry.type == "file" then
+          if nx.str.endswith(entry.name, ".sln") or nx.str.endswith(entry.name, ".slnx") then
+            return on_init_sln(client, util.joinpath(root_dir, entry.name))
+          end
+          if nx.str.endswith(entry.name, ".csproj") then
+            projects[#projects + 1] = util.joinpath(root_dir, entry.name)
+          end
         end
       end
 
-      -- if no solution is found load project
-      for entry, type in fs.dir(root_dir) do
-        if type == "file" and nx.str.endswith(entry, ".csproj") then
-          on_init_project(client, { fs.joinpath(root_dir, entry) })
-        end
+      -- if no solution is found load the projects. Upstream sends one `project/open`
+      -- per .csproj; the notification takes a LIST, and a second one replaces the first
+      -- rather than adding to it, so a multi-project directory loaded only its last.
+      if #projects > 0 then
+        on_init_project(client, projects)
       end
-    end,
+    end),
   },
 
   on_attach = function(client, bufnr)
     -- avoid duplicate autocmds for same buffer
-    if vim.api.nvim_get_autocmds({ buffer = bufnr, group = group })[1] then
+    if armed[bufnr] then
       return
     end
+    armed[bufnr] = true
 
     nx.autocmd.create({ "BufWritePost", "InsertLeave" }, {
       group = group,

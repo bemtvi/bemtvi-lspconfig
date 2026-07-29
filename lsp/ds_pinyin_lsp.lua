@@ -15,10 +15,9 @@
 ---
 --- ```
 
-local bin_name = "ds-pinyin-lsp"
-if vim.fn.has("win32") == 1 then
-  bin_name = bin_name .. ".exe"
-end
+local util = require("nxvim-lspconfig.util")
+
+local bin_name = util.exe("ds-pinyin-lsp")
 
 local function ds_pinyin_lsp_off(bufnr)
   local ds_pinyin_lsp_client = nx.lsp.clients({ bufnr = bufnr, name = "ds_pinyin_lsp" })[1]
@@ -28,7 +27,7 @@ local function ds_pinyin_lsp_off(bufnr)
       ["completion_on"] = false,
     })
   else
-    vim.notify(
+    nx.notify(
       "notification $/turn/completion is not supported by any servers active on the current buffer"
     )
   end
@@ -42,7 +41,7 @@ local function ds_pinyin_lsp_on(bufnr)
       ["completion_on"] = true,
     })
   else
-    vim.notify(
+    nx.notify(
       "notification $/turn/completion is not supported by any servers active on the current buffer"
     )
   end

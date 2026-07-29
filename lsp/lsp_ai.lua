@@ -16,8 +16,8 @@ return {
   root_dir = nil,
   init_options = {
     memory = {
-      file_store = vim.empty_dict(),
+      file_store = nx.json.empty_object(),
     },
-    models = vim.empty_dict(),
+    models = nx.json.empty_object(),
   },
 }

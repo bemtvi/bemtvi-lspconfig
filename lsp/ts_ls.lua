@@ -84,7 +84,7 @@ return {
     "typescript",
     "typescriptreact",
   },
-  root_dir = function(bufnr, on_dir)
+  root_dir = util.root_dir(function(bufnr, on_dir)
     -- The project root is where the LSP can be started from
     -- As stated in the documentation above, this LSP supports monorepos and simple projects.
     -- We select then from the project root, which is identified by the presence of a package
@@ -94,9 +94,9 @@ return {
     -- Give the root markers equal priority by wrapping them in a table
     root_markers = { root_markers, { ".git" } }
     -- exclude deno
-    local deno_root = vim.fs.root(bufnr, { "deno.json", "deno.jsonc" })
-    local deno_lock_root = vim.fs.root(bufnr, { "deno.lock" })
-    local project_root = vim.fs.root(bufnr, root_markers)
+    local deno_root = nx.await(util.root(bufnr, { "deno.json", "deno.jsonc" }))
+    local deno_lock_root = nx.await(util.root(bufnr, { "deno.lock" }))
+    local project_root = nx.await(util.root(bufnr, root_markers))
     if deno_lock_root and (not project_root or #deno_lock_root > #project_root) then
       -- deno lock is closer than package manager lock, abort
       return
@@ -107,8 +107,8 @@ return {
     end
     -- project is standard TS, not deno
     -- We fallback to the current working directory if no project root is found
-    on_dir(project_root or vim.fn.getcwd())
-  end,
+    on_dir(project_root or util.cwd())
+  end),
   handlers = {
     -- handle rename request for certain code actions like extracting functions / types
     ["_typescript.rename"] = function(_, result, ctx)
@@ -178,11 +178,11 @@ return {
         arguments = { params.textDocument.uri, params.position },
       }, { bufnr = bufnr }, function(err, result)
         if err then
-          nx.notify("Go to source definition failed: " .. err.message, vim.log.levels.ERROR)
+          nx.notify("Go to source definition failed: " .. err.message, nx.log.levels.ERROR)
           return
         end
         if not result or nx.tbl.is_empty(result) then
-          nx.notify("No source definition found", vim.log.levels.INFO)
+          nx.notify("No source definition found", nx.log.levels.INFO)
           return
         end
         nx.lsp.show_document(result[1], client.offset_encoding, { focus = true })

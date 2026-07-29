@@ -6,10 +6,10 @@
 ---
 --- If you're setting this up manually, build vscode-gradle using `./gradlew installDist` and point `cmd` to the `gradle-language-server` generated in the build directory
 
-local bin_name = "gradle-language-server"
-if vim.fn.has("win32") == 1 then
-  bin_name = bin_name .. ".bat"
-end
+local util = require("nxvim-lspconfig.util")
+
+-- Installed as a `.bat` wrapper on Windows, a bare script elsewhere.
+local bin_name = util.exe("gradle-language-server", ".bat")
 
 return {
   filetypes = { "groovy" },

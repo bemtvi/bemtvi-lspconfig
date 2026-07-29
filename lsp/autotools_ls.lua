@@ -18,6 +18,6 @@ return {
   filetypes = { "config", "automake", "make" },
   root_dir = function(bufnr, on_dir)
     local fname = util.bufname(bufnr)
-    on_dir(util.root_pattern(unpack(root_files))(fname))
+    util.root_pattern(root_files)(fname):next(on_dir)
   end,
 }

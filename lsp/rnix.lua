@@ -8,11 +8,15 @@
 ---
 --- This server accepts configuration via the `settings` key.
 
+local util = require("nxvim-lspconfig.util")
+
 return {
   cmd = { "rnix-lsp" },
   filetypes = { "nix" },
   root_dir = function(bufnr, on_dir)
-    on_dir(vim.fs.root(bufnr, ".git") or vim.uv.os_homedir())
+    util.root(bufnr, { ".git" }):next(function(root)
+      on_dir(root or util.home())
+    end)
   end,
   settings = {},
   init_options = {},

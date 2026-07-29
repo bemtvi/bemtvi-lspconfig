@@ -15,12 +15,15 @@
 --- },
 --- ```
 
+local util = require("nxvim-lspconfig.util")
+
 return {
   cmd = { "matlab-language-server", "--stdio" },
   filetypes = { "matlab" },
   root_dir = function(bufnr, on_dir)
-    local root_dir = vim.fs.root(bufnr, ".git")
-    on_dir(root_dir or vim.fn.getcwd())
+    util.root(bufnr, { ".git" }):next(function(root_dir)
+      on_dir(root_dir or util.cwd())
+    end)
   end,
   settings = {
     MATLAB = {

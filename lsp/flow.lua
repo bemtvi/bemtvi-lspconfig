@@ -12,22 +12,19 @@
 --- npx flow lsp --help
 --- ```
 
+local util = require("nxvim-lspconfig.util")
+
 return {
-  cmd = function(dispatchers, config)
-    local cmd
-    if vim.fn.executable("flow") == 1 then
-      cmd = { "flow", "lsp" }
-    else
-      local flow_bin = (config or {}).root_dir
-        and util.joinpath(config.root_dir, "node_modules/.bin/flow")
-      if flow_bin and vim.fn.executable(flow_bin) == 1 then
-        cmd = { flow_bin, "lsp" }
-      else
-        cmd = { "npx", "--no-install", "flow", "lsp" }
-      end
+  cmd = nx.async(function(_dispatchers, config)
+    if nx.await(util.which("flow")) then
+      return { "flow", "lsp" }
     end
-    return vim.lsp.rpc.start(cmd, dispatchers)
-  end,
+    local flow_bin = nx.await(util.local_bin((config or {}).root_dir, "flow"))
+    if flow_bin then
+      return { flow_bin, "lsp" }
+    end
+    return { "npx", "--no-install", "flow", "lsp" }
+  end),
   filetypes = { "javascript", "javascriptreact" },
   root_markers = { ".flowconfig" },
 }

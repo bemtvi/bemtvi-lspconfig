@@ -37,13 +37,13 @@ return {
         -- there can sometimes be a short delay until `ts_ls`/`vtsls` are attached so we retry for a few times until it is ready
         if retries <= 10 then
           retries = retries + 1
-          vim.defer_fn(function()
+          nx.timer(function()
             typescriptHandler(_, result, context)
           end, 100)
         else
           nx.notify(
             "Could not find `ts_ls`, `vtsls`, or `typescript-tools` lsp client required by `vue_ls`.",
-            vim.log.levels.ERROR
+            nx.log.levels.ERROR
           )
         end
         return

@@ -14,7 +14,7 @@ return {
     -- directly in the home directory (e.g. ~/foo.sh).
     --
     -- Default upstream pattern is "**/*@(.sh|.inc|.bash|.command)".
-    GLOB_PATTERN = vim.env.GLOB_PATTERN or "*@(.blp)",
+    GLOB_PATTERN = nx.env.get("GLOB_PATTERN") or "*@(.blp)",
   },
   filetypes = { "blueprint" },
   root_markers = { ".git" },

@@ -9,6 +9,8 @@
 ---@param bufnr integer
 ---@param opts table
 ---@param action fun(path: string, title: string)
+local util = require("nxvim-lspconfig.util")
+
 local function zk_list(client, bufnr, opts, action)
   opts = nx.tbl.extend("keep", { select = { "path", "title" } }, opts or {})
   client:exec_cmd({
@@ -17,7 +19,7 @@ local function zk_list(client, bufnr, opts, action)
     arguments = { util.bufname(bufnr), opts },
   }, { bufnr = bufnr }, function(err, result)
     if err ~= nil then
-      nx.echo({ { "zk.list error\n" }, { vim.inspect(err) } }, true, {})
+      nx.echo({ { "zk.list error\n" }, { nx.inspect(err) } }, true, {})
       return
     end
     if result == nil then
@@ -49,18 +51,18 @@ return {
         arguments = { util.bufname(bufnr) },
       }, { bufnr = bufnr }, function(err, result)
         if err ~= nil then
-          nx.echo({ { "zk.index error\n" }, { vim.inspect(err) } }, true, {})
+          nx.echo({ { "zk.index error\n" }, { nx.inspect(err) } }, true, {})
           return
         end
         if result ~= nil then
-          nx.echo({ { vim.inspect(result) } }, false, {})
+          nx.echo({ { nx.inspect(result) } }, false, {})
         end
       end)
     end, { desc = "ZkIndex" })
 
     util.buf_command(bufnr, "LspZkList", function()
       zk_list(client, bufnr, {}, function(path)
-        vim.cmd("edit " .. path)
+        nx.cmd("edit " .. nx.fname.escape(path))
       end)
     end, { desc = "ZkList" })
 
@@ -71,7 +73,7 @@ return {
         arguments = { util.bufname(bufnr) },
       }, { bufnr = bufnr }, function(err, result)
         if err ~= nil then
-          nx.echo({ { "zk.tag.list error\n" }, { vim.inspect(err) } }, true, {})
+          nx.echo({ { "zk.tag.list error\n" }, { nx.inspect(err) } }, true, {})
           return
         end
         if result == nil then
@@ -85,7 +87,7 @@ return {
         }, function(item)
           if item ~= nil then
             zk_list(client, bufnr, { tags = { item.name } }, function(path)
-              vim.cmd("edit " .. path)
+              nx.cmd("edit " .. nx.fname.escape(path))
             end)
           end
         end)
@@ -104,11 +106,11 @@ return {
         },
       }, { bufnr = bufnr }, function(err, result)
         if err ~= nil then
-          nx.echo({ { "zk.new error\n" }, { vim.inspect(err) } }, true, {})
+          nx.echo({ { "zk.new error\n" }, { nx.inspect(err) } }, true, {})
           return
         end
 
-        vim.cmd("edit " .. result.path)
+        nx.cmd("edit " .. nx.fname.escape(result.path))
       end)
     end, { desc = "ZkNew [title] [dir]", nargs = "*" })
   end,

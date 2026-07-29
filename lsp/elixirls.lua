@@ -30,6 +30,8 @@
 --- directories upward, the second one (higher up) is chosen, with the assumption that it is the root of an umbrella
 --- app. Otherwise the directory containing the single mix.exs that was found is chosen.
 
+local util = require("nxvim-lspconfig.util")
+
 return {
   cmd = { "elixir-ls" },
   filetypes = { "elixir", "eelixir", "heex", "surface" },
@@ -37,10 +39,14 @@ return {
     local fname = util.bufname(bufnr)
     --- Elixir workspaces may have multiple `mix.exs` files, for an "umbrella" layout or monorepo.
     --- So we specify `limit=2` and treat the highest one (if any) as the root of an umbrella app.
-    local matches = vim.fs.find({ "mix.exs" }, { upward = true, limit = 2, path = fname })
-    local child_or_root_path, maybe_umbrella_path = unpack(matches)
-    local root_dir = util.dirname(maybe_umbrella_path or child_or_root_path)
-
-    on_dir(root_dir)
+    util.find_upward_all(fname, { "mix.exs" }, { limit = 2 }):next(function(matches)
+      local child_or_root_path, maybe_umbrella_path = matches[1], matches[2]
+      local mix = maybe_umbrella_path or child_or_root_path
+      -- An elixir buffer outside any mix project has no root at all; upstream errors
+      -- here (`dirname(nil)`), which loses the buffer rather than just the server.
+      if mix then
+        on_dir(util.dirname(mix))
+      end
+    end)
   end,
 }

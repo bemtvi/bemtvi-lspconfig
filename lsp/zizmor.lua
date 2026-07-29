@@ -10,6 +10,8 @@
 ---
 --- See `zizmor`'s [documentation](https://docs.zizmor.sh/) for additional documentation.
 
+local util = require("nxvim-lspconfig.util")
+
 return {
   cmd = { "zizmor", "--lsp" },
   filetypes = { "yaml" },

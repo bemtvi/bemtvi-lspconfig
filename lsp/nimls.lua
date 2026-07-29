@@ -15,9 +15,7 @@ return {
   filetypes = { "nim" },
   root_dir = function(bufnr, on_dir)
     local fname = util.bufname(bufnr)
-    on_dir(
-      util.root_pattern("*.nimble")(fname)
-        or util.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
-    )
+    -- Pattern order is priority: the nimble project wins over an enclosing repo.
+    util.root_pattern("*.nimble", ".git")(fname):next(on_dir)
   end,
 }

@@ -15,65 +15,52 @@
 ---
 --- You need to enable `:help lsp-inline-completion` to receive suggestions. For example, you can enable it in the LspAttach event:
 ---
---- ```lua
---- nx.autocmd.create('LspAttach', {
----   callback = function(args)
----     local bufnr = args.buf
----     local client = assert(nx.lsp.client_by_id(args.data.client_id))
----
----     if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlineCompletion, bufnr) then
----       vim.lsp.inline_completion.enable(true, { bufnr = bufnr })
----
----       nx.keymap.set(
----         'i',
----         '<C-F>',
----         vim.lsp.inline_completion.get,
----         { desc = 'LSP: accept inline completion', buffer = bufnr }
----       )
----       nx.keymap.set(
----         'i',
----         '<C-G>',
----         vim.lsp.inline_completion.select,
----         { desc = 'LSP: switch inline completion', buffer = bufnr }
----       )
----     end
----   end
---- })
---- ```
+--- NOTE: the server's headline feature — `textDocument/inlineCompletion`, the greyed-out
+--- suggestion accepted with a keypress — has no home in nxvim yet. `nx.complete` is a
+--- popup-menu engine; inline completion is a different surface (virtual text at the
+--- cursor, its own accept/cycle keys), and nxvim has no client for it. The server
+--- starts, `:LspCopilotSignIn` works, and the panel/chat commands work; the inline
+--- suggestions are requested by nothing. Closing this needs an inline-completion layer
+--- in the core, which is a feature rather than a config.
 
 ---@param bufnr integer,
 ---@param client vim.lsp.Client
+local util = require("nxvim-lspconfig.util")
+
 local function sign_in(bufnr, client)
   client:request(
     ---@diagnostic disable-next-line: param-type-mismatch
     "signIn",
-    vim.empty_dict(),
+    nx.json.empty_object(),
     function(err, result)
       if err then
-        nx.notify(err.message, vim.log.levels.ERROR)
+        nx.notify(err.message, nx.log.levels.ERROR)
         return
       end
       if result.command then
         local code = result.userCode
         local command = result.command
-        vim.fn.setreg("+", code)
-        vim.fn.setreg("*", code)
-        local continue = vim.fn.confirm(
-          "Copied your one-time code to clipboard.\n"
-            .. "Open the browser to complete the sign-in process?",
-          "&Yes\n&No"
-        )
-        if continue == 1 then
-          client:exec_cmd(command, { bufnr = bufnr }, function(cmd_err, cmd_result)
-            if cmd_err then
-              nx.notify(cmd_err.message, vim.log.levels.ERROR)
+        nx.reg.set("+", code)
+        nx.reg.set("*", code)
+        nx.ui
+          .confirm(
+            "Copied your one-time code to clipboard.\n"
+              .. "Open the browser to complete the sign-in process?"
+          )
+          :next(function(yes)
+            if not yes then
               return
             end
-            if cmd_result.status == "OK" then
-              nx.notify("Signed in as " .. cmd_result.user .. ".")
-            end
+            client:exec_cmd(command, { bufnr = bufnr }, function(cmd_err, cmd_result)
+              if cmd_err then
+                nx.notify(cmd_err.message, nx.log.levels.ERROR)
+                return
+              end
+              if cmd_result.status == "OK" then
+                nx.notify("Signed in as " .. cmd_result.user .. ".")
+              end
+            end)
           end)
-        end
       end
 
       if result.status == "PromptUserDeviceFlow" then
@@ -92,10 +79,10 @@ local function sign_out(_, client)
   client:request(
     ---@diagnostic disable-next-line: param-type-mismatch
     "signOut",
-    vim.empty_dict(),
+    nx.json.empty_object(),
     function(err, result)
       if err then
-        nx.notify(err.message, vim.log.levels.ERROR)
+        nx.notify(err.message, nx.log.levels.ERROR)
         return
       end
       if result.status == "NotSignedIn" then
@@ -113,12 +100,12 @@ return {
   root_markers = { ".git" },
   init_options = {
     editorInfo = {
-      name = "Neovim",
-      version = tostring(vim.version()),
+      name = "nxvim",
+      version = nx.version(),
     },
     editorPluginInfo = {
-      name = "Neovim",
-      version = tostring(vim.version()),
+      name = "nxvim",
+      version = nx.version(),
     },
   },
   settings = {

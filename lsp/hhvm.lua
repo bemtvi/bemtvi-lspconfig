@@ -7,12 +7,9 @@
 --- https://docs.hhvm.com/hhvm/getting-started/getting-started
 
 return {
-  cmd = function(dispatchers, config)
-    return vim.lsp.rpc.start({ "hh_client", "lsp", "--from", "neovim" }, dispatchers, {
-      -- cwd should be the same as project root, not neovim's process cwd
-      cwd = config.root_dir,
-    })
-  end,
+  -- The working directory has to be the project root rather than the editor's; nxvim
+  -- spawns every server there already.
+  cmd = { "hh_client", "lsp", "--from", "nxvim" },
 
   filetypes = { "php", "hack" },
   root_markers = { ".hhconfig" },

@@ -7,22 +7,22 @@
 --- npm install -g foam-language-server
 --- ```
 
+local util = require("nxvim-lspconfig.util")
+
 return {
   cmd = { "foam-ls", "--stdio" },
   filetypes = { "foam", "OpenFOAM" },
-  root_dir = function(bufnr, on_dir)
+  -- An OpenFOAM case is the directory holding `system/controlDict`; only when there is
+  -- none above the file does the enclosing repo — then the file's own directory — stand
+  -- in. The marker is a nested path rather than a plain name, so this walks the
+  -- ancestors itself instead of declaring `root_markers`.
+  root_dir = nx.async(function(bufnr)
     local fname = util.bufname(bufnr)
     for path in util.ancestors(fname) do
-      if vim.uv.fs_stat(path .. "/system/controlDict") then
-        on_dir(path)
-        return
+      if nx.await(util.exists(util.joinpath(path, "system/controlDict"))) then
+        return path
       end
     end
-    local git_root = vim.fs.root(bufnr, { ".git" })
-    if git_root then
-      on_dir(git_root)
-      return
-    end
-    on_dir(util.dirname(fname))
-  end,
+    return nx.await(util.root(bufnr, { ".git" })) or util.dirname(fname)
+  end),
 }

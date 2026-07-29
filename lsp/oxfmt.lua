@@ -37,25 +37,32 @@ return {
     "markdown",
   },
   workspace_required = true,
-  root_dir = function(bufnr, on_dir)
+  root_dir = util.root_dir(function(bufnr, on_dir)
     local fname = util.bufname(bufnr)
 
     -- Oxfmt resolves configuration by walking upward and using the nearest config file
     -- to the file being processed. We therefore compute the root directory by locating
     -- the closest `.oxfmtrc.json` / `.oxfmtrc.jsonc` / `oxfmt.config.ts` (or `package.json` fallback) above the buffer.
-    local root_markers = util.insert_package_json(
-      { ".oxfmtrc.json", ".oxfmtrc.jsonc", "oxfmt.config.ts" },
-      { "oxfmt", "vite%-plus" },
-      fname
+    local root_markers = nx.await(
+      util.insert_package_json(
+        { ".oxfmtrc.json", ".oxfmtrc.jsonc", "oxfmt.config.ts" },
+        { "oxfmt", "vite%-plus" },
+        fname
+      )
     )
     -- find vite plus config with fmt field
-    root_markers = util.root_markers_with_field(
-      root_markers,
-      { "vite.config.ts" },
-      { "vite%-plus", "fmt:" },
-      fname,
-      "all"
+    root_markers = nx.await(
+      util.root_markers_with_field(
+        root_markers,
+        { "vite.config.ts" },
+        { "vite%-plus", "fmt:" },
+        fname,
+        "all"
+      )
     )
-    on_dir(util.dirname(vim.fs.find(root_markers, { path = fname, upward = true })[1]))
-  end,
+    local found = nx.await(util.find_upward(fname, root_markers))
+    if found then
+      on_dir(util.dirname(found))
+    end
+  end),
 }

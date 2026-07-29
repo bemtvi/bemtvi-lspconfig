@@ -6,10 +6,7 @@
 ---
 --- NOTE: AutoHotkey is Windows-only.
 
-local function get_autohotkey_path()
-  local path = vim.fn.exepath("autohotkey.exe")
-  return #path > 0 and path or ""
-end
+local util = require("nxvim-lspconfig.util")
 
 return {
   cmd = { "autohotkey_lsp", "--stdio" },
@@ -19,9 +16,15 @@ return {
   flags = { debounce_text_changes = 500 },
   --capabilities = capabilities,
   --on_attach = custom_attach,
+  -- `InterpreterPath` needs the AutoHotkey interpreter's real location, which is a
+  -- `$PATH` lookup — I/O, so it is resolved once per server here rather than at load.
+  before_init = nx.async(function(_init_params, config)
+    config.init_options = nx.tbl.deep_extend("force", config.init_options or {}, {
+      InterpreterPath = nx.await(util.which(util.exe("autohotkey"))) or "",
+    })
+  end),
   init_options = {
     locale = "en-us",
-    InterpreterPath = get_autohotkey_path(),
     AutoLibInclude = "All",
     CommentTags = "^;;\\s*(?<tag>.+)",
     CompleteFunctionParens = false,

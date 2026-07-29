@@ -34,10 +34,10 @@
 --- ```
 
 return {
-  cmd = function(dispatchers, config)
+  cmd = function(_dispatchers, config)
     ---@diagnostic disable: undefined-field
     local local_cmd = {
-      vim.env.JAVA_HOME and (vim.env.JAVA_HOME .. "/bin/java") or "java",
+      nx.env.get("JAVA_HOME") and (nx.env.get("JAVA_HOME") .. "/bin/java") or "java",
       "-cp",
       config.apex_jar_path,
       "-Ddebug.internal.errors=true",
@@ -52,7 +52,7 @@ return {
     ---@diagnostic enable: undefined-field
     table.insert(local_cmd, "apex.jorje.lsp.ApexLanguageServerLauncher")
 
-    return vim.lsp.rpc.start(local_cmd, dispatchers)
+    return local_cmd
   end,
   filetypes = { "apex", "apexcode" },
   root_markers = {

@@ -20,7 +20,7 @@
 
 -- Disable the (slow) built-in query linter, which will show duplicate diagnostics. This must be done before the query
 -- ftplugin is sourced.
-vim.g.query_lint_on = {}
+nx.g.query_lint_on = {}
 
 return {
   cmd = { "ts_query_ls" },
@@ -33,10 +33,12 @@ return {
       php_only = "php",
     },
     parser_install_directories = {
-      vim.fn.stdpath("data") .. "/site/parser",
+      nx.utils.joinpath(nx.stdpath("data"), "site/parser"),
     },
   },
-  on_attach = function(_, buf)
-    vim.bo[buf].omnifunc = "v:lua.vim.lsp.omnifunc"
-  end,
+  -- Upstream points `'omnifunc'` at neovim's `vim.lsp.omnifunc` so `<C-x><C-o>` asks
+  -- the server. nxvim has no `'omnifunc'` hook into LSP — completion is `nx.complete`,
+  -- whose `lsp` source serves this buffer already once the server is attached — so
+  -- there is nothing to set here and setting a dead Vimscript expression would only
+  -- make `<C-x><C-o>` fail obscurely.
 }

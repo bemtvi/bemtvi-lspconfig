@@ -26,91 +26,72 @@
 ---
 --- @field custom_subdir string?
 
-local mod_cache = nil
-local std_lib = nil
+local util = require("nxvim-lspconfig.util")
 
----@param custom_args go_dir_custom_args
----@param on_complete fun(dir: string | nil)
-local function identify_go_dir(custom_args, on_complete)
-  local cmd = { "go", "env", custom_args.envvar_id }
-  vim.system(cmd, { text = true }, function(output)
-    local res = nx.str.trim(output.stdout or "")
-    if output.code == 0 and res ~= "" then
-      if custom_args.custom_subdir and custom_args.custom_subdir ~= "" then
-        res = res .. custom_args.custom_subdir
+--- `go env <VAR>`, memoized for the session — the values are properties of the
+--- toolchain, not of the buffer, and shelling out once per buffer open would be a
+--- subprocess on every `:e`. `nil` means the probe failed and stays retryable.
+---
+--- Upstream fires this probe from a `root_dir` that cannot wait for it, so the FIRST
+--- Go buffer of a session always decides its root with an empty cache — the branch
+--- below never fires when it matters. Awaiting the answer is what makes it work.
+local go_dir_cache = {}
+--- @param custom_args go_dir_custom_args
+--- @return string?
+local identify_go_dir = nx.async(function(custom_args)
+  local key = custom_args.envvar_id
+  if go_dir_cache[key] then
+    return go_dir_cache[key]
+  end
+  local cmd = { "go", "env", key }
+  local output = nx.await(util.system(cmd))
+  local res = nx.str.trim(output.stdout or "")
+  if output.code ~= 0 or res == "" then
+    nx.notify(
+      ("[gopls] identify " .. key .. " dir cmd failed with code %d: %s\n%s"):format(
+        output.code,
+        nx.inspect(cmd),
+        output.stderr
+      ),
+      nx.log.levels.WARN
+    )
+    return nil
+  end
+  if custom_args.custom_subdir and custom_args.custom_subdir ~= "" then
+    res = res .. custom_args.custom_subdir
+  end
+  go_dir_cache[key] = res
+  return res
+end)
+
+--- The root a Go buffer belongs to. A file inside the module cache or the standard
+--- library is not part of any project of its own — it was jumped into from one — so it
+--- attaches to the gopls already serving that project rather than starting a second
+--- server rooted in `$GOMODCACHE`.
+--- @param fname string
+--- @return string?
+local get_root_dir = nx.async(function(fname)
+  local std_lib = nx.await(identify_go_dir({ envvar_id = "GOROOT", custom_subdir = "/src" }))
+  local mod_cache = nx.await(identify_go_dir({ envvar_id = "GOMODCACHE" }))
+
+  for _, dir in ipairs({ mod_cache, std_lib }) do
+    if dir and fname:sub(1, #dir) == dir then
+      local clients = nx.lsp.clients({ name = "gopls" })
+      if #clients > 0 then
+        return clients[#clients].config.root_dir
       end
-      on_complete(res)
-    else
-      nx.schedule(function()
-        nx.notify(
-          ("[gopls] identify " .. custom_args.envvar_id .. " dir cmd failed with code %d: %s\n%s"):format(
-            output.code,
-            vim.inspect(cmd),
-            output.stderr
-          )
-        )
-      end)
-      on_complete(nil)
-    end
-  end)
-end
-
----@return string?
-local function get_std_lib_dir()
-  if std_lib and std_lib ~= "" then
-    return std_lib
-  end
-
-  identify_go_dir({ envvar_id = "GOROOT", custom_subdir = "/src" }, function(dir)
-    if dir then
-      std_lib = dir
-    end
-  end)
-  return std_lib
-end
-
----@return string?
-local function get_mod_cache_dir()
-  if mod_cache and mod_cache ~= "" then
-    return mod_cache
-  end
-
-  identify_go_dir({ envvar_id = "GOMODCACHE" }, function(dir)
-    if dir then
-      mod_cache = dir
-    end
-  end)
-  return mod_cache
-end
-
----@param fname string
----@return string?
-local function get_root_dir(fname)
-  if mod_cache and fname:sub(1, #mod_cache) == mod_cache then
-    local clients = nx.lsp.clients({ name = "gopls" })
-    if #clients > 0 then
-      return clients[#clients].config.root_dir
     end
   end
-  if std_lib and fname:sub(1, #std_lib) == std_lib then
-    local clients = nx.lsp.clients({ name = "gopls" })
-    if #clients > 0 then
-      return clients[#clients].config.root_dir
-    end
-  end
-  return vim.fs.root(fname, "go.work") or vim.fs.root(fname, "go.mod") or vim.fs.root(fname, ".git")
-end
+  -- see: https://github.com/neovim/nvim-lspconfig/issues/804
+  return nx.await(util.root_of_path(fname, { { "go.work" }, { "go.mod" }, { ".git" } }))
+end)
 
 return {
   cmd = { "gopls" },
   filetypes = { "go", "gomod", "gowork", "gotmpl" },
-  root_dir = function(bufnr, on_dir)
-    local fname = util.bufname(bufnr)
-    get_mod_cache_dir()
-    get_std_lib_dir()
-    -- see: https://github.com/neovim/nvim-lspconfig/issues/804
-    on_dir(get_root_dir(fname))
-  end,
+  root_dir = nx.async(function(bufnr)
+    return nx.await(get_root_dir(util.bufname(bufnr)))
+  end),
   settings = {
     gopls = {
       semanticTokens = true,

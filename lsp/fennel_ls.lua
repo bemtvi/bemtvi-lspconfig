@@ -7,16 +7,19 @@
 --- fennel-ls is configured using the closest file to your working directory named `flsproject.fnl`.
 --- All fennel-ls configuration options [can be found here](https://git.sr.ht/~xerool/fennel-ls/tree/HEAD/docs/manual.md#configuration).
 
+local util = require("nxvim-lspconfig.util")
+
 return {
   cmd = { "fennel-ls" },
   filetypes = { "fennel" },
   root_dir = function(bufnr, on_dir)
     local fname = util.bufname(bufnr)
-    local has_fls_project_cfg = function(path)
-      local fnlpath = util.joinpath(path, "flsproject.fnl")
-      return (vim.uv.fs_stat(fnlpath) or {}).type == "file"
-    end
-    on_dir(vim.iter(util.ancestors(fname)):find(has_fls_project_cfg) or vim.fs.root(0, ".git"))
+    util.root_of_path(fname, { "flsproject.fnl" }):next(function(project)
+      if project then
+        return on_dir(project)
+      end
+      util.root(bufnr, { ".git" }):next(on_dir)
+    end)
   end,
   settings = {},
   capabilities = {

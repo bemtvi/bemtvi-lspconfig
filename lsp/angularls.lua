@@ -14,7 +14,7 @@
 
 -- Angular requires a node_modules directory to probe for @angular/language-service and typescript
 -- in order to use your projects configured versions.
-local fs, fn, uv = vim.fs, vim.fn, vim.uv
+local util = require("nxvim-lspconfig.util")
 
 --- Recursively solve for the original ngserver path on Windows
 -- For a given ngserver path:
@@ -31,13 +31,18 @@ local fs, fn, uv = vim.fs, vim.fn, vim.uv
 -- -- Recursive case: cmd_path points to a CMD wrapper (Windows)
 -- resolve_cmd_shim('C:/Users/user/project/node_modules/.bin/ngserver.cmd')
 -- => 'C:/Users/user/project/node_modules/@angular/language-server/bin/ngserver'
-local function resolve_cmd_shim(cmd_path)
-  if not cmd_path:lower():match("%ngserver.cmd$") then
+local resolve_cmd_shim
+resolve_cmd_shim = nx.async(function(cmd_path)
+  -- Upstream writes this pattern `%ngserver.cmd$`, where `%n` is an escape for a plain
+  -- `n` and the `.` stays a wildcard — it happens to work, but only by accident.
+  if not cmd_path:lower():match("ngserver%.cmd$") then
     return cmd_path
   end
 
-  local ok, content = pcall(fn.readblob, cmd_path)
-  if not ok or not content then
+  local content = nx.await(nx.fs.read_text(cmd_path):catch(function()
+    return nil
+  end))
+  if type(content) ~= "string" then
     return cmd_path
   end
 
@@ -46,78 +51,65 @@ local function resolve_cmd_shim(cmd_path)
     return cmd_path
   end
 
-  local full = fs.normalize(fs.joinpath(fs.dirname(cmd_path), target))
+  return nx.await(resolve_cmd_shim(util.normalize(util.joinpath(util.dirname(cmd_path), target))))
+end)
 
-  return resolve_cmd_shim(full)
-end
-
-local function collect_node_modules(root_dir)
+local collect_node_modules = nx.async(function(root_dir)
   local results = {}
 
-  local project_node = fs.joinpath(root_dir, "node_modules")
-  if uv.fs_stat(project_node) then
+  local project_node = util.joinpath(root_dir, "node_modules")
+  if nx.await(util.exists(project_node)) then
     table.insert(results, project_node)
   end
 
-  local ngserver_exe = fn.exepath("ngserver")
-  if ngserver_exe and #ngserver_exe > 0 then
-    local realpath = uv.fs_realpath(ngserver_exe) or ngserver_exe
-    realpath = resolve_cmd_shim(realpath)
-    local candidate = fs.normalize(fs.joinpath(fs.dirname(realpath), "../../.."))
-    if uv.fs_stat(candidate) then
+  local ngserver_exe = nx.await(util.which("ngserver"))
+  if ngserver_exe then
+    local realpath = nx.await(nx.fs.realpath(ngserver_exe):catch(function()
+      return ngserver_exe
+    end))
+    realpath = nx.await(resolve_cmd_shim(realpath))
+    local candidate = util.normalize(util.joinpath(util.dirname(realpath), "../../.."))
+    if nx.await(util.exists(candidate)) then
       table.insert(results, candidate)
     end
   end
 
   return results
-end
+end)
 
-local function get_angular_core_version(root_dir)
-  local package_json = fs.joinpath(root_dir, "package.json")
-  if not uv.fs_stat(package_json) then
+local get_angular_core_version = nx.async(function(root_dir)
+  local json = nx.await(util.read_json(util.joinpath(root_dir, "package.json")))
+  if type(json) ~= "table" then
     return ""
   end
-
-  local ok, content = pcall(fn.readblob, package_json)
-  if not ok or not content then
-    return ""
-  end
-
-  local json = nx.json.decode(content) or {}
 
   local version = (json.dependencies or {})["@angular/core"]
     or (json.devDependencies or {})["@angular/core"]
     or ""
   return version:match("%d+%.%d+%.%d+") or ""
-end
+end)
 
 return {
-  cmd = function(dispatchers, config)
-    local root_dir = (config and config.root_dir) or fn.getcwd()
-    local node_paths = collect_node_modules(root_dir)
+  cmd = nx.async(function(_dispatchers, config)
+    local root_dir = (config and config.root_dir) or util.cwd()
+    local node_paths = nx.await(collect_node_modules(root_dir))
 
-    local ts_probe = table.concat(node_paths, ",")
-    local ng_probe = table.concat(
-      vim
-        .iter(node_paths)
-        :map(function(p)
-          return fs.joinpath(p, "@angular/language-server/node_modules")
-        end)
-        :totable(),
-      ","
-    )
-    local cmd = {
+    local ng_paths = {}
+    for i, p in ipairs(node_paths) do
+      ng_paths[i] = util.joinpath(p, "@angular/language-server/node_modules")
+    end
+
+    return {
       "ngserver",
       "--stdio",
       "--tsProbeLocations",
-      ts_probe,
+      table.concat(node_paths, ","),
       "--ngProbeLocations",
-      ng_probe,
+      table.concat(ng_paths, ","),
       "--angularCoreVersion",
-      get_angular_core_version(root_dir),
+      nx.await(get_angular_core_version(root_dir)),
     }
-    return vim.lsp.rpc.start(cmd, dispatchers)
-  end,
+  end),
 
   filetypes = { "typescript", "html", "typescriptreact", "htmlangular" },
   root_markers = { "angular.json", "nx.json" },

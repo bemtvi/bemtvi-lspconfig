@@ -37,18 +37,27 @@
 --- ```
 
 return {
-  cmd = function(dispatchers)
-    local temp_path = vim.fn.stdpath("cache")
-    local bundle_path = vim.lsp.config.powershell_es.bundle_path
-
-    local shell = vim.lsp.config.powershell_es.shell or "pwsh"
+  cmd = function(_dispatchers, config)
+    local temp_path = nx.stdpath("cache")
+    -- `bundle_path` / `shell` are not `nx.lsp` config keys — they are this config's own
+    -- settings, read back off the resolved config the builder is handed rather than
+    -- through a global registry lookup.
+    config = config or {}
+    ---@diagnostic disable-next-line: undefined-field
+    local bundle_path = config.bundle_path
+    if not bundle_path then
+      error(
+        "powershell_es: set `bundle_path` to the extracted PowerShellEditorServices "
+          .. "directory — nx.lsp.config('powershell_es', { bundle_path = … })"
+      )
+    end
+    ---@diagnostic disable-next-line: undefined-field
+    local shell = config.shell or "pwsh"
 
     local command_fmt =
-      [[& '%s/PowerShellEditorServices/Start-EditorServices.ps1' -BundledModulesPath '%s' -LogPath '%s/powershell_es.log' -SessionDetailsPath '%s/powershell_es.session.json' -FeatureFlags @() -AdditionalModules @() -HostName nvim -HostProfileId 0 -HostVersion 1.0.0 -Stdio -LogLevel Normal]]
+      [[& '%s/PowerShellEditorServices/Start-EditorServices.ps1' -BundledModulesPath '%s' -LogPath '%s/powershell_es.log' -SessionDetailsPath '%s/powershell_es.session.json' -FeatureFlags @() -AdditionalModules @() -HostName nxvim -HostProfileId 0 -HostVersion 1.0.0 -Stdio -LogLevel Normal]]
     local command = command_fmt:format(bundle_path, bundle_path, temp_path, temp_path)
-    local cmd = { shell, "-NoLogo", "-NoProfile", "-Command", command }
-
-    return vim.lsp.rpc.start(cmd, dispatchers)
+    return { shell, "-NoLogo", "-NoProfile", "-Command", command }
   end,
   filetypes = { "ps1" },
   root_markers = { "PSScriptAnalyzerSettings.psd1", ".git" },

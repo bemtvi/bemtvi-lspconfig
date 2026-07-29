@@ -90,9 +90,11 @@ return {
     activateSnykOpenSource = "true", -- Scan open source dependencies
     activateSnykCode = "false", -- Scan your code for vulnerabilities
     activateSnykIac = "true", -- Scan infrastructure as code
-    integrationName = "Neovim",
-    integrationVersion = tostring(vim.version()),
-    token = os.getenv("SNYK_TOKEN") or vim.NIL,
+    integrationName = "nxvim",
+    integrationVersion = nx.version(),
+    -- An absent token has to cross as an explicit null: `nil` would drop the key, which
+    -- the server reads as "unchanged" rather than "none".
+    token = nx.env.get("SNYK_TOKEN") or nx.json.null,
     trustedFolders = {}, -- Add your trusted directories here to avoid being prompted every time
   },
 }

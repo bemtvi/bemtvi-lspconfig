@@ -82,11 +82,11 @@ return {
   capabilities = {
     textDocument = {
       ---@diagnostic disable-next-line: assign-type-mismatch
-      semanticTokens = vim.NIL,
+      semanticTokens = nx.json.null,
     },
     workspace = {
       ---@diagnostic disable-next-line: assign-type-mismatch
-      semanticTokens = vim.NIL,
+      semanticTokens = nx.json.null,
     },
   },
 }

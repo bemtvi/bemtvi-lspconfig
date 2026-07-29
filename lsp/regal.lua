@@ -16,9 +16,7 @@ return {
   filetypes = { "rego" },
   root_dir = function(bufnr, on_dir)
     local fname = util.bufname(bufnr)
-    on_dir(
-      util.root_pattern("*.rego")(fname)
-        or util.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
-    )
+    -- Pattern order is priority: a rego source tree wins over an enclosing repo.
+    util.root_pattern("*.rego", ".git")(fname):next(on_dir)
   end,
 }
