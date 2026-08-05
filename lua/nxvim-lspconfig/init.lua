@@ -107,6 +107,12 @@ end
 -- K / <C-k>), so this adds only the rest of the now-standard set, at the
 -- OVERRIDABLE rung (`default = true`) so a user's own map for the same key always
 -- wins. Opt out of the whole set with `setup({ keymaps = false })`.
+--
+-- Two of these are *alternative spellings* of maps the core already provides —
+-- `<C-]>` for `gd`, `<C-s>` for `<C-k>` — rather than new verbs. They live here for
+-- that reason: they are the muscle memory a vim/neovim user arrives with, and the
+-- core's built-in set stays the small one that earns its place on every buffer a
+-- server touches.
 local DEFAULT_KEYMAPS = {
   { "n", "grn", nx.lsp.rename, "LSP rename" },
   { "n", "gra", nx.lsp.code_action, "LSP code action" },
@@ -116,6 +122,16 @@ local DEFAULT_KEYMAPS = {
   { "n", "gO", nx.lsp.document_symbol, "LSP document symbols" },
   { "n", "<leader>ls", nx.lsp.workspace_symbol, "LSP workspace symbols" },
   { "n", "<leader>lf", nx.lsp.format, "LSP format buffer" },
+  -- `<C-]>` is the TAG JUMP, and a language server is what you have instead of a
+  -- tags file here — neovim reaches the same place by pointing `'tagfunc'` at the
+  -- client, a mechanism nxvim has no other use for, so this binds it directly.
+  -- `<C-o>` still comes back: a goto records the jumplist.
+  { "n", "<C-]>", nx.lsp.definition, "LSP go to definition" },
+  -- neovim's `i_CTRL-S`, in insert AND select mode, beside nxvim's own `<C-k>`.
+  -- Terminal flow control would eat `<C-s>` as XOFF, but raw mode clears `IXON`,
+  -- so it reaches the editor.
+  { "i", "<C-s>", nx.lsp.signature_help, "LSP signature help" },
+  { "s", "<C-s>", nx.lsp.signature_help, "LSP signature help" },
 }
 
 local function install_default_keymaps(bufnr)

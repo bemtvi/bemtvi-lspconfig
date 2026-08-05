@@ -174,10 +174,18 @@ grr           references
 gri           implementation
 grt           type definition
 gO            document symbols
+<C-]>         go to definition          (normal)
+<C-s>         signature help            (insert and select)
 <leader>ls    workspace symbols
 <leader>lf    format buffer
 <leader>lh    toggle inlay hints
 ```
+
+The last two of the `g`-less pair are *alternative spellings*, not new verbs: `<C-]>`
+is the tag jump, and a language server is what you have here instead of a tags file
+(neovim reaches the same place by pointing `'tagfunc'` at the client); `<C-s>` is
+neovim's `i_CTRL-S`, beside nxvim's own `<C-k>`. `<C-o>` returns from a `<C-]>` jump,
+since a goto records the jumplist.
 
 All are installed at the *overridable* rung, so your own mapping for the same key wins
 whether you set it before or after.
