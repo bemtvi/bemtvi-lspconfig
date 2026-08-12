@@ -13,8 +13,8 @@
 ---
 --- Some ts_ls refactors (extract function / extract type) finish by asking the editor
 --- to start a rename at the position they just created, through a server→client
---- `_typescript.rename` request. nxvim does not route server-initiated requests into
---- per-config `handlers` (`nx.lsp` warns about the key at load), so the refactor
+--- `_typescript.rename` request. bemtvi does not route server-initiated requests into
+--- per-config `handlers` (`btv.lsp` warns about the key at load), so the refactor
 --- applies and the rename prompt does not follow — run `:LspRename` on the new name.
 --- The interception is dropped rather than kept as code that cannot run.
 ---
@@ -82,7 +82,7 @@
 --- If DENO ROOT is found, and it's longer than or equal to PROJECT ROOT, then this is a Deno file, and we abort.
 --- Otherwise, attach at PROJECT ROOT, or the cwd if not found.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   init_options = { hostInfo = "neovim" },
@@ -103,9 +103,9 @@ return {
     -- Give the root markers equal priority by wrapping them in a table
     root_markers = { root_markers, { ".git" } }
     -- exclude deno
-    local deno_root = nx.await(util.root(bufnr, { "deno.json", "deno.jsonc" }))
-    local deno_lock_root = nx.await(util.root(bufnr, { "deno.lock" }))
-    local project_root = nx.await(util.root(bufnr, root_markers))
+    local deno_root = btv.await(util.root(bufnr, { "deno.json", "deno.jsonc" }))
+    local deno_lock_root = btv.await(util.root(bufnr, { "deno.lock" }))
+    local project_root = btv.await(util.root(bufnr, root_markers))
     if deno_lock_root and (not project_root or #deno_lock_root > #project_root) then
       -- deno lock is closer than package manager lock, abort
       return
@@ -121,31 +121,31 @@ return {
   commands = {
     -- `editor.action.showReferences` is a CLIENT-side command: ts_ls hands over the
     -- references it already found and asks the editor to present them. The list goes
-    -- to the quickfix stack (nxvim's own list surface) and the cursor jumps to the
+    -- to the quickfix stack (bemtvi's own list surface) and the cursor jumps to the
     -- symbol the action was about.
     ["editor.action.showReferences"] = function(command, ctx)
-      local client = assert(nx.lsp.client_by_id(ctx.client_id))
+      local client = assert(btv.lsp.client_by_id(ctx.client_id))
       local file_uri, position, references = unpack(command.arguments)
 
       -- A promise: an item quotes its source line, and a reference into a file no
       -- buffer holds means reading it. Nothing blocks, so the jump below is sequenced
       -- after the list rather than racing it.
-      nx.lsp
+      btv.lsp
         .locations_to_items(references, { encoding = client.offset_encoding })
         :next(function(items)
-          nx.qf.setqflist({}, " ", {
+          btv.qf.setqflist({}, " ", {
             title = command.title,
             items = items,
             context = { command = command, bufnr = ctx.bufnr },
           })
-          nx.lsp.show_document({
+          btv.lsp.show_document({
             uri = file_uri,
             range = { start = position, ["end"] = position },
           }, { encoding = client.offset_encoding })
-          nx.qf.open()
+          btv.qf.open()
         end)
         :catch(function(err)
-          nx.notify("ts_ls: could not build the reference list: " .. tostring(err), "error")
+          btv.notify("ts_ls: could not build the reference list: " .. tostring(err), "error")
         end)
     end,
   },
@@ -160,12 +160,12 @@ return {
     -- says what upstream says by enumerating the server's advertised kinds and
     -- prefix-matching them, without depending on that list being advertised at all.
     util.buf_command(bufnr, "LspTypescriptSourceAction", function()
-      nx.lsp.code_action({ context = { only = { "source" }, diagnostics = {} } })
+      btv.lsp.code_action({ context = { only = { "source" }, diagnostics = {} } })
     end, { desc = "Choose a whole-file source action" })
 
     -- Go to source definition command
     util.buf_command(bufnr, "LspTypescriptGoToSourceDefinition", function()
-      local params = nx.lsp.position_params({
+      local params = btv.lsp.position_params({
         bufnr = bufnr,
         encoding = client.offset_encoding,
       })
@@ -175,14 +175,14 @@ return {
         arguments = { params.textDocument.uri, params.position },
       }, { bufnr = bufnr }, function(err, result)
         if err then
-          nx.notify("Go to source definition failed: " .. err.message, nx.log.levels.ERROR)
+          btv.notify("Go to source definition failed: " .. err.message, btv.log.levels.ERROR)
           return
         end
-        if not result or nx.tbl.is_empty(result) then
-          nx.notify("No source definition found", nx.log.levels.INFO)
+        if not result or btv.tbl.is_empty(result) then
+          btv.notify("No source definition found", btv.log.levels.INFO)
           return
         end
-        nx.lsp.show_document(result[1], { encoding = client.offset_encoding })
+        btv.lsp.show_document(result[1], { encoding = client.offset_encoding })
       end)
     end, { desc = "Go to source definition" })
   end,

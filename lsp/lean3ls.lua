@@ -14,7 +14,7 @@
 --- that plugin fully handles the setup of the Lean language server,
 --- and you shouldn't set up `lean3ls` both with it and `lspconfig`.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "lean-language-server", "--stdio", "--", "-M", "4096", "-T", "100000" },

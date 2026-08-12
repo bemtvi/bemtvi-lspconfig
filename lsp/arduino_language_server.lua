@@ -68,7 +68,7 @@
 --- Note that an upstream bug makes keywords in some cases become undefined by the language server.
 --- Ref: https://github.com/arduino/arduino-ide/issues/159
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   filetypes = { "arduino" },
@@ -82,11 +82,11 @@ return {
   capabilities = {
     textDocument = {
       ---@diagnostic disable-next-line: assign-type-mismatch
-      semanticTokens = nx.json.null,
+      semanticTokens = btv.json.null,
     },
     workspace = {
       ---@diagnostic disable-next-line: assign-type-mismatch
-      semanticTokens = nx.json.null,
+      semanticTokens = btv.json.null,
     },
   },
 }

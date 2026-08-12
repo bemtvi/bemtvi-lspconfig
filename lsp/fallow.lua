@@ -4,7 +4,7 @@
 ---
 --- Codebase intelligence for TypeScript and JavaScript.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = util.node_cmd("fallow-lsp", {}),

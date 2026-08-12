@@ -14,7 +14,7 @@
 --- npm install -g gh-actions-language-server
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "gh-actions-language-server", "--stdio" },
@@ -24,26 +24,26 @@ return {
   root_dir = function(bufnr, on_dir)
     local parent = util.dirname(util.bufname(bufnr))
     if
-      nx.str.endswith(parent, "/.github/workflows")
-      or nx.str.endswith(parent, "/.forgejo/workflows")
-      or nx.str.endswith(parent, "/.gitea/workflows")
+      btv.str.endswith(parent, "/.github/workflows")
+      or btv.str.endswith(parent, "/.forgejo/workflows")
+      or btv.str.endswith(parent, "/.gitea/workflows")
     then
       on_dir(parent)
     end
   end,
   -- The server asks the editor to read files it can't reach itself (reusable workflows,
   -- composite actions in another repo) through a server-initiated `actions/readFile`.
-  -- nxvim does not route server-initiated requests into Lua, so `nx.lsp` reports this
+  -- bemtvi does not route server-initiated requests into Lua, so `btv.lsp` reports this
   -- key loud and the request goes unanswered: completion and validation still work, but
   -- stop at the boundary of the file being edited. The key is kept rather than deleted
   -- precisely so that report keeps naming the gap.
   --
   -- The body cannot be carried over either — an LSP reply must be produced
-  -- synchronously, and nxvim has no synchronous file read (all fs is `nx.fs`, async).
+  -- synchronously, and bemtvi has no synchronous file read (all fs is `btv.fs`, async).
   -- Closing this needs server-initiated request routing in the core, not a shim here.
   handlers = {
     ["actions/readFile"] = function()
-      error("gh_actions_ls: nxvim does not route server-initiated requests into Lua")
+      error("gh_actions_ls: bemtvi does not route server-initiated requests into Lua")
     end,
   },
   init_options = {}, -- needs to be present https://github.com/neovim/nvim-lspconfig/pull/3713#issuecomment-2857394868

@@ -14,8 +14,8 @@
 --- This can be added via an autocmd:
 ---
 --- ```lua
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.scad" }, function()
----   nx.bo.filetype = "openscad"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.scad" }, function()
+---   btv.bo.filetype = "openscad"
 --- end)
 --- ```
 ---

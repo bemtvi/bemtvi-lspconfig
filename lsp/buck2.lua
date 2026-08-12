@@ -7,8 +7,8 @@
 --- To better detect Buck2 project files, the following can be added:
 ---
 --- ```
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = { "*.bxl", "BUCK", "TARGETS" } }, function()
----   nx.bo.filetype = "bzl"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = { "*.bxl", "BUCK", "TARGETS" } }, function()
+---   btv.bo.filetype = "bzl"
 --- end)
 --- ```
 

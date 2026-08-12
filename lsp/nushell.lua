@@ -4,7 +4,7 @@
 ---
 --- Nushell built-in language server.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "nu", "--lsp" },

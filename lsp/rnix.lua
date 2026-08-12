@@ -8,7 +8,7 @@
 ---
 --- This server accepts configuration via the `settings` key.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "rnix-lsp" },

@@ -16,8 +16,8 @@ return {
   root_dir = nil,
   init_options = {
     memory = {
-      file_store = nx.json.empty_object(),
+      file_store = btv.json.empty_object(),
     },
-    models = nx.json.empty_object(),
+    models = btv.json.empty_object(),
   },
 }

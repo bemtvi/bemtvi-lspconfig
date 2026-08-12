@@ -5,7 +5,7 @@
 --- `stylelint-language-server` can be installed via npm `npm install -g @stylelint/language-server`.
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local stylelint_config_files = {
   ".stylelintrc",
@@ -41,12 +41,12 @@ return {
     root_markers = { root_markers, { ".git" } }
 
     -- exclude deno
-    if nx.await(util.root(bufnr, { "deno.json", "deno.jsonc", "deno.lock" })) then
+    if btv.await(util.root(bufnr, { "deno.json", "deno.jsonc", "deno.lock" })) then
       return
     end
 
     -- We fallback to the current working directory if no project root is found
-    local project_root = nx.await(util.root(bufnr, root_markers)) or util.cwd()
+    local project_root = btv.await(util.root(bufnr, root_markers)) or util.cwd()
 
     -- We know that the buffer is using Stylelint if it has a config file
     -- in its directory tree.
@@ -54,9 +54,9 @@ return {
     -- Stylelint support package.json files as config files.
     local filename = util.bufname(bufnr)
     local stylelint_config_files_with_package_json =
-      nx.await(util.insert_package_json(stylelint_config_files, "stylelintConfig", filename))
+      btv.await(util.insert_package_json(stylelint_config_files, "stylelintConfig", filename))
     local is_buffer_using_stylelint =
-      nx.await(util.find_upward(filename, stylelint_config_files_with_package_json, {
+      btv.await(util.find_upward(filename, stylelint_config_files_with_package_json, {
         stop = util.dirname(project_root),
       }))
     if not is_buffer_using_stylelint then
@@ -70,9 +70,9 @@ return {
     -- stylelint's private `stylelint.applyAutoFix` command with a hand-carried
     -- document version over a BLOCKING `request_sync`, and the standard
     -- `source.fixAll.stylelint` code action is the same operation over the path
-    -- nxvim already implements, without blocking anything.
+    -- bemtvi already implements, without blocking anything.
     util.buf_command(bufnr, "LspStylelintFixAll", function()
-      nx.lsp.code_action({ context = { only = { "source.fixAll.stylelint" } }, apply = true })
+      btv.lsp.code_action({ context = { only = { "source.fixAll.stylelint" } }, apply = true })
     end, { desc = "Apply every stylelint autofix in this buffer" })
   end,
   -- Refer to https://github.com/stylelint/vscode-stylelint?tab=readme-ov-file#extension-settings for documentation.

@@ -9,7 +9,7 @@
 ---
 --- Additional configuration can be applied in the following way:
 --- ```lua
---- nx.lsp.config("dockerls", {
+--- btv.lsp.config("dockerls", {
 ---     settings = {
 ---         docker = {
 --- 	    languageserver = {

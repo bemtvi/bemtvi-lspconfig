@@ -7,14 +7,14 @@
 --- local project_library_path = "/path/to/project/lib"
 --- local cmd = {"ngserver", "--stdio", "--tsProbeLocations", project_library_path , "--ngProbeLocations", project_library_path}
 ---
---- nx.lsp.config('angularls', {
+--- btv.lsp.config('angularls', {
 ---   cmd = cmd,
 --- })
 --- ```
 
 -- Angular requires a node_modules directory to probe for @angular/language-service and typescript
 -- in order to use your projects configured versions.
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 --- Recursively solve for the original ngserver path on Windows
 -- For a given ngserver path:
@@ -32,14 +32,14 @@ local util = require("nxvim-lspconfig.util")
 -- resolve_cmd_shim('C:/Users/user/project/node_modules/.bin/ngserver.cmd')
 -- => 'C:/Users/user/project/node_modules/@angular/language-server/bin/ngserver'
 local resolve_cmd_shim
-resolve_cmd_shim = nx.async(function(cmd_path)
+resolve_cmd_shim = btv.async(function(cmd_path)
   -- Upstream writes this pattern `%ngserver.cmd$`, where `%n` is an escape for a plain
   -- `n` and the `.` stays a wildcard — it happens to work, but only by accident.
   if not cmd_path:lower():match("ngserver%.cmd$") then
     return cmd_path
   end
 
-  local content = nx.await(nx.fs.read_text(cmd_path):catch(function()
+  local content = btv.await(btv.fs.read_text(cmd_path):catch(function()
     return nil
   end))
   if type(content) ~= "string" then
@@ -51,25 +51,25 @@ resolve_cmd_shim = nx.async(function(cmd_path)
     return cmd_path
   end
 
-  return nx.await(resolve_cmd_shim(util.normalize(util.joinpath(util.dirname(cmd_path), target))))
+  return btv.await(resolve_cmd_shim(util.normalize(util.joinpath(util.dirname(cmd_path), target))))
 end)
 
-local collect_node_modules = nx.async(function(root_dir)
+local collect_node_modules = btv.async(function(root_dir)
   local results = {}
 
   local project_node = util.joinpath(root_dir, "node_modules")
-  if nx.await(util.exists(project_node)) then
+  if btv.await(util.exists(project_node)) then
     table.insert(results, project_node)
   end
 
-  local ngserver_exe = nx.await(util.which("ngserver"))
+  local ngserver_exe = btv.await(util.which("ngserver"))
   if ngserver_exe then
-    local realpath = nx.await(nx.fs.realpath(ngserver_exe):catch(function()
+    local realpath = btv.await(btv.fs.realpath(ngserver_exe):catch(function()
       return ngserver_exe
     end))
-    realpath = nx.await(resolve_cmd_shim(realpath))
+    realpath = btv.await(resolve_cmd_shim(realpath))
     local candidate = util.normalize(util.joinpath(util.dirname(realpath), "../../.."))
-    if nx.await(util.exists(candidate)) then
+    if btv.await(util.exists(candidate)) then
       table.insert(results, candidate)
     end
   end
@@ -77,8 +77,8 @@ local collect_node_modules = nx.async(function(root_dir)
   return results
 end)
 
-local get_angular_core_version = nx.async(function(root_dir)
-  local json = nx.await(util.read_json(util.joinpath(root_dir, "package.json")))
+local get_angular_core_version = btv.async(function(root_dir)
+  local json = btv.await(util.read_json(util.joinpath(root_dir, "package.json")))
   if type(json) ~= "table" then
     return ""
   end
@@ -90,9 +90,9 @@ local get_angular_core_version = nx.async(function(root_dir)
 end)
 
 return {
-  cmd = nx.async(function(_dispatchers, config)
+  cmd = btv.async(function(_dispatchers, config)
     local root_dir = (config and config.root_dir) or util.cwd()
-    local node_paths = nx.await(collect_node_modules(root_dir))
+    local node_paths = btv.await(collect_node_modules(root_dir))
 
     local ng_paths = {}
     for i, p in ipairs(node_paths) do
@@ -107,7 +107,7 @@ return {
       "--ngProbeLocations",
       table.concat(ng_paths, ","),
       "--angularCoreVersion",
-      nx.await(get_angular_core_version(root_dir)),
+      btv.await(get_angular_core_version(root_dir)),
     }
   end),
 

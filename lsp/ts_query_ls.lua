@@ -1,9 +1,9 @@
 ---@brief
 ---
 --- https://github.com/ribru17/ts_query_ls
---- Can be configured by passing a "settings" object to `nx.lsp.config('ts_query_ls', {})`:
+--- Can be configured by passing a "settings" object to `btv.lsp.config('ts_query_ls', {})`:
 --- ```lua
---- nx.lsp.config('ts_query_ls', {
+--- btv.lsp.config('ts_query_ls', {
 ---   init_options = {
 ---     parser_install_directories = {
 ---       '/my/parser/install/dir',
@@ -20,7 +20,7 @@
 
 -- Disable the (slow) built-in query linter, which will show duplicate diagnostics. This must be done before the query
 -- ftplugin is sourced.
-nx.g.query_lint_on = {}
+btv.g.query_lint_on = {}
 
 return {
   cmd = { "ts_query_ls" },
@@ -33,11 +33,11 @@ return {
       php_only = "php",
     },
     parser_install_directories = {
-      nx.utils.joinpath(nx.stdpath("data"), "site/parser"),
+      btv.utils.joinpath(btv.stdpath("data"), "site/parser"),
     },
   },
   -- Upstream points `'omnifunc'` at neovim's `vim.lsp.omnifunc` so `<C-x><C-o>` asks
-  -- the server. nxvim has no `'omnifunc'` hook into LSP — completion is `nx.complete`,
+  -- the server. bemtvi has no `'omnifunc'` hook into LSP — completion is `btv.complete`,
   -- whose `lsp` source serves this buffer already once the server is attached — so
   -- there is nothing to set here and setting a dead Vimscript expression would only
   -- make `<C-x><C-o>` fail obscurely.

@@ -11,7 +11,7 @@
 --- If you have installed groovy language server, you can set the `cmd` custom path as follow:
 ---
 --- ```lua
---- nx.lsp.config("groovyls", {
+--- btv.lsp.config("groovyls", {
 ---     -- Unix
 ---     cmd = { "java", "-jar", "path/to/groovyls/groovy-language-server-all.jar" },
 ---     ...

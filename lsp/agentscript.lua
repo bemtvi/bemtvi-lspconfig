@@ -6,11 +6,11 @@
 --- language for `*.agent` files. Install with
 --- `npm install -g @sf-agentscript/lsp-server`.
 ---
---- nxvim does not detect the `agentscript` filetype by default:
+--- bemtvi does not detect the `agentscript` filetype by default:
 ---
 --- ```lua
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.agent" }, function()
----   nx.bo.filetype = "agentscript"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.agent" }, function()
+---   btv.bo.filetype = "agentscript"
 --- end)
 --- ```
 

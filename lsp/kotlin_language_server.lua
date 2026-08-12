@@ -40,7 +40,7 @@ return {
   -- that server actually resolved, which is the value it wanted. With no root the key
   -- is left unset and the server falls back to the home directory itself.
   before_init = function(_init_params, config)
-    config.init_options = nx.tbl.deep_extend("force", config.init_options or {}, {
+    config.init_options = btv.tbl.deep_extend("force", config.init_options or {}, {
       storagePath = config.root_dir,
     })
   end,

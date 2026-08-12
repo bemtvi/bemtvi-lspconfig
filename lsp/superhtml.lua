@@ -11,7 +11,7 @@
 --- to your configuration:
 ---
 --- ```lua
---- nx.lsp.config("superhtml", {
+--- btv.lsp.config("superhtml", {
 ---   filetypes = { 'superhtml' }
 --- })
 --- ```

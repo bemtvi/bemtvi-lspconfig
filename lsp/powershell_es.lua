@@ -10,7 +10,7 @@
 --- of the extracted PowerShellEditorServices.zip.
 ---
 --- ```lua
---- nx.lsp.config('powershell_es', {
+--- btv.lsp.config('powershell_es', {
 ---   bundle_path = 'c:/w/PowerShellEditorServices',
 --- })
 --- ```
@@ -18,7 +18,7 @@
 --- By default the language server is started in `pwsh` (PowerShell Core). This can be changed by specifying `shell`.
 ---
 --- ```lua
---- nx.lsp.config('powershell_es', {
+--- btv.lsp.config('powershell_es', {
 ---   bundle_path = 'c:/w/PowerShellEditorServices',
 ---   shell = 'powershell.exe',
 --- })
@@ -31,15 +31,15 @@
 --- to learn more.
 ---
 --- ```lua
---- nx.lsp.config('powershell_es', {
+--- btv.lsp.config('powershell_es', {
 ---   cmd = {'pwsh', '-NoLogo', '-NoProfile', '-Command', "c:/PSES/Start-EditorServices.ps1 ..."},
 --- })
 --- ```
 
 return {
   cmd = function(_dispatchers, config)
-    local temp_path = nx.stdpath("cache")
-    -- `bundle_path` / `shell` are not `nx.lsp` config keys — they are this config's own
+    local temp_path = btv.stdpath("cache")
+    -- `bundle_path` / `shell` are not `btv.lsp` config keys — they are this config's own
     -- settings, read back off the resolved config the builder is handed rather than
     -- through a global registry lookup.
     config = config or {}
@@ -48,14 +48,14 @@ return {
     if not bundle_path then
       error(
         "powershell_es: set `bundle_path` to the extracted PowerShellEditorServices "
-          .. "directory — nx.lsp.config('powershell_es', { bundle_path = … })"
+          .. "directory — btv.lsp.config('powershell_es', { bundle_path = … })"
       )
     end
     ---@diagnostic disable-next-line: undefined-field
     local shell = config.shell or "pwsh"
 
     local command_fmt =
-      [[& '%s/PowerShellEditorServices/Start-EditorServices.ps1' -BundledModulesPath '%s' -LogPath '%s/powershell_es.log' -SessionDetailsPath '%s/powershell_es.session.json' -FeatureFlags @() -AdditionalModules @() -HostName nxvim -HostProfileId 0 -HostVersion 1.0.0 -Stdio -LogLevel Normal]]
+      [[& '%s/PowerShellEditorServices/Start-EditorServices.ps1' -BundledModulesPath '%s' -LogPath '%s/powershell_es.log' -SessionDetailsPath '%s/powershell_es.session.json' -FeatureFlags @() -AdditionalModules @() -HostName bemtvi -HostProfileId 0 -HostVersion 1.0.0 -Stdio -LogLevel Normal]]
     local command = command_fmt:format(bundle_path, bundle_path, temp_path, temp_path)
     return { shell, "-NoLogo", "-NoProfile", "-Command", command }
   end,

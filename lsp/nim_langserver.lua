@@ -8,7 +8,7 @@
 --- nimble install nimlangserver
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "nimlangserver" },

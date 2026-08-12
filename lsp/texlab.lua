@@ -12,10 +12,10 @@
 --- `LspTexlabCleanAuxiliary`, `LspTexlabFindEnvironments`,
 --- and `LspTexlabChangeEnvironment`.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local function buf_build(client, bufnr)
-  local params = nx.lsp.position_params({ encoding = client.offset_encoding })
+  local params = btv.lsp.position_params({ encoding = client.offset_encoding })
   client:request("textDocument/build", params, function(err, result)
     if err then
       error(tostring(err))
@@ -26,12 +26,12 @@ local function buf_build(client, bufnr)
       [2] = "Failure",
       [3] = "Cancelled",
     }
-    nx.notify("Build " .. texlab_build_status[result.status], nx.log.levels.INFO)
+    btv.notify("Build " .. texlab_build_status[result.status], btv.log.levels.INFO)
   end, bufnr)
 end
 
 local function buf_search(client, bufnr)
-  local params = nx.lsp.position_params({ encoding = client.offset_encoding })
+  local params = btv.lsp.position_params({ encoding = client.offset_encoding })
   client:request("textDocument/forwardSearch", params, function(err, result)
     if err then
       error(tostring(err))
@@ -42,7 +42,7 @@ local function buf_search(client, bufnr)
       [2] = "Failure",
       [3] = "Unconfigured",
     }
-    nx.notify("Search " .. texlab_forward_status[result.status], nx.log.levels.INFO)
+    btv.notify("Search " .. texlab_forward_status[result.status], btv.log.levels.INFO)
   end, bufnr)
 end
 
@@ -56,9 +56,9 @@ end
 local function dependency_graph(client)
   client:exec_cmd({ command = "texlab.showDependencyGraph" }, { bufnr = 0 }, function(err, result)
     if err then
-      return nx.notify(err.code .. ": " .. err.message, nx.log.levels.ERROR)
+      return btv.notify(err.code .. ": " .. err.message, btv.log.levels.ERROR)
     end
-    nx.notify("The dependency graph has been generated:\n" .. result, nx.log.levels.INFO)
+    btv.notify("The dependency graph has been generated:\n" .. result, btv.log.levels.INFO)
   end)
 end
 
@@ -74,9 +74,9 @@ local function command_factory(cmd)
       arguments = { { uri = util.uri_from_buf(bufnr) } },
     }, { bufnr = bufnr }, function(err, _)
       if err then
-        nx.notify(("Failed to clean %s files: %s"):format(cmd, err.message), nx.log.levels.ERROR)
+        btv.notify(("Failed to clean %s files: %s"):format(cmd, err.message), btv.log.levels.ERROR)
       else
-        nx.notify(("Command %s executed successfully"):format(cmd), nx.log.levels.INFO)
+        btv.notify(("Command %s executed successfully"):format(cmd), btv.log.levels.INFO)
       end
     end)
   end
@@ -85,10 +85,10 @@ end
 local function buf_find_envs(client, bufnr)
   client:exec_cmd({
     command = "texlab.findEnvironments",
-    arguments = { nx.lsp.position_params({ encoding = client.offset_encoding }) },
+    arguments = { btv.lsp.position_params({ encoding = client.offset_encoding }) },
   }, { bufnr = bufnr }, function(err, result)
     if err then
-      return nx.notify(err.code .. ": " .. err.message, nx.log.levels.ERROR)
+      return btv.notify(err.code .. ": " .. err.message, btv.log.levels.ERROR)
     end
     local env_names = {}
     for _, env in ipairs(result) do
@@ -100,23 +100,23 @@ local function buf_find_envs(client, bufnr)
       env_names[i] = string.rep(" ", i - 1) .. name
     end
     -- A transient content float, sized by the server's answer and dismissed by the
-    -- next key — nxvim's float owns its own geometry, so upstream's explicit
+    -- next key — bemtvi's float owns its own geometry, so upstream's explicit
     -- height/width (and the `focusable = false` that expressed "don't put me in
-    -- it") have nothing to set: a non-persistent `nx.ui.float` is already that.
-    nx.ui.float(env_names, { title = "Environments" })
+    -- it") have nothing to set: a non-persistent `btv.ui.float` is already that.
+    btv.ui.float(env_names, { title = "Environments" })
   end)
 end
 
 local function buf_change_env(client, bufnr)
-  nx.ui.input({ prompt = "New environment name: " }, function(input)
+  btv.ui.input({ prompt = "New environment name: " }, function(input)
     if not input or input == "" then
-      return nx.notify("No environment name provided", nx.log.levels.WARN)
+      return btv.notify("No environment name provided", btv.log.levels.WARN)
     end
     -- The whole params shape, cursor included, in the encoding this server agreed
     -- to — a hand-built `{ line, character }` from the cursor's BYTE column is off
     -- by one per multi-byte character on the line, which for `\begin{…}` names in a
     -- non-ASCII document is exactly where it matters.
-    local params = nx.lsp.position_params({ bufnr = bufnr, encoding = client.offset_encoding })
+    local params = btv.lsp.position_params({ bufnr = bufnr, encoding = client.offset_encoding })
     return client:exec_cmd({
       title = "change_environment",
       command = "texlab.changeEnvironment",

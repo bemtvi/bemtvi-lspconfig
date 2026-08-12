@@ -19,8 +19,8 @@
 --- To support org files or R sweave, users can define a custom filetype autocommand (or use a plugin which defines these filetypes):
 ---
 --- ```lua
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.org" }, function()
----   nx.bo.filetype = "org"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.org" }, function()
+---   btv.bo.filetype = "org"
 --- end)
 --- ```
 

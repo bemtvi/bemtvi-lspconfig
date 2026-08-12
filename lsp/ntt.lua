@@ -2,9 +2,9 @@
 ---
 --- https://github.com/nokia/ntt
 --- Installation instructions can be found [here](https://github.com/nokia/ntt#Install).
---- Can be configured by passing a "settings" object to nx.lsp.config("ntt"):
+--- Can be configured by passing a "settings" object to btv.lsp.config("ntt"):
 --- ```lua
---- nx.lsp.config("ntt", {
+--- btv.lsp.config("ntt", {
 ---     settings = {
 ---       ntt = {
 ---       }

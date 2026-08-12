@@ -22,39 +22,39 @@
 --- or
 ---
 --- ```lua
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "atlas.hcl" }, function()
----   nx.bo.filetype = "atlas-config"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "atlas.hcl" }, function()
+---   btv.bo.filetype = "atlas-config"
 --- end)
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.my.hcl" }, function()
----   nx.bo.filetype = "atlas-schema-mysql"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.my.hcl" }, function()
+---   btv.bo.filetype = "atlas-schema-mysql"
 --- end)
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.pg.hcl" }, function()
----   nx.bo.filetype = "atlas-schema-postgresql"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.pg.hcl" }, function()
+---   btv.bo.filetype = "atlas-schema-postgresql"
 --- end)
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.lt.hcl" }, function()
----   nx.bo.filetype = "atlas-schema-sqlite"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.lt.hcl" }, function()
+---   btv.bo.filetype = "atlas-schema-sqlite"
 --- end)
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.ch.hcl" }, function()
----   nx.bo.filetype = "atlas-schema-clickhouse"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.ch.hcl" }, function()
+---   btv.bo.filetype = "atlas-schema-clickhouse"
 --- end)
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.ms.hcl" }, function()
----   nx.bo.filetype = "atlas-schema-mssql"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.ms.hcl" }, function()
+---   btv.bo.filetype = "atlas-schema-mssql"
 --- end)
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.rs.hcl" }, function()
----   nx.bo.filetype = "atlas-schema-redshift"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.rs.hcl" }, function()
+---   btv.bo.filetype = "atlas-schema-redshift"
 --- end)
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.test.hcl" }, function()
----   nx.bo.filetype = "atlas-test"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.test.hcl" }, function()
+---   btv.bo.filetype = "atlas-test"
 --- end)
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.plan.hcl" }, function()
----   nx.bo.filetype = "atlas-plan"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.plan.hcl" }, function()
+---   btv.bo.filetype = "atlas-plan"
 --- end)
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.rule.hcl" }, function()
----   nx.bo.filetype = "atlas-rule"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.rule.hcl" }, function()
+---   btv.bo.filetype = "atlas-rule"
 --- end)
 --- ```
 ---
---- These filetypes are all HCL. nxvim has no filetype-to-grammar alias, so they are
+--- These filetypes are all HCL. bemtvi has no filetype-to-grammar alias, so they are
 --- not highlighted under their own names; `:setf hcl` in such a buffer gives HCL
 --- highlighting for that session.
 ---

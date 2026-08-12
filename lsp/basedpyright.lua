@@ -7,22 +7,22 @@
 --- Tagged hints are disabled by default. See Pyright for more details.
 --- Set `basedpyright.disableTaggedHints = false` to re-enable.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local function set_python_path(command)
   local path = command.args
-  local clients = nx.lsp.clients({
-    bufnr = nx.buf.current(),
+  local clients = btv.lsp.clients({
+    bufnr = btv.buf.current(),
     name = "basedpyright",
   })
   for _, client in ipairs(clients) do
     if client.settings then
       ---@diagnostic disable-next-line: param-type-mismatch
       client.settings.python =
-        nx.tbl.deep_extend("force", client.settings.python or {}, { pythonPath = path })
+        btv.tbl.deep_extend("force", client.settings.python or {}, { pythonPath = path })
     else
       client.config.settings =
-        nx.tbl.deep_extend("force", client.config.settings, { python = { pythonPath = path } })
+        btv.tbl.deep_extend("force", client.config.settings, { python = { pythonPath = path } })
     end
     client:notify("workspace/didChangeConfiguration", { settings = nil })
   end

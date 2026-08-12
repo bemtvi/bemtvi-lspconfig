@@ -8,28 +8,28 @@
 --- extension](https://github.com/forcedotcom/salesforcedx-vscode/tree/develop/packages/salesforcedx-vscode-apex) and adjust the `apex_jar_path` appropriately.
 ---
 --- ```lua
---- nx.lsp.config('apex_ls', {
+--- btv.lsp.config('apex_ls', {
 ---   apex_jar_path = '/path/to/apex-jorje-lsp.jar',
 ---   apex_enable_semantic_errors = false, -- Whether to allow Apex Language Server to surface semantic errors
 ---   apex_enable_completion_statistics = false, -- Whether to allow Apex Language Server to collect telemetry on code completion usage
 --- }
 ---```
 ---
---- Example configuration with the jar unpacked under nxvim's data dir:
+--- Example configuration with the jar unpacked under bemtvi's data dir:
 ---
 ---```lua
---- nx.lsp.config('apex_ls', {
----   apex_jar_path = nx.stdpath('data') .. '/apex-language-server/apex-jorje-lsp.jar',
+--- btv.lsp.config('apex_ls', {
+---   apex_jar_path = btv.stdpath('data') .. '/apex-language-server/apex-jorje-lsp.jar',
 --- }
 ---```
 ---
 --- For a complete experience, you may need to ensure the treesitter parsers for 'apex' are installed (:TSInstall apex) as well as configure the filetype for apex (*.cls) files:
 ---
 --- ```lua
---- nx.autocmd.create({ 'BufReadPost', 'BufNewFile' }, {
+--- btv.autocmd.create({ 'BufReadPost', 'BufNewFile' }, {
 ---   pattern = '*.cls',
 ---   callback = function()
----     nx.cmd('setfiletype apex')
+---     btv.cmd('setfiletype apex')
 ---   end,
 --- })
 --- ```
@@ -38,7 +38,7 @@ return {
   cmd = function(_dispatchers, config)
     ---@diagnostic disable: undefined-field
     local local_cmd = {
-      nx.env.get("JAVA_HOME") and (nx.env.get("JAVA_HOME") .. "/bin/java") or "java",
+      btv.env.get("JAVA_HOME") and (btv.env.get("JAVA_HOME") .. "/bin/java") or "java",
       "-cp",
       config.apex_jar_path,
       "-Ddebug.internal.errors=true",

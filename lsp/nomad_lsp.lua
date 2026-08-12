@@ -9,14 +9,14 @@
 --- No configuration option is needed unless you choose not to add `nomad-lsp` executable to the PATH. You should know what you are doing if you choose so.
 ---
 --- ```lua
---- nx.lsp.enable('nomad_lsp')
+--- btv.lsp.enable('nomad_lsp')
 --- ```
 ---
 --- However, a `hcl.nomad` or `nomad` filetype should be defined.
 ---
 --- Description of your jobs should be written in `.nomad` files for the LSP client to configure the server's `root_dir` configuration option.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 local bin_name = util.exe("nomad-lsp")
 
 return {

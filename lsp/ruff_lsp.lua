@@ -13,7 +13,7 @@
 --- Extra CLI arguments for `ruff` can be provided via
 ---
 --- ```lua
---- nx.lsp.config('ruff_lsp', {
+--- btv.lsp.config('ruff_lsp', {
 ---   init_options = {
 ---     settings = {
 ---       -- Any extra CLI arguments for `ruff` go here.
@@ -29,9 +29,9 @@ return {
   root_markers = { "pyproject.toml", "ruff.toml", ".git" },
   settings = {},
   on_init = function()
-    nx.notify_once(
-      "nxvim-lspconfig: 'ruff_lsp' has been renamed to 'ruff'; enable that instead",
-      nx.log.levels.WARN
+    btv.notify_once(
+      "bemtvi-lspconfig: 'ruff_lsp' has been renamed to 'ruff'; enable that instead",
+      btv.log.levels.WARN
     )
   end,
 }

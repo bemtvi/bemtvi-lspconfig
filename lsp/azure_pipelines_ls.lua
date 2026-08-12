@@ -12,7 +12,7 @@
 ---
 --- By default `azure-pipelines-ls` will only work in files named `azure-pipelines.yml`, this can be changed by providing additional settings like so:
 --- ```lua
---- nx.lsp.config("azure_pipelines_ls", {
+--- btv.lsp.config("azure_pipelines_ls", {
 ---   ... -- other configuration
 ---   settings = {
 ---       yaml = {

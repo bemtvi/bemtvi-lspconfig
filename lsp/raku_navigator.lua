@@ -2,7 +2,7 @@
 ---
 --- https://github.com/bscan/RakuNavigator
 --- A Raku language server
---- **By default, raku_navigator doesn't have a `cmd` set.** This is because nxvim-lspconfig does not make assumptions about your path.
+--- **By default, raku_navigator doesn't have a `cmd` set.** This is because bemtvi-lspconfig does not make assumptions about your path.
 --- You have to install the language server manually.
 --- Clone the RakuNavigator repo, install based on the [instructions](https://github.com/bscan/raku_Navigator#installation-for-other-editors),
 --- and point `cmd` to `server.js` inside the `server/out` directory:

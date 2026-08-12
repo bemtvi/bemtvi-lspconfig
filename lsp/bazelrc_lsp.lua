@@ -7,8 +7,8 @@
 --- The `.bazelrc` file type is not detected automatically, you can register it manually (see below) or override the filetypes:
 ---
 --- ```lua
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.bazelrc" }, function()
----   nx.bo.filetype = "bazelrc"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.bazelrc" }, function()
+---   btv.bo.filetype = "bazelrc"
 --- end)
 --- ```
 

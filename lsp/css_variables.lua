@@ -10,7 +10,7 @@
 --- npm i -g css-variables-language-server
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "css-variables-language-server", "--stdio" },

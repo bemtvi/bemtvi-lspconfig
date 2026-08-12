@@ -10,7 +10,7 @@
 --- install.packages("languageserver")
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "R", "--no-echo", "-e", "languageserver::run()" },

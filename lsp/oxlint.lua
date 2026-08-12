@@ -19,13 +19,13 @@
 --- The default `on_attach` function provides an `:LspOxlintFixAll` command which
 --- can be used to fix all fixable diagnostics. See the `eslint` config entry for
 --- an example of how to use this to automatically fix all errors on write.
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
-local oxlint_conf_mentions_typescript = nx.async(function(root_dir)
+local oxlint_conf_mentions_typescript = btv.async(function(root_dir)
   if not root_dir then
     return false
   end
-  local text = nx.await(nx.fs.read_text(util.joinpath(root_dir, ".oxlintrc.json")):catch(function()
+  local text = btv.await(btv.fs.read_text(util.joinpath(root_dir, ".oxlintrc.json")):catch(function()
     return nil
   end))
   return type(text) == "string" and text:find("typescript") ~= nil
@@ -45,7 +45,7 @@ return {
   root_dir = util.root_dir(function(bufnr, on_dir)
     local fname = util.bufname(bufnr)
 
-    local root_markers = nx.await(
+    local root_markers = btv.await(
       util.insert_package_json(
         { ".oxlintrc.json", ".oxlintrc.jsonc", "oxlint.config.ts" },
         { "oxlint", "vite%-plus" },
@@ -53,7 +53,7 @@ return {
       )
     )
     -- find vite plus config with lint field
-    root_markers = nx.await(
+    root_markers = btv.await(
       util.root_markers_with_field(
         root_markers,
         { "vite.config.ts" },
@@ -62,7 +62,7 @@ return {
         "all"
       )
     )
-    local found = nx.await(util.find_upward(fname, root_markers))
+    local found = btv.await(util.find_upward(fname, root_markers))
     if found then
       on_dir(util.dirname(found))
     end
@@ -88,18 +88,18 @@ return {
     -- disableNestedConfig = false,
     -- fixKind = 'safe_fix',
   },
-  before_init = nx.async(function(init_params, config)
+  before_init = btv.async(function(init_params, config)
     local settings = config.settings or {}
-    local has_tsgolint = nx.await(util.which("tsgolint"))
-      or nx.await(util.local_bin((config or {}).root_dir, "tsgolint"))
+    local has_tsgolint = btv.await(util.which("tsgolint"))
+      or btv.await(util.local_bin((config or {}).root_dir, "tsgolint"))
     if settings.typeAware == nil and has_tsgolint then
-      if nx.await(oxlint_conf_mentions_typescript(config.root_dir)) then
-        settings = nx.tbl.extend("force", settings, { typeAware = true })
+      if btv.await(oxlint_conf_mentions_typescript(config.root_dir)) then
+        settings = btv.tbl.extend("force", settings, { typeAware = true })
       end
     end
     local init_options = config.init_options or {}
     init_options.settings =
-      nx.tbl.extend("force", init_options.settings or {} --[[@as table]], settings)
+      btv.tbl.extend("force", init_options.settings or {} --[[@as table]], settings)
 
     init_params.initializationOptions = init_options
   end),

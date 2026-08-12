@@ -10,21 +10,21 @@
 --- ```
 ---
 --- `vscode-json-language-server` only provides completions when the client advertises
---- snippet support, which nxvim's base capabilities do not — turn it on per server.
---- nxvim expands the snippets itself (`nx.snippet`); no snippet plugin is needed.
+--- snippet support, which bemtvi's base capabilities do not — turn it on per server.
+--- bemtvi expands the snippets itself (`btv.snippet`); no snippet plugin is needed.
 ---
 --- ```lua
 --- -- Broadcast snippet support. A config's `capabilities` are deep-merged over
---- -- nxvim's base client capabilities, so this adds the one field rather than
+--- -- bemtvi's base client capabilities, so this adds the one field rather than
 --- -- rebuilding the whole table.
---- nx.lsp.config('jsonls', {
+--- btv.lsp.config('jsonls', {
 ---   capabilities = {
 ---     textDocument = { completion = { completionItem = { snippetSupport = true } } },
 ---   },
 --- })
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = util.node_cmd("vscode-json-language-server"),

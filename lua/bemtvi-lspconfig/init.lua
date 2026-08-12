@@ -1,22 +1,22 @@
--- nxvim-lspconfig — ready-made `nx.lsp` configs for every language server
+-- bemtvi-lspconfig — ready-made `btv.lsp` configs for every language server
 -- nvim-lspconfig knows about, ported natively.
 --
 -- This is a port, not a compatibility layer. Upstream's `require('lspconfig').x
 -- .setup{}` framework is gone — deleted, not aliased — along with everything that
 -- depended on neovim internals (`vim.lsp.config._configs`, `vim.uv.new_timer`,
 -- `vim.deprecate`, `:checkhealth`). What remains is what actually carries value:
--- one curated config table per server, rewritten against `nx.*` so that nothing
+-- one curated config table per server, rewritten against `btv.*` so that nothing
 -- blocks the editor.
 --
 -- ## Two ways to use it
 --
--- **The native path.** `nx.lsp` reads each server's preset straight off this
+-- **The native path.** `btv.lsp` reads each server's preset straight off this
 -- plugin's runtimepath (`lsp/<name>.lua`), so once it is installed there is nothing
 -- to require:
 --
 -- ```lua
--- nx.lsp.enable("rust_analyzer")
--- nx.lsp.config("rust_analyzer", { settings = { … } })  -- to override
+-- btv.lsp.enable("rust_analyzer")
+-- btv.lsp.config("rust_analyzer", { settings = { … } })  -- to override
 -- ```
 --
 -- **The convenience path.** `setup()` enables a batch, applies global
@@ -24,7 +24,7 @@
 -- per-server overrides inline:
 --
 -- ```lua
--- require("nxvim-lspconfig").setup({
+-- require("bemtvi-lspconfig").setup({
 --   servers = {
 --     "lua_ls", "pyright", "gopls",
 --     rust_analyzer = { settings = { ["rust-analyzer"] = { … } } },
@@ -36,9 +36,9 @@
 --
 -- Every config field that needs to touch the filesystem or run a program — locating
 -- a project-local binary, probing for a manifest, asking a toolchain where its
--- sources live — is a promise. `nx.lsp` awaits `cmd` builders and `before_init`
+-- sources live — is a promise. `btv.lsp` awaits `cmd` builders and `before_init`
 -- hooks before it spawns, so a config never blocks the editor to answer a question
--- about the project. See `nxvim-lspconfig.util` for the helpers configs use.
+-- about the project. See `bemtvi-lspconfig.util` for the helpers configs use.
 
 local M = {}
 
@@ -56,8 +56,8 @@ function M.available()
     return available_cache
   end
   local seen, names = {}, {}
-  for _, path in ipairs(nx.runtime_file("lsp/*.lua", true)) do
-    local name = nx.utils.basename(path)
+  for _, path in ipairs(btv.runtime_file("lsp/*.lua", true)) do
+    local name = btv.utils.basename(path)
     name = name and name:match("^(.*)%.lua$")
     if name and not seen[name] then
       seen[name] = true
@@ -82,7 +82,7 @@ end
 -- `M.for_filetype(ft)` -> the bundled servers whose `filetypes` include `ft`, sorted.
 -- Backs argument-less `:LspStart`.
 --
--- The filetypes come from `nx.lsp.get_config`, i.e. the config **as resolved** —
+-- The filetypes come from `btv.lsp.get_config`, i.e. the config **as resolved** —
 -- preset plus any override the user has applied — rather than from the preset file
 -- alone. That matters: someone who added `htmldjango` to `html`'s filetypes expects
 -- `:LspStart` in an htmldjango buffer to find it. It also means there is one loader
@@ -94,8 +94,8 @@ function M.for_filetype(ft)
     return out
   end
   for _, name in ipairs(M.available()) do
-    local cfg = nx.lsp.get_config(name)
-    if cfg.filetypes and nx.tbl.contains(cfg.filetypes, ft) then
+    local cfg = btv.lsp.get_config(name)
+    if cfg.filetypes and btv.tbl.contains(cfg.filetypes, ft) then
       out[#out + 1] = name
     end
   end
@@ -103,7 +103,7 @@ function M.for_filetype(ft)
 end
 
 -- ----- the default keymaps ----------------------------------------------------
--- nxvim already installs the core LSP maps buffer-local on attach (gd / gD / gr /
+-- bemtvi already installs the core LSP maps buffer-local on attach (gd / gD / gr /
 -- K / <C-k>), so this adds only the rest of the now-standard set, at the
 -- OVERRIDABLE rung (`default = true`) so a user's own map for the same key always
 -- wins. Opt out of the whole set with `setup({ keymaps = false })`.
@@ -114,35 +114,35 @@ end
 -- core's built-in set stays the small one that earns its place on every buffer a
 -- server touches.
 local DEFAULT_KEYMAPS = {
-  { "n", "grn", nx.lsp.rename, "LSP rename" },
-  { "n", "gra", nx.lsp.code_action, "LSP code action" },
-  { "n", "grr", nx.lsp.references, "LSP references" },
-  { "n", "gri", nx.lsp.implementation, "LSP implementation" },
-  { "n", "grt", nx.lsp.type_definition, "LSP type definition" },
-  { "n", "gO", nx.lsp.document_symbol, "LSP document symbols" },
-  { "n", "<leader>ls", nx.lsp.workspace_symbol, "LSP workspace symbols" },
-  { "n", "<leader>lf", nx.lsp.format, "LSP format buffer" },
+  { "n", "grn", btv.lsp.rename, "LSP rename" },
+  { "n", "gra", btv.lsp.code_action, "LSP code action" },
+  { "n", "grr", btv.lsp.references, "LSP references" },
+  { "n", "gri", btv.lsp.implementation, "LSP implementation" },
+  { "n", "grt", btv.lsp.type_definition, "LSP type definition" },
+  { "n", "gO", btv.lsp.document_symbol, "LSP document symbols" },
+  { "n", "<leader>ls", btv.lsp.workspace_symbol, "LSP workspace symbols" },
+  { "n", "<leader>lf", btv.lsp.format, "LSP format buffer" },
   -- `<C-]>` is the TAG JUMP, and a language server is what you have instead of a
   -- tags file here — neovim reaches the same place by pointing `'tagfunc'` at the
-  -- client, a mechanism nxvim has no other use for, so this binds it directly.
+  -- client, a mechanism bemtvi has no other use for, so this binds it directly.
   -- `<C-o>` still comes back: a goto records the jumplist.
-  { "n", "<C-]>", nx.lsp.definition, "LSP go to definition" },
-  -- neovim's `i_CTRL-S`, in insert AND select mode, beside nxvim's own `<C-k>`.
+  { "n", "<C-]>", btv.lsp.definition, "LSP go to definition" },
+  -- neovim's `i_CTRL-S`, in insert AND select mode, beside bemtvi's own `<C-k>`.
   -- Terminal flow control would eat `<C-s>` as XOFF, but raw mode clears `IXON`,
   -- so it reaches the editor.
-  { "i", "<C-s>", nx.lsp.signature_help, "LSP signature help" },
-  { "s", "<C-s>", nx.lsp.signature_help, "LSP signature help" },
+  { "i", "<C-s>", btv.lsp.signature_help, "LSP signature help" },
+  { "s", "<C-s>", btv.lsp.signature_help, "LSP signature help" },
 }
 
 local function install_default_keymaps(bufnr)
   for _, m in ipairs(DEFAULT_KEYMAPS) do
-    nx.keymap.set(m[1], m[2], m[3], { buffer = bufnr, default = true, desc = m[4] })
+    btv.keymap.set(m[1], m[2], m[3], { buffer = bufnr, default = true, desc = m[4] })
   end
 end
 
 -- Flip inlay hints for the current buffer (the RHS of the `<leader>lh` toggle).
 local function toggle_inlay_hints()
-  nx.lsp.inlay_hint.enable(not nx.lsp.inlay_hint.is_enabled({ bufnr = 0 }), { bufnr = 0 })
+  btv.lsp.inlay_hint.enable(not btv.lsp.inlay_hint.is_enabled({ bufnr = 0 }), { bufnr = 0 })
 end
 
 -- ----- the global "*" layer ---------------------------------------------------
@@ -160,14 +160,14 @@ local function build_on_attach(opts)
   return function(client, bufnr)
     if want_keymaps then
       install_default_keymaps(bufnr)
-      nx.keymap.set("n", "<leader>lh", toggle_inlay_hints, {
+      btv.keymap.set("n", "<leader>lh", toggle_inlay_hints, {
         buffer = bufnr,
         default = true,
         desc = "LSP toggle inlay hints",
       })
     end
     if want_inlay and client.server_capabilities and client.server_capabilities.inlay_hints then
-      nx.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+      btv.lsp.inlay_hint.enable(true, { bufnr = bufnr })
     end
     if user then
       user(client, bufnr)
@@ -188,14 +188,14 @@ local function apply_global(opts)
     star.on_attach = on_attach
   end
   if next(star) ~= nil then
-    nx.lsp.config("*", star)
+    btv.lsp.config("*", star)
   end
 end
 
 -- ----- per-server registration ------------------------------------------------
 
--- Register one server's override into `nx.lsp`'s registry. The bundled preset is
--- NOT merged in here: `nx.lsp` resolves `"*"` ⊕ the runtimepath preset ⊕ this
+-- Register one server's override into `btv.lsp`'s registry. The bundled preset is
+-- NOT merged in here: `btv.lsp` resolves `"*"` ⊕ the runtimepath preset ⊕ this
 -- override itself, so merging it a second time would just duplicate work — and,
 -- with list-replacing deep-merge semantics, could quietly re-introduce a preset
 -- list the user meant to replace.
@@ -205,7 +205,7 @@ end
 local function register(name, override)
   if not M.is_available(name) then
     error(
-      "nxvim-lspconfig: unknown server '"
+      "bemtvi-lspconfig: unknown server '"
         .. tostring(name)
         .. "' (there are "
         .. #M.available()
@@ -214,7 +214,7 @@ local function register(name, override)
     )
   end
   if override and next(override) ~= nil then
-    nx.lsp.config(name, override)
+    btv.lsp.config(name, override)
   end
 end
 
@@ -239,7 +239,7 @@ local function each_server(servers, fn)
     return
   end
   if type(servers) ~= "table" then
-    error('nxvim-lspconfig: `servers` must be a name, a list, a map, or "all"', 2)
+    error('bemtvi-lspconfig: `servers` must be a name, a list, a map, or "all"', 2)
   end
   for k, v in pairs(servers) do
     if type(k) == "number" then
@@ -261,7 +261,7 @@ function M.enable(servers)
     names[#names + 1] = name
   end)
   if #names > 0 then
-    nx.lsp.enable(names)
+    btv.lsp.enable(names)
   end
   return M
 end
@@ -280,7 +280,7 @@ end
 function M.setup(opts)
   opts = opts or {}
   if type(opts) ~= "table" then
-    error("nxvim-lspconfig.setup: opts must be a table", 2)
+    error("bemtvi-lspconfig.setup: opts must be a table", 2)
   end
   apply_global(opts)
   if opts.servers ~= nil then
@@ -293,6 +293,6 @@ end
 -- The helper surface bundled configs are written against, re-exported so a user's
 -- own config can build on the same helpers (`util.node_cmd`, `util.root`, …)
 -- without a second `require`.
-M.util = require("nxvim-lspconfig.util")
+M.util = require("bemtvi-lspconfig.util")
 
 return M

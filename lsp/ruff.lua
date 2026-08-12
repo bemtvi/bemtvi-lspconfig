@@ -15,7 +15,7 @@
 --- Server settings can be provided via:
 ---
 --- ```lua
---- nx.lsp.config("ruff", {
+--- btv.lsp.config("ruff", {
 ---   init_options = {
 ---     settings = {
 ---       -- Server settings should go here

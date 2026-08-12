@@ -7,12 +7,12 @@
 --- If you are using HLS 1.9.0.0, enable the language server to launch on Cabal files as well:
 ---
 --- ```lua
---- nx.lsp.config('hls', {
+--- btv.lsp.config('hls', {
 ---   filetypes = { 'haskell', 'lhaskell', 'cabal' },
 --- })
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "haskell-language-server-wrapper", "--lsp" },

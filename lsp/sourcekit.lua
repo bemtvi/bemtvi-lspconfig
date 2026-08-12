@@ -4,7 +4,7 @@
 ---
 --- Language server for Swift and C/C++/Objective-C.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "sourcekit-lsp" },

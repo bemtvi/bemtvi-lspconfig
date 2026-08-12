@@ -8,7 +8,7 @@
 ---
 --- In short, they should look something like this:
 --- ```lua
---- nx.lsp.config("harper_ls", {
+--- btv.lsp.config("harper_ls", {
 ---   settings = {
 ---     ["harper-ls"] = {
 ---       userDictPath = "~/dict.txt"

@@ -9,7 +9,7 @@
 --- GitHub releases. Then, configure `cmd` to run the Node script at the unpacked location:
 ---
 --- ```lua
---- nx.lsp.config("visualforce_ls", {
+--- btv.lsp.config("visualforce_ls", {
 ---   cmd = {
 ---     'node',
 ---     '/path/to/unpacked/archive/extension/node_modules/@salesforce/salesforcedx-visualforce-language-server/out/src/visualforceServer.js',

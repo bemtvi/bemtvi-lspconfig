@@ -9,7 +9,7 @@
 --- go install github.com/StyraInc/regal@latest
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "regal", "language-server" },

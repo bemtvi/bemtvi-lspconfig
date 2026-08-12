@@ -7,7 +7,7 @@
 --- npm i -g turtle-language-server
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local BIN = "turtle-language-server"
 
@@ -17,13 +17,13 @@ return {
   -- over whatever `$PATH` resolves to — running one node's script under another node is
   -- how this breaks. Upstream scans `$PATH` by hand at load time; `which` is the same
   -- search, asynchronously, once the server is actually starting.
-  cmd = nx.async(function()
-    local nvm_bin = nx.env.get("NVM_BIN")
+  cmd = btv.async(function()
+    local nvm_bin = btv.env.get("NVM_BIN")
     local path = nvm_bin and util.joinpath(nvm_bin, BIN) or nil
-    if path and not nx.await(util.exists(path)) then
+    if path and not btv.await(util.exists(path)) then
       path = nil
     end
-    path = path or nx.await(util.which(BIN))
+    path = path or btv.await(util.which(BIN))
     if not path then
       error("turtle_ls: " .. BIN .. " not found on $PATH (npm i -g " .. BIN .. ")")
     end

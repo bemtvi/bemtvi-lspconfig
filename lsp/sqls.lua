@@ -3,7 +3,7 @@
 --- https://github.com/sqls-server/sqls
 ---
 --- ```lua
---- nx.lsp.config("sqls", {
+--- btv.lsp.config("sqls", {
 ---   cmd = {"path/to/command", "-config", "path/to/config.yml"};
 ---   ...
 --- })

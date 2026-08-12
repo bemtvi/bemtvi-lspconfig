@@ -44,7 +44,7 @@
 --- If DENO ROOT is found, and it's longer than or equal to PROJECT ROOT, then this is a Deno file, and we abort.
 --- Otherwise, attach at PROJECT ROOT, or the cwd if not found.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   settings = {
@@ -79,9 +79,9 @@ return {
     -- Give the root markers equal priority by wrapping them in a table
     root_markers = { root_markers, { ".git" } }
 
-    local deno_root = nx.await(util.root(bufnr, { "deno.json", "deno.jsonc" }))
-    local deno_lock_root = nx.await(util.root(bufnr, { "deno.lock" }))
-    local project_root = nx.await(util.root(bufnr, root_markers))
+    local deno_root = btv.await(util.root(bufnr, { "deno.json", "deno.jsonc" }))
+    local deno_lock_root = btv.await(util.root(bufnr, { "deno.lock" }))
+    local project_root = btv.await(util.root(bufnr, root_markers))
     if deno_lock_root and (not project_root or #deno_lock_root > #project_root) then
       -- deno lock is closer than package manager lock, abort
       return

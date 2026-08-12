@@ -11,20 +11,20 @@
 --- You can override the default command by manually configuring it like this:
 ---
 --- ```lua
---- nx.lsp.config("vespa_ls", {
+--- btv.lsp.config("vespa_ls", {
 ---   cmd = { 'java', '-jar', '/path/to/vespa-language-server.jar' },
 --- })
 --- ```
 ---
 --- The project root is determined based on the presence of a `.git` directory.
 ---
---- To make nxvim recognize the proper filetypes, add the following setting in `init.lua`:
+--- To make bemtvi recognize the proper filetypes, add the following setting in `init.lua`:
 ---
----     nx.on({ "BufReadPost", "BufNewFile" }, { pattern = { "*.profile", "*.sd" } }, function()
----       nx.bo.filetype = "sd"
+---     btv.on({ "BufReadPost", "BufNewFile" }, { pattern = { "*.profile", "*.sd" } }, function()
+---       btv.bo.filetype = "sd"
 ---     end)
----     nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.yql" }, function()
----       nx.bo.filetype = "yql"
+---     btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.yql" }, function()
+---       btv.bo.filetype = "yql"
 ---     end)
 
 return {

@@ -10,7 +10,7 @@
 --- If you have installed nextflow language server, you can set the `cmd` custom path as follow:
 ---
 --- ```lua
---- nx.lsp.config("nextflow_ls", {
+--- btv.lsp.config("nextflow_ls", {
 ---     cmd = { 'nextflow-language-server' },
 ---     filetypes = { 'nextflow' },
 ---     settings = {

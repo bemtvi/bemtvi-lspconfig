@@ -19,8 +19,8 @@
 --- ```
 --- -- Point this at wherever @vue/language-server is installed. For a project-local
 --- -- copy, resolve it asynchronously rather than hard-coding a path:
---- --   local util = require('nxvim-lspconfig.util')
---- --   local dir = nx.await(util.find_upward(nx.buf.name(0), 'node_modules'))
+--- --   local util = require('bemtvi-lspconfig.util')
+--- --   local dir = btv.await(util.find_upward(btv.buf.name(0), 'node_modules'))
 --- local vue_language_server_path = '/path/to/@vue/language-server'
 --- local vue_plugin = {
 ---   name = '@vue/typescript-plugin',
@@ -28,7 +28,7 @@
 ---   languages = { 'vue' },
 ---   configNamespace = 'typescript',
 --- }
---- nx.lsp.config('vtsls', {
+--- btv.lsp.config('vtsls', {
 ---   settings = {
 ---     vtsls = {
 ---       tsserver = {
@@ -49,7 +49,7 @@
 --- You must make sure the Vue language server is setup. For example,
 ---
 --- ```
---- nx.lsp.enable('vue_ls')
+--- btv.lsp.enable('vue_ls')
 --- ```
 ---
 --- See `vue_ls` section and https://github.com/vuejs/language-tools/wiki/Neovim for more information.
@@ -63,7 +63,7 @@
 ---
 --- This includes the same Deno-excluding logic from `ts_ls`. It is not recommended to enable both `vtsls` and `ts_ls` at the same time!
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "vtsls", "--stdio" },
@@ -86,9 +86,9 @@ return {
     -- Give the root markers equal priority by wrapping them in a table
     root_markers = { root_markers, { ".git" } }
     -- exclude deno
-    local deno_root = nx.await(util.root(bufnr, { "deno.json", "deno.jsonc" }))
-    local deno_lock_root = nx.await(util.root(bufnr, { "deno.lock" }))
-    local project_root = nx.await(util.root(bufnr, root_markers))
+    local deno_root = btv.await(util.root(bufnr, { "deno.json", "deno.jsonc" }))
+    local deno_lock_root = btv.await(util.root(bufnr, { "deno.lock" }))
+    local project_root = btv.await(util.root(bufnr, root_markers))
     if deno_lock_root and (not project_root or #deno_lock_root > #project_root) then
       -- deno lock is closer than package manager lock, abort
       return

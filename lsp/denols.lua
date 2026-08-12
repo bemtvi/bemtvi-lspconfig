@@ -4,11 +4,11 @@
 ---
 --- Deno's built-in language server
 ---
---- To appropriately highlight codefences returned from denols, you will need to augment nx.g.markdown_fenced languages
+--- To appropriately highlight codefences returned from denols, you will need to augment btv.g.markdown_fenced languages
 ---  in your init.lua. Example:
 ---
 --- ```lua
---- nx.g.markdown_fenced_languages = {
+--- btv.g.markdown_fenced_languages = {
 ---   "ts=typescript"
 --- }
 --- ```
@@ -43,7 +43,7 @@
 --- exists only inside the server, fetched with `deno/virtualTextDocument`. Upstream
 --- intercepts the goto reply and fills a scratch buffer with the fetched text.
 ---
---- nxvim does not route server *replies* through per-config `handlers` (`nx.lsp` warns
+--- bemtvi does not route server *replies* through per-config `handlers` (`btv.lsp` warns
 --- about the key at load), and it has no Lua buffer-mutation API to fill such a buffer
 --- with, so that interception is gone rather than kept as code that cannot run. A goto
 --- landing on a `deno:` URI reports that it has no path instead of opening a blank
@@ -57,7 +57,7 @@
 --- If DENO ROOT is found, and it's longer than or equal to PROJECT ROOT, then this is a Deno file, and we attach.
 --- Otherwise, we abort, because this is a non-Deno TS file.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "deno", "lsp" },
@@ -74,9 +74,9 @@ return {
     -- Give the root markers equal priority by wrapping them in a table
     root_markers = { root_markers, { ".git" } }
     -- only include deno projects
-    local deno_root = nx.await(util.root(bufnr, { "deno.json", "deno.jsonc" }))
-    local deno_lock_root = nx.await(util.root(bufnr, { "deno.lock" }))
-    local project_root = nx.await(util.root(bufnr, root_markers))
+    local deno_root = btv.await(util.root(bufnr, { "deno.json", "deno.jsonc" }))
+    local deno_lock_root = btv.await(util.root(bufnr, { "deno.lock" }))
+    local project_root = btv.await(util.root(bufnr, root_markers))
     if
       (deno_lock_root and (not project_root or #deno_lock_root > #project_root))
       or (deno_root and (not project_root or #deno_root >= #project_root))
@@ -108,7 +108,7 @@ return {
       }, { bufnr = bufnr }, function(err, _, ctx)
         if err then
           local uri = ctx.params.arguments[2]
-          nx.notify("cache command failed for" .. util.uri_to_path(uri), nx.log.levels.ERROR)
+          btv.notify("cache command failed for" .. util.uri_to_path(uri), btv.log.levels.ERROR)
         end
       end)
     end, {

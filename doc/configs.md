@@ -7,8 +7,8 @@ Every language server this plugin ships a config for, with its install notes and
 defaults it sets. Read it in the editor with `:help lspconfig-all`, or jump straight
 to one server with `:help lspconfig-<name>` (e.g. `:help lspconfig-clangd`).
 
-Enable any of them with `nx.lsp.enable("<name>")`; override with `nx.lsp.config`. See
-[nxvim-lspconfig.md](./nxvim-lspconfig.md) for the plugin itself.
+Enable any of them with `btv.lsp.enable("<name>")`; override with `btv.lsp.config`. See
+[bemtvi-lspconfig.md](./bemtvi-lspconfig.md) for the plugin itself.
 
 - [ada_ls](#ada_ls)
 - [agda_ls](#agda_ls)
@@ -425,10 +425,10 @@ https://github.com/AdaCore/ada_language_server
 Installation instructions can be found [here](https://github.com/AdaCore/ada_language_server#Install).
 
 Workspace-specific [settings](https://github.com/AdaCore/ada_language_server/blob/master/doc/settings.md) such as `projectFile` can be provided in a `.als.json` file at the root of the workspace.
-Alternatively, configuration may be passed as a "settings" object to `nx.lsp.config('ada_ls', {})`:
+Alternatively, configuration may be passed as a "settings" object to `btv.lsp.config('ada_ls', {})`:
 
 ```lua
-nx.lsp.config('ada_ls', {
+btv.lsp.config('ada_ls', {
     settings = {
       ada = {
         projectFile = "project.gpr";
@@ -441,7 +441,7 @@ nx.lsp.config('ada_ls', {
 Enable it:
 
 ```lua
-nx.lsp.enable("ada_ls")
+btv.lsp.enable("ada_ls")
 ```
 
 Default config:
@@ -466,7 +466,7 @@ Language Server for Agda.
 Enable it:
 
 ```lua
-nx.lsp.enable("agda_ls")
+btv.lsp.enable("agda_ls")
 ```
 
 Default config:
@@ -490,18 +490,18 @@ Language server for Agent Script, Salesforce's open agent specification
 language for `*.agent` files. Install with
 `npm install -g @sf-agentscript/lsp-server`.
 
-nxvim does not detect the `agentscript` filetype by default:
+bemtvi does not detect the `agentscript` filetype by default:
 
 ```lua
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.agent" }, function()
-  nx.bo.filetype = "agentscript"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.agent" }, function()
+  btv.bo.filetype = "agentscript"
 end)
 ```
 
 Enable it:
 
 ```lua
-nx.lsp.enable("agentscript")
+btv.lsp.enable("agentscript")
 ```
 
 Default config:
@@ -532,7 +532,7 @@ It can be i
 Enable it:
 
 ```lua
-nx.lsp.enable("aiken")
+btv.lsp.enable("aiken")
 ```
 
 Default config:
@@ -562,7 +562,7 @@ Refer to the [documentation](https://posit-dev.github.io/air/editors.html) for m
 Enable it:
 
 ```lua
-nx.lsp.enable("air")
+btv.lsp.enable("air")
 ```
 
 Default config:
@@ -596,8 +596,8 @@ autocmd BufNewFile,BufRead *.als set filetype=alloy
 or
 
 ```lua
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.als" }, function()
-  nx.bo.filetype = "alloy"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.als" }, function()
+  btv.bo.filetype = "alloy"
 end)
 ```
 
@@ -606,7 +606,7 @@ Alternatively, you may use a syntax plugin like https://github.com/runoshun/vim-
 Enable it:
 
 ```lua
-nx.lsp.enable("alloy_ls")
+btv.lsp.enable("alloy_ls")
 ```
 
 Default config:
@@ -639,7 +639,7 @@ Available options:
 Enable it:
 
 ```lua
-nx.lsp.enable("anakin_language_server")
+btv.lsp.enable("anakin_language_server")
 ```
 
 Default config:
@@ -714,7 +714,7 @@ https://github.com/angular/angular/tree/main/vscode-ng-language-service
 local project_library_path = "/path/to/project/lib"
 local cmd = {"ngserver", "--stdio", "--tsProbeLocations", project_library_path , "--ngProbeLocations", project_library_path}
 
-nx.lsp.config('angularls', {
+btv.lsp.config('angularls', {
   cmd = cmd,
 })
 ```
@@ -722,7 +722,7 @@ nx.lsp.config('angularls', {
 Enable it:
 
 ```lua
-nx.lsp.enable("angularls")
+btv.lsp.enable("angularls")
 ```
 
 Default config:
@@ -753,7 +753,7 @@ npm install -g @ansible/ansible-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("ansiblels")
+btv.lsp.enable("ansiblels")
 ```
 
 Default config:
@@ -798,7 +798,7 @@ npm install -g antlers-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("antlersls")
+btv.lsp.enable("antlersls")
 ```
 
 Default config:
@@ -823,7 +823,7 @@ Default config:
 Enable it:
 
 ```lua
-nx.lsp.enable("apex_ls")
+btv.lsp.enable("apex_ls")
 ```
 
 Default config:
@@ -912,15 +912,15 @@ Ref: https://github.com/arduino/arduino-ide/issues/159
 Enable it:
 
 ```lua
-nx.lsp.enable("arduino_language_server")
+btv.lsp.enable("arduino_language_server")
 ```
 
 Default config:
 - `capabilities`:
   ```lua
   {
-    textDocument = { semanticTokens = nx.json.null },
-    workspace = { semanticTokens = nx.json.null },
+    textDocument = { semanticTokens = btv.json.null },
+    workspace = { semanticTokens = btv.json.null },
   }
   ```
 - `cmd`:
@@ -947,7 +947,7 @@ cargo install asm-lsp
 Enable it:
 
 ```lua
-nx.lsp.enable("asm_lsp")
+btv.lsp.enable("asm_lsp")
 ```
 
 Default config:
@@ -979,7 +979,7 @@ npm install [-g] @ast-grep/cli
 Enable it:
 
 ```lua
-nx.lsp.enable("ast_grep")
+btv.lsp.enable("ast_grep")
 ```
 
 Default config:
@@ -1058,7 +1058,7 @@ You will need to manually pass the typescript SDK path. Here is an example of a 
       astro-language-server
     ];
     initLua = ''
-      nx.lsp.config('astro', {
+      btv.lsp.config('astro', {
         init_options = {
           typescript = {
             tsdk = '${pkgs.typescript}/lib/node_modules/typescript/lib',
@@ -1066,14 +1066,14 @@ You will need to manually pass the typescript SDK path. Here is an example of a 
         },
       })
 
-      nx.lsp.enable('astro')
+      btv.lsp.enable('astro')
 
       -- ...
     '';
   };
 }
 ```
-The path can also be passed via a variable, like `nx.g.tsdk = "${pkgs.typescript}/lib/node_modules/typescript/lib"`, and then read from the Lua config.
+The path can also be passed via a variable, like `btv.g.tsdk = "${pkgs.typescript}/lib/node_modules/typescript/lib"`, and then read from the Lua config.
 
 WARNING: TypeScript 7.x dropped `tsserverlibrary.js` from its npm package, so
 `typescript.tsdk` cannot resolve from a local or global TS 7.x install. Pin to
@@ -1084,12 +1084,12 @@ path is known at build time), look up the workspace-local TS first via
 `util.get_typescript_server_path`, then fall back to `npm root -g`:
 
 ```lua
-nx.lsp.config('astro', {
-  before_init = nx.async(function(_, config)
-    local util = require("nxvim-lspconfig.util")
-    local tsdk = nx.await(util.get_typescript_server_path(config.root_dir))
+btv.lsp.config('astro', {
+  before_init = btv.async(function(_, config)
+    local util = require("bemtvi-lspconfig.util")
+    local tsdk = btv.await(util.get_typescript_server_path(config.root_dir))
     if tsdk == '' then
-      local npm_root = nx.await(util.output({ 'npm', 'root', '-g' }))
+      local npm_root = btv.await(util.output({ 'npm', 'root', '-g' }))
       if npm_root then
         tsdk = util.joinpath(npm_root, 'typescript/lib')
       end
@@ -1099,7 +1099,7 @@ nx.lsp.config('astro', {
     config.init_options.typescript.tsdk = tsdk
   end),
 })
-nx.lsp.enable('astro')
+btv.lsp.enable('astro')
 ```
 
 For other package managers, replace `npm root -g` with:
@@ -1111,7 +1111,7 @@ For other package managers, replace `npm root -g` with:
 Enable it:
 
 ```lua
-nx.lsp.enable("astro")
+btv.lsp.enable("astro")
 ```
 
 Default config:
@@ -1123,7 +1123,7 @@ Default config:
   ```
 - `init_options`:
   ```lua
-  { typescript = nx.json.empty_object() }
+  { typescript = btv.json.empty_object() }
   ```
 - `root_markers`:
   ```lua
@@ -1156,46 +1156,46 @@ autocmd BufNewFile,BufRead *.rule.hcl set filetype=atlas-rule
 or
 
 ```lua
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "atlas.hcl" }, function()
-  nx.bo.filetype = "atlas-config"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "atlas.hcl" }, function()
+  btv.bo.filetype = "atlas-config"
 end)
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.my.hcl" }, function()
-  nx.bo.filetype = "atlas-schema-mysql"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.my.hcl" }, function()
+  btv.bo.filetype = "atlas-schema-mysql"
 end)
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.pg.hcl" }, function()
-  nx.bo.filetype = "atlas-schema-postgresql"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.pg.hcl" }, function()
+  btv.bo.filetype = "atlas-schema-postgresql"
 end)
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.lt.hcl" }, function()
-  nx.bo.filetype = "atlas-schema-sqlite"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.lt.hcl" }, function()
+  btv.bo.filetype = "atlas-schema-sqlite"
 end)
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.ch.hcl" }, function()
-  nx.bo.filetype = "atlas-schema-clickhouse"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.ch.hcl" }, function()
+  btv.bo.filetype = "atlas-schema-clickhouse"
 end)
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.ms.hcl" }, function()
-  nx.bo.filetype = "atlas-schema-mssql"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.ms.hcl" }, function()
+  btv.bo.filetype = "atlas-schema-mssql"
 end)
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.rs.hcl" }, function()
-  nx.bo.filetype = "atlas-schema-redshift"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.rs.hcl" }, function()
+  btv.bo.filetype = "atlas-schema-redshift"
 end)
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.test.hcl" }, function()
-  nx.bo.filetype = "atlas-test"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.test.hcl" }, function()
+  btv.bo.filetype = "atlas-test"
 end)
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.plan.hcl" }, function()
-  nx.bo.filetype = "atlas-plan"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.plan.hcl" }, function()
+  btv.bo.filetype = "atlas-plan"
 end)
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.rule.hcl" }, function()
-  nx.bo.filetype = "atlas-rule"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.rule.hcl" }, function()
+  btv.bo.filetype = "atlas-rule"
 end)
 ```
 
-These filetypes are all HCL. nxvim has no filetype-to-grammar alias, so they are
+These filetypes are all HCL. bemtvi has no filetype-to-grammar alias, so they are
 not highlighted under their own names; `:setf hcl` in such a buffer gives HCL
 highlighting for that session.
 
 Enable it:
 
 ```lua
-nx.lsp.enable("atlas")
+btv.lsp.enable("atlas")
 ```
 
 Default config:
@@ -1225,7 +1225,7 @@ It comes with the atopile compiler, for installation see: [Installing atopile](h
 Enable it:
 
 ```lua
-nx.lsp.enable("atopile")
+btv.lsp.enable("atopile")
 ```
 
 Default config:
@@ -1255,7 +1255,7 @@ NOTE: AutoHotkey is Windows-only.
 Enable it:
 
 ```lua
-nx.lsp.enable("autohotkey_lsp")
+btv.lsp.enable("autohotkey_lsp")
 ```
 
 Default config:
@@ -1317,7 +1317,7 @@ Language server for autoconf, automake and make using tree sitter in python.
 Enable it:
 
 ```lua
-nx.lsp.enable("autotools_ls")
+btv.lsp.enable("autotools_ls")
 ```
 
 Default config:
@@ -1345,7 +1345,7 @@ npm install -g awk-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("awk_ls")
+btv.lsp.enable("awk_ls")
 ```
 
 Default config:
@@ -1374,7 +1374,7 @@ npm install -g azure-pipelines-language-server
 
 By default `azure-pipelines-ls` will only work in files named `azure-pipelines.yml`, this can be changed by providing additional settings like so:
 ```lua
-nx.lsp.config("azure_pipelines_ls", {
+btv.lsp.config("azure_pipelines_ls", {
   ... -- other configuration
   settings = {
       yaml = {
@@ -1395,7 +1395,7 @@ The Azure Pipelines LSP is a fork of `yaml-language-server` and as such the same
 Enable it:
 
 ```lua
-nx.lsp.enable("azure_pipelines_ls")
+btv.lsp.enable("azure_pipelines_ls")
 ```
 
 Default config:
@@ -1413,7 +1413,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -1461,7 +1461,7 @@ init_options = {
 Enable it:
 
 ```lua
-nx.lsp.enable("bacon_ls")
+btv.lsp.enable("bacon_ls")
 ```
 
 Default config:
@@ -1475,7 +1475,7 @@ Default config:
   ```
 - `init_options`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 - `root_markers`:
   ```lua
@@ -1494,7 +1494,7 @@ The `bal` command line tool must be installed and available in your system's PAT
 Enable it:
 
 ```lua
-nx.lsp.enable("ballerina")
+btv.lsp.enable("ballerina")
 ```
 
 Default config:
@@ -1525,7 +1525,7 @@ Set `basedpyright.disableTaggedHints = false` to re-enable.
 Enable it:
 
 ```lua
-nx.lsp.enable("basedpyright")
+btv.lsp.enable("basedpyright")
 ```
 
 Default config:
@@ -1576,7 +1576,7 @@ Language server for bash, written using tree sitter in typescript.
 Enable it:
 
 ```lua
-nx.lsp.enable("bashls")
+btv.lsp.enable("bashls")
 ```
 
 Default config:
@@ -1612,7 +1612,7 @@ npm install -g basics-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("basics_ls")
+btv.lsp.enable("basics_ls")
 ```
 
 Default config:
@@ -1625,7 +1625,7 @@ Default config:
   {
     buffer = { enable = true, minCompletionLength = 4 },
     path = { enable = true },
-    snippet = { enable = false, sources = nx.json.empty_object() },
+    snippet = { enable = false, sources = btv.json.empty_object() },
   }
   ```
 
@@ -1640,15 +1640,15 @@ https://github.com/salesforce-misc/bazelrc-lsp
 The `.bazelrc` file type is not detected automatically, you can register it manually (see below) or override the filetypes:
 
 ```lua
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.bazelrc" }, function()
-  nx.bo.filetype = "bazelrc"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.bazelrc" }, function()
+  btv.bo.filetype = "bazelrc"
 end)
 ```
 
 Enable it:
 
 ```lua
-nx.lsp.enable("bazelrc_lsp")
+btv.lsp.enable("bazelrc_lsp")
 ```
 
 Default config:
@@ -1676,7 +1676,7 @@ See https://github.com/polarmutex/beancount-language-server#configuration for co
 Enable it:
 
 ```lua
-nx.lsp.enable("beancount")
+btv.lsp.enable("beancount")
 ```
 
 Default config:
@@ -1690,7 +1690,7 @@ Default config:
   ```
 - `init_options`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 - `root_markers`:
   ```lua
@@ -1708,20 +1708,20 @@ Bicep language server can be installed by downloading and extracting a release o
 
 Bicep language server requires the [dotnet-sdk](https://dotnet.microsoft.com/download) to be installed.
 
-nxvim does not have built-in support for the bicep filetype which is required for lspconfig to automatically launch the language server.
+bemtvi does not have built-in support for the bicep filetype which is required for lspconfig to automatically launch the language server.
 
 Filetype detection can be added via an autocmd:
 ```lua
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.bicep" }, function()
-  nx.bo.filetype = "bicep"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.bicep" }, function()
+  btv.bo.filetype = "bicep"
 end)
 ```
 
-**By default, bicep language server does not have a `cmd` set.** This is because nxvim-lspconfig does not make assumptions about your path. You must add the following to your init.vim or init.lua to set `cmd` to the absolute path ($HOME and ~ are not expanded) of the unzipped run script or binary.
+**By default, bicep language server does not have a `cmd` set.** This is because bemtvi-lspconfig does not make assumptions about your path. You must add the following to your init.vim or init.lua to set `cmd` to the absolute path ($HOME and ~ are not expanded) of the unzipped run script or binary.
 
 ```lua
 local bicep_lsp_bin = "/path/to/bicep-langserver/Bicep.LangServer.dll"
-nx.lsp.config("bicep", {
+btv.lsp.config("bicep", {
     cmd = { "dotnet", bicep_lsp_bin };
     ...
 })
@@ -1738,7 +1738,7 @@ To download the latest release and place in /usr/local/bin/bicep-langserver:
 Enable it:
 
 ```lua
-nx.lsp.enable("bicep")
+btv.lsp.enable("bicep")
 ```
 
 Default config:
@@ -1748,7 +1748,7 @@ Default config:
   ```
 - `init_options`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 - `root_markers`:
   ```lua
@@ -1774,7 +1774,7 @@ npm install [-g] @biomejs/biome
 Enable it:
 
 ```lua
-nx.lsp.enable("biome")
+btv.lsp.enable("biome")
 ```
 
 Default config:
@@ -1818,7 +1818,7 @@ Language server for bitbake.
 Enable it:
 
 ```lua
-nx.lsp.enable("bitbake_language_server")
+btv.lsp.enable("bitbake_language_server")
 ```
 
 Default config:
@@ -1849,7 +1849,7 @@ of the blueprint-compiler.
 Enable it:
 
 ```lua
-nx.lsp.enable("blueprint_ls")
+btv.lsp.enable("blueprint_ls")
 ```
 
 Default config:
@@ -1885,7 +1885,7 @@ $ go install github.com/kitagry/bqls@latest
 Enable it:
 
 ```lua
-nx.lsp.enable("bqls")
+btv.lsp.enable("bqls")
 ```
 
 Default config:
@@ -1903,7 +1903,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -1920,7 +1920,7 @@ npm install -g brighterscript
 Enable it:
 
 ```lua
-nx.lsp.enable("bright_script")
+btv.lsp.enable("bright_script")
 ```
 
 Default config:
@@ -1948,7 +1948,7 @@ https://github.com/brioche-dev/brioche
 Enable it:
 
 ```lua
-nx.lsp.enable("brioche")
+btv.lsp.enable("brioche")
 ```
 
 Default config:
@@ -1976,7 +1976,7 @@ Language Server Protocol implementation for 1C (BSL) - 1C:Enterprise 8 and OneSc
 Enable it:
 
 ```lua
-nx.lsp.enable("bsl_ls")
+btv.lsp.enable("bsl_ls")
 ```
 
 Default config:
@@ -2000,15 +2000,15 @@ Build system, successor to Buck
 To better detect Buck2 project files, the following can be added:
 
 ```
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = { "*.bxl", "BUCK", "TARGETS" } }, function()
-  nx.bo.filetype = "bzl"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = { "*.bxl", "BUCK", "TARGETS" } }, function()
+  btv.bo.filetype = "bzl"
 end)
 ```
 
 Enable it:
 
 ```lua
-nx.lsp.enable("buck2")
+btv.lsp.enable("buck2")
 ```
 
 Default config:
@@ -2037,7 +2037,7 @@ supporting new dialects defined in buddy-mlir.
 Enable it:
 
 ```lua
-nx.lsp.enable("buddy_ls")
+btv.lsp.enable("buddy_ls")
 ```
 
 Default config:
@@ -2062,7 +2062,7 @@ Default config:
 Enable it:
 
 ```lua
-nx.lsp.enable("buf_ls")
+btv.lsp.enable("buf_ls")
 ```
 
 Default config:
@@ -2093,7 +2093,7 @@ https://docs.stack.build/docs/vscode/starlark-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("bzl")
+btv.lsp.enable("bzl")
 ```
 
 Default config:
@@ -2121,7 +2121,7 @@ Language Server for c3.
 Enable it:
 
 ```lua
-nx.lsp.enable("c3_lsp")
+btv.lsp.enable("c3_lsp")
 ```
 
 Default config:
@@ -2148,7 +2148,7 @@ First, install Cairo following [this tutorial](https://book.cairo-lang.org/ch01-
 
 Then enable Cairo Language Server in your Lua configuration.
 ```lua
-nx.lsp.enable("cairo_ls")
+btv.lsp.enable("cairo_ls")
 ```
 
 *cairo-language-server is still under active development, some features might not work yet !*
@@ -2156,7 +2156,7 @@ nx.lsp.enable("cairo_ls")
 Enable it:
 
 ```lua
-nx.lsp.enable("cairo_ls")
+btv.lsp.enable("cairo_ls")
 ```
 
 Default config:
@@ -2190,7 +2190,7 @@ For details on how to automatically generate one using CMake look [here](https:/
 Customization options are passed to ccls at initialization time via init_options, a list of available options can be found [here](https://github.com/MaskRay/ccls/wiki/Customization#initialization-options). For example:
 
 ```lua
-nx.lsp.config("ccls", {
+btv.lsp.config("ccls", {
   init_options = {
     compilationDatabaseDirectory = "build";
     index = {
@@ -2206,7 +2206,7 @@ nx.lsp.config("ccls", {
 Enable it:
 
 ```lua
-nx.lsp.enable("ccls")
+btv.lsp.enable("ccls")
 ```
 
 Default config:
@@ -2247,7 +2247,7 @@ npm i -g @sap/cds-lsp
 Enable it:
 
 ```lua
-nx.lsp.enable("cds_lsp")
+btv.lsp.enable("cds_lsp")
 ```
 
 Default config:
@@ -2281,7 +2281,7 @@ The Language Server for the LLVM ClangIR language
 Enable it:
 
 ```lua
-nx.lsp.enable("cir_lsp_server")
+btv.lsp.enable("cir_lsp_server")
 ```
 
 Default config:
@@ -2309,7 +2309,7 @@ Default config:
 Enable it:
 
 ```lua
-nx.lsp.enable("circom-lsp")
+btv.lsp.enable("circom-lsp")
 ```
 
 Default config:
@@ -2344,7 +2344,7 @@ https://clangd.llvm.org/installation.html
 Enable it:
 
 ```lua
-nx.lsp.enable("clangd")
+btv.lsp.enable("clangd")
 ```
 
 Default config:
@@ -2398,7 +2398,7 @@ Clarinet is the fastest way to build, test, and deploy smart contracts on the St
 Enable it:
 
 ```lua
-nx.lsp.enable("clarinet")
+btv.lsp.enable("clarinet")
 ```
 
 Default config:
@@ -2426,7 +2426,7 @@ Clojure Language Server
 Enable it:
 
 ```lua
-nx.lsp.enable("clojure_lsp")
+btv.lsp.enable("clojure_lsp")
 ```
 
 Default config:
@@ -2461,7 +2461,7 @@ CMake LSP Implementation
 Enable it:
 
 ```lua
-nx.lsp.enable("cmake")
+btv.lsp.enable("cmake")
 ```
 
 Default config:
@@ -2497,7 +2497,7 @@ Cobol language support
 Enable it:
 
 ```lua
-nx.lsp.enable("cobol_ls")
+btv.lsp.enable("cobol_ls")
 ```
 
 Default config:
@@ -2529,7 +2529,7 @@ The default `cmd` assumes that the `codebook-lsp` binary can be found in `$PATH`
 Enable it:
 
 ```lua
-nx.lsp.enable("codebook")
+btv.lsp.enable("codebook")
 ```
 
 Default config:
@@ -2583,7 +2583,7 @@ npm install -g coffeesense-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("coffeesense")
+btv.lsp.enable("coffeesense")
 ```
 
 Default config:
@@ -2617,7 +2617,7 @@ After the download unzip the Contextive.LanguageServer binary and copy the file 
 Enable it:
 
 ```lua
-nx.lsp.enable("contextive")
+btv.lsp.enable("contextive")
 ```
 
 Default config:
@@ -2650,9 +2650,9 @@ Please see [terms of use for GitHub Copilot](https://docs.github.com/en/site-pol
 You need to enable `:help lsp-inline-completion` to receive suggestions. For example, you can enable it in the LspAttach event:
 
 NOTE: the server's headline feature — `textDocument/inlineCompletion`, the greyed-out
-suggestion accepted with a keypress — has no home in nxvim yet. `nx.complete` is a
+suggestion accepted with a keypress — has no home in bemtvi yet. `btv.complete` is a
 popup-menu engine; inline completion is a different surface (virtual text at the
-cursor, its own accept/cycle keys), and nxvim has no client for it. The server
+cursor, its own accept/cycle keys), and bemtvi has no client for it. The server
 starts, `:LspCopilotSignIn` works, and the panel/chat commands work; the inline
 suggestions are requested by nothing. Closing this needs an inline-completion layer
 in the core, which is a feature rather than a config.
@@ -2660,7 +2660,7 @@ in the core, which is a feature rather than a config.
 Enable it:
 
 ```lua
-nx.lsp.enable("copilot")
+btv.lsp.enable("copilot")
 ```
 
 Default config:
@@ -2671,8 +2671,8 @@ Default config:
 - `init_options`:
   ```lua
   {
-    editorInfo = { name = "nxvim", version = "nxvim 0.1.0" },
-    editorPluginInfo = { name = "nxvim", version = "nxvim 0.1.0" },
+    editorInfo = { name = "bemtvi", version = "bemtvi 0.1.0" },
+    editorPluginInfo = { name = "bemtvi", version = "bemtvi 0.1.0" },
   }
   ```
 - `on_attach`: [../lsp/copilot.lua:116](../lsp/copilot.lua#L116)
@@ -2694,7 +2694,7 @@ https://github.com/ejgallego/coq-lsp/
 Enable it:
 
 ```lua
-nx.lsp.enable("coq_lsp")
+btv.lsp.enable("coq_lsp")
 ```
 
 Default config:
@@ -2725,7 +2725,7 @@ cargo install cqlls
 Enable it:
 
 ```lua
-nx.lsp.enable("cqlls")
+btv.lsp.enable("cqlls")
 ```
 
 Default config:
@@ -2743,7 +2743,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -2757,7 +2757,7 @@ Crystal language server.
 Enable it:
 
 ```lua
-nx.lsp.enable("crystalline")
+btv.lsp.enable("crystalline")
 ```
 
 Default config:
@@ -2789,7 +2789,7 @@ The preferred way to install csharp-ls is with `dotnet tool install --global csh
 Enable it:
 
 ```lua
-nx.lsp.enable("csharp_ls")
+btv.lsp.enable("csharp_ls")
 ```
 
 Default config:
@@ -2817,7 +2817,7 @@ Default config:
 Enable it:
 
 ```lua
-nx.lsp.enable("cspell_ls")
+btv.lsp.enable("cspell_ls")
 ```
 
 Default config:
@@ -2861,7 +2861,7 @@ npm i -g css-variables-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("css_variables")
+btv.lsp.enable("css_variables")
 ```
 
 Default config:
@@ -2914,7 +2914,7 @@ npm i -g csskit
 Enable it:
 
 ```lua
-nx.lsp.enable("csskit")
+btv.lsp.enable("csskit")
 ```
 
 Default config:
@@ -2944,14 +2944,14 @@ npm i -g vscode-langservers-extracted
 ```
 
 `vscode-css-language-server` only provides completions when the client advertises
-snippet support, which nxvim's base capabilities do not — turn it on per server.
-nxvim expands the snippets itself (`nx.snippet`); no snippet plugin is needed.
+snippet support, which bemtvi's base capabilities do not — turn it on per server.
+bemtvi expands the snippets itself (`btv.snippet`); no snippet plugin is needed.
 
 ```lua
 -- Broadcast snippet support. A config's `capabilities` are deep-merged over
--- nxvim's base client capabilities, so this adds the one field rather than
+-- bemtvi's base client capabilities, so this adds the one field rather than
 -- rebuilding the whole table.
-nx.lsp.config('cssls', {
+btv.lsp.config('cssls', {
   capabilities = {
     textDocument = { completion = { completionItem = { snippetSupport = true } } },
   },
@@ -2961,7 +2961,7 @@ nx.lsp.config('cssls', {
 Enable it:
 
 ```lua
-nx.lsp.enable("cssls")
+btv.lsp.enable("cssls")
 ```
 
 Default config:
@@ -3003,7 +3003,7 @@ npm install -g cssmodules-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("cssmodules_ls")
+btv.lsp.enable("cssmodules_ls")
 ```
 
 Default config:
@@ -3044,16 +3044,16 @@ The server is generic and does not declare default `filetypes`. Configure
 the languages you want it to attach to:
 
 ```lua
-nx.lsp.config("ctags_lsp", {
+btv.lsp.config("ctags_lsp", {
   filetypes = { 'lua', 'ruby', 'go' },
 })
-nx.lsp.enable("ctags_lsp")
+btv.lsp.enable("ctags_lsp")
 ```
 
 Enable it:
 
 ```lua
-nx.lsp.enable("ctags_lsp")
+btv.lsp.enable("ctags_lsp")
 ```
 
 Default config:
@@ -3084,7 +3084,7 @@ npm install -g @cucumber/language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("cucumber_language_server")
+btv.lsp.enable("cucumber_language_server")
 ```
 
 Default config:
@@ -3112,7 +3112,7 @@ CUE makes it easy to validate data, write schemas, and ensure configurations ali
 Enable it:
 
 ```lua
-nx.lsp.enable("cue")
+btv.lsp.enable("cue")
 ```
 
 Default config:
@@ -3160,7 +3160,7 @@ Here's an example that disables type checking in JavaScript files.
 Enable it:
 
 ```lua
-nx.lsp.enable("custom_elements_ls")
+btv.lsp.enable("custom_elements_ls")
 ```
 
 Default config:
@@ -3194,7 +3194,7 @@ npm i -g @neo4j-cypher/language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("cypher_ls")
+btv.lsp.enable("cypher_ls")
 ```
 
 Default config:
@@ -3219,7 +3219,7 @@ Default config:
 Enable it:
 
 ```lua
-nx.lsp.enable("daedalus_ls")
+btv.lsp.enable("daedalus_ls")
 ```
 
 Default config:
@@ -3265,7 +3265,7 @@ Support for the Dafny language server.
 Enable it:
 
 ```lua
-nx.lsp.enable("dafny")
+btv.lsp.enable("dafny")
 ```
 
 Default config:
@@ -3293,7 +3293,7 @@ Dagger's lsp server for cuelang.
 Enable it:
 
 ```lua
-nx.lsp.enable("dagger")
+btv.lsp.enable("dagger")
 ```
 
 Default config:
@@ -3321,7 +3321,7 @@ Language server for dart.
 Enable it:
 
 ```lua
-nx.lsp.enable("dartls")
+btv.lsp.enable("dartls")
 ```
 
 Default config:
@@ -3363,7 +3363,7 @@ Language server for DCM analyzer.
 Enable it:
 
 ```lua
-nx.lsp.enable("dcmls")
+btv.lsp.enable("dcmls")
 ```
 
 Default config:
@@ -3391,7 +3391,7 @@ Language Server for Debian packages.
 Enable it:
 
 ```lua
-nx.lsp.enable("debputy")
+btv.lsp.enable("debputy")
 ```
 
 Default config:
@@ -3423,11 +3423,11 @@ https://github.com/denoland/deno
 
 Deno's built-in language server
 
-To appropriately highlight codefences returned from denols, you will need to augment nx.g.markdown_fenced languages
+To appropriately highlight codefences returned from denols, you will need to augment btv.g.markdown_fenced languages
  in your init.lua. Example:
 
 ```lua
-nx.g.markdown_fenced_languages = {
+btv.g.markdown_fenced_languages = {
   "ts=typescript"
 }
 ```
@@ -3462,7 +3462,7 @@ A goto into Deno's own standard library resolves to a `deno:` URI — a document
 exists only inside the server, fetched with `deno/virtualTextDocument`. Upstream
 intercepts the goto reply and fills a scratch buffer with the fetched text.
 
-nxvim does not route server *replies* through per-config `handlers` (`nx.lsp` warns
+bemtvi does not route server *replies* through per-config `handlers` (`btv.lsp` warns
 about the key at load), and it has no Lua buffer-mutation API to fill such a buffer
 with, so that interception is gone rather than kept as code that cannot run. A goto
 landing on a `deno:` URI reports that it has no path instead of opening a blank
@@ -3479,7 +3479,7 @@ Otherwise, we abort, because this is a non-Deno TS file.
 Enable it:
 
 ```lua
-nx.lsp.enable("denols")
+btv.lsp.enable("denols")
 ```
 
 Default config:
@@ -3549,20 +3549,20 @@ asdf install dexter latest
 
 Configuration example:
 ```lua
-nx.lsp.config("dexter", {
+btv.lsp.config("dexter", {
   init_options = {
     followDelegates = true,  -- jump through defdelegate to the target function
     -- stdlibPath = "",      -- override Elixir stdlib path (auto-detected)
     -- debug = false,        -- verbose logging to stderr (view with :LspLog)
   },
 })
-nx.lsp.enable("dexter")
+btv.lsp.enable("dexter")
 ```
 
 Enable it:
 
 ```lua
-nx.lsp.enable("dexter")
+btv.lsp.enable("dexter")
 ```
 
 Default config:
@@ -3600,7 +3600,7 @@ prebuilt binaries can be found [here](https://github.com/dhall-lang/dhall-haskel
 Enable it:
 
 ```lua
-nx.lsp.enable("dhall_lsp_server")
+btv.lsp.enable("dhall_lsp_server")
 ```
 
 Default config:
@@ -3628,7 +3628,7 @@ Diagnostic language server integrate with linters.
 Enable it:
 
 ```lua
-nx.lsp.enable("diagnosticls")
+btv.lsp.enable("diagnosticls")
 ```
 
 Default config:
@@ -3638,7 +3638,7 @@ Default config:
   ```
 - `filetypes`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 - `root_markers`:
   ```lua
@@ -3660,7 +3660,7 @@ text editor that speaks the LSP protocol.
 Enable it:
 
 ```lua
-nx.lsp.enable("digestif")
+btv.lsp.enable("digestif")
 ```
 
 Default config:
@@ -3688,7 +3688,7 @@ https://github.com/joshuadavidthomas/django-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("djls")
+btv.lsp.enable("djls")
 ```
 
 Default config:
@@ -3716,7 +3716,7 @@ https://github.com/fourdigits/django-template-lsp
 Enable it:
 
 ```lua
-nx.lsp.enable("djlsp")
+btv.lsp.enable("djlsp")
 ```
 
 Default config:
@@ -3734,7 +3734,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -3755,7 +3755,7 @@ Note: If the docker-compose-langserver doesn't startup when entering a `docker-c
 Enable it:
 
 ```lua
-nx.lsp.enable("docker_compose_language_service")
+btv.lsp.enable("docker_compose_language_service")
 ```
 
 Default config:
@@ -3791,7 +3791,7 @@ go install github.com/docker/docker-language-server/cmd/docker-language-server@l
 Enable it:
 
 ```lua
-nx.lsp.enable("docker_language_server")
+btv.lsp.enable("docker_language_server")
 ```
 
 Default config:
@@ -3832,7 +3832,7 @@ npm install -g dockerfile-language-server-nodejs
 
 Additional configuration can be applied in the following way:
 ```lua
-nx.lsp.config("dockerls", {
+btv.lsp.config("dockerls", {
     settings = {
         docker = {
 	    languageserver = {
@@ -3848,7 +3848,7 @@ nx.lsp.config("dockerls", {
 Enable it:
 
 ```lua
-nx.lsp.enable("dockerls")
+btv.lsp.enable("dockerls")
 ```
 
 Default config:
@@ -3879,7 +3879,7 @@ opam install dolmen_lsp
 Enable it:
 
 ```lua
-nx.lsp.enable("dolmenls")
+btv.lsp.enable("dolmenls")
 ```
 
 Default config:
@@ -3910,7 +3910,7 @@ npm install -g dot-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("dotls")
+btv.lsp.enable("dotls")
 ```
 
 Default config:
@@ -3938,7 +3938,7 @@ Pluggable and configurable code formatting platform written in Rust.
 Enable it:
 
 ```lua
-nx.lsp.enable("dprint")
+btv.lsp.enable("dprint")
 ```
 
 Default config:
@@ -3969,7 +3969,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -3983,7 +3983,7 @@ And make ensure the database file `dict.db3` is also downloaded. And put the pat
 
 ```lua
 
-nx.lsp.config('ds_pinyin_lsp', {
+btv.lsp.config('ds_pinyin_lsp', {
     init_options = {
         db_path = "your_path_to_database"
     }
@@ -3994,7 +3994,7 @@ nx.lsp.config('ds_pinyin_lsp', {
 Enable it:
 
 ```lua
-nx.lsp.enable("ds_pinyin_lsp")
+btv.lsp.enable("ds_pinyin_lsp")
 ```
 
 Default config:
@@ -4043,7 +4043,7 @@ https://docs.zephyrproject.org/latest/build/dts/index.html
 Enable it:
 
 ```lua
-nx.lsp.enable("dts_lsp")
+btv.lsp.enable("dts_lsp")
 ```
 
 Default config:
@@ -4065,7 +4065,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -4079,7 +4079,7 @@ A fast language server for earthly.
 Enable it:
 
 ```lua
-nx.lsp.enable("earthlyls")
+btv.lsp.enable("earthlyls")
 ```
 
 Default config:
@@ -4110,7 +4110,7 @@ Ecsact SDK: https://ecsact.dev/start
 Enable it:
 
 ```lua
-nx.lsp.enable("ecsact")
+btv.lsp.enable("ecsact")
 ```
 
 Default config:
@@ -4135,7 +4135,7 @@ Default config:
 Enable it:
 
 ```lua
-nx.lsp.enable("efm")
+btv.lsp.enable("efm")
 ```
 
 Default config:
@@ -4169,7 +4169,7 @@ your path. You must add the following to your init.vim or init.lua to set `cmd` 
 ~ are not expanded) of your unzipped elixir-ls.
 
 ```lua
-nx.lsp.config('elixirls', {
+btv.lsp.config('elixirls', {
     -- Unix
     cmd = { "/path/to/elixir-ls/language_server.sh" };
     -- Windows
@@ -4185,7 +4185,7 @@ app. Otherwise the directory containing the single mix.exs that was found is cho
 Enable it:
 
 ```lua
-nx.lsp.enable("elixirls")
+btv.lsp.enable("elixirls")
 ```
 
 Default config:
@@ -4213,7 +4213,7 @@ npm install -g elm elm-test elm-format @elm-tooling/elm-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("elmls")
+btv.lsp.enable("elmls")
 ```
 
 Default config:
@@ -4252,7 +4252,7 @@ inspired by rust-analyzer.
 Enable it:
 
 ```lua
-nx.lsp.enable("elp")
+btv.lsp.enable("elp")
 ```
 
 Default config:
@@ -4284,7 +4284,7 @@ npm install -g @ember-tooling/ember-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("ember")
+btv.lsp.enable("ember")
 ```
 
 Default config:
@@ -4321,7 +4321,7 @@ npm install -g @olrtg/emmet-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("emmet_language_server")
+btv.lsp.enable("emmet_language_server")
 ```
 
 Default config:
@@ -4366,7 +4366,7 @@ npm install -g emmet-ls
 Enable it:
 
 ```lua
-nx.lsp.enable("emmet_ls")
+btv.lsp.enable("emmet_ls")
 ```
 
 Default config:
@@ -4418,24 +4418,24 @@ ln -s $(pwd)/target/release/emmylua_ls ~/bin/emmylua_ls
 See the emmylua_ls [configuration guide](https://github.com/EmmyLuaLs/emmylua-analyzer-rust/blob/main/docs/config/emmyrc_json_EN.md)
 for settings documentation.
 
-## Editing your nxvim config or a plugin
+## Editing your bemtvi config or a plugin
 
-Point the server at the Lua nxvim actually runs, and tell it about `nx` — otherwise
-every `nx.*` call in your config is flagged as an undefined global. A project that
+Point the server at the Lua bemtvi actually runs, and tell it about `btv` — otherwise
+every `btv.*` call in your config is flagged as an undefined global. A project that
 ships its own `.emmyrc.json` overrides all of this, so there is nothing to guard.
 
 ```lua
-nx.lsp.config('emmylua_ls', {
+btv.lsp.config('emmylua_ls', {
   settings = {
     emmylua = {
-      -- nxvim's Lua is PUC 5.4, NOT LuaJIT (which nxvim dropped).
+      -- bemtvi's Lua is PUC 5.4, NOT LuaJIT (which bemtvi dropped).
       runtime = { version = 'Lua 5.4' },
-      -- `nx` is the plugin API; `vim` is the bounded compat surface.
-      diagnostics = { globals = { 'nx', 'vim' } },
+      -- `btv` is the plugin API; `vim` is the bounded compat surface.
+      diagnostics = { globals = { 'btv', 'vim' } },
       workspace = {
         -- Every `lua/` directory on the runtimepath, so a plugin's modules
         -- resolve. This can be slow on a large plugin set.
-        library = nx.runtime_file('lua', true),
+        library = btv.runtime_file('lua', true),
       },
     },
   },
@@ -4445,7 +4445,7 @@ nx.lsp.config('emmylua_ls', {
 Enable it:
 
 ```lua
-nx.lsp.enable("emmylua_ls")
+btv.lsp.enable("emmylua_ls")
 ```
 
 Default config:
@@ -4500,7 +4500,7 @@ erg --language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("erg_language_server")
+btv.lsp.enable("erg_language_server")
 ```
 
 Default config:
@@ -4542,7 +4542,7 @@ nvim
 Or you can modify the default `cmd` to include the full path to the Python interpreter.
 
 ```lua
-nx.lsp.config("esbonio", {
+btv.lsp.config("esbonio", {
   cmd = { '/path/to/virtualenv/bin/python', '-m', 'esbonio.server' }
 })
 ```
@@ -4550,7 +4550,7 @@ nx.lsp.config("esbonio", {
 Esbonio supports a number of config values passed as `init_options` on startup, for example.
 
 ```lua
-nx.lsp.config("esbonio", {
+btv.lsp.config("esbonio", {
   init_options = {
     server = {
       logLevel = "debug"
@@ -4567,7 +4567,7 @@ A full list and explanation of the available options can be found [here](https:/
 Enable it:
 
 ```lua
-nx.lsp.enable("esbonio")
+btv.lsp.enable("esbonio")
 ```
 
 Default config:
@@ -4592,7 +4592,7 @@ Default config:
 Enable it:
 
 ```lua
-nx.lsp.enable("eslint")
+btv.lsp.enable("eslint")
 ```
 
 Default config:
@@ -4630,13 +4630,13 @@ Default config:
       showDocumentation = { enable = true },
     },
     codeActionOnSave = { enable = false, mode = "all" },
-    experimental = nx.json.empty_object(),
+    experimental = btv.json.empty_object(),
     format = true,
     nodePath = "",
     onIgnoredFiles = "off",
     problems = { shortenToSingleLine = false },
     quiet = false,
-    rulesCustomizations = nx.json.empty_object(),
+    rulesCustomizations = btv.json.empty_object(),
     run = "onType",
     useESLintClass = false,
     validate = "on",
@@ -4664,7 +4664,7 @@ found is chosen.
 Enable it:
 
 ```lua
-nx.lsp.enable("expert")
+btv.lsp.enable("expert")
 ```
 
 Default config:
@@ -4689,7 +4689,7 @@ Facility language server protocol (LSP) support.
 Enable it:
 
 ```lua
-nx.lsp.enable("facility_language_server")
+btv.lsp.enable("facility_language_server")
 ```
 
 Default config:
@@ -4717,7 +4717,7 @@ Codebase intelligence for TypeScript and JavaScript.
 Enable it:
 
 ```lua
-nx.lsp.enable("fallow")
+btv.lsp.enable("fallow")
 ```
 
 Default config:
@@ -4733,7 +4733,7 @@ Default config:
   ```
 - `init_options`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 - `root_markers`:
   ```lua
@@ -4751,7 +4751,7 @@ Fennel language server protocol (LSP) support.
 Enable it:
 
 ```lua
-nx.lsp.enable("fennel_language_server")
+btv.lsp.enable("fennel_language_server")
 ```
 
 Default config:
@@ -4769,7 +4769,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -4786,7 +4786,7 @@ All fennel-ls configuration options [can be found here](https://git.sr.ht/~xeroo
 Enable it:
 
 ```lua
-nx.lsp.enable("fennel_ls")
+btv.lsp.enable("fennel_ls")
 ```
 
 Default config:
@@ -4805,7 +4805,7 @@ Default config:
 - `root_dir`: [../lsp/fennel_ls.lua:15](../lsp/fennel_ls.lua#L15)
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -4824,7 +4824,7 @@ scope aware symbol analysis, per-token hover generation, and many others.
 Enable it:
 
 ```lua
-nx.lsp.enable("fish_lsp")
+btv.lsp.enable("fish_lsp")
 ```
 
 Default config:
@@ -4860,7 +4860,7 @@ npx flow lsp --help
 Enable it:
 
 ```lua
-nx.lsp.enable("flow")
+btv.lsp.enable("flow")
 ```
 
 Default config:
@@ -4887,7 +4887,7 @@ cargo install --git https://github.com/influxdata/flux-lsp
 Enable it:
 
 ```lua
-nx.lsp.enable("flux_lsp")
+btv.lsp.enable("flux_lsp")
 ```
 
 Default config:
@@ -4918,7 +4918,7 @@ npm install -g foam-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("foam_ls")
+btv.lsp.enable("foam_ls")
 ```
 
 Default config:
@@ -4955,7 +4955,7 @@ Refer to the [documentation](https://fortitude.readthedocs.io/en/stable/editors/
 Enable it:
 
 ```lua
-nx.lsp.enable("fortitude")
+btv.lsp.enable("fortitude")
 ```
 
 Default config:
@@ -4973,7 +4973,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -4995,7 +4995,7 @@ see the `fortls` [documentation](https://fortls.fortran-lang.org/options.html).
 Enable it:
 
 ```lua
-nx.lsp.enable("fortls")
+btv.lsp.enable("fortls")
 ```
 
 Default config:
@@ -5019,7 +5019,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -5045,7 +5045,7 @@ This is automatically done by plugins such as [PhilT/vim-fsharp](https://github.
 Enable it:
 
 ```lua
-nx.lsp.enable("fsautocomplete")
+btv.lsp.enable("fsautocomplete")
 ```
 
 Default config:
@@ -5106,7 +5106,7 @@ If filetype determination is not already performed by an available plugin ([Phil
 Enable it:
 
 ```lua
-nx.lsp.enable("fsharp_language_server")
+btv.lsp.enable("fsharp_language_server")
 ```
 
 Default config:
@@ -5125,7 +5125,7 @@ Default config:
 - `root_dir`: [../lsp/fsharp_language_server.lua:20](../lsp/fsharp_language_server.lua#L20)
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -5139,7 +5139,7 @@ LSP support is included in FStar. Make sure `fstar.exe` is in your PATH.
 Enable it:
 
 ```lua
-nx.lsp.enable("fstar")
+btv.lsp.enable("fstar")
 ```
 
 Default config:
@@ -5172,7 +5172,7 @@ futhark lsp
 Enable it:
 
 ```lua
-nx.lsp.enable("futhark_lsp")
+btv.lsp.enable("futhark_lsp")
 ```
 
 Default config:
@@ -5199,17 +5199,17 @@ Language server for GDScript, used by Godot Engine.
 
 Godot does not ship a language server you can spawn: the editor itself listens on a
 TCP port (`6005` by default, `$GDScript_Port` to override) and the client connects
-to it. nxvim's LSP transport spawns a process and speaks to its stdio — there is no
+to it. bemtvi's LSP transport spawns a process and speaks to its stdio — there is no
 TCP leg — so this config cannot start, and says so rather than pretending.
 
-Closing this needs a socket transport in `nxvim-lsp` alongside the stdio one.
-(`nx.socket.connect` already exists for plugins; it is the LSP client that has no
+Closing this needs a socket transport in `bemtvi-lsp` alongside the stdio one.
+(`btv.socket.connect` already exists for plugins; it is the LSP client that has no
 way to use it.)
 
 Enable it:
 
 ```lua
-nx.lsp.enable("gdscript")
+btv.lsp.enable("gdscript")
 ```
 
 Default config:
@@ -5234,7 +5234,7 @@ A language server for the Godot Shading language.
 Enable it:
 
 ```lua
-nx.lsp.enable("gdshader_lsp")
+btv.lsp.enable("gdshader_lsp")
 ```
 
 Default config:
@@ -5273,7 +5273,7 @@ npm install -g gh-actions-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("gh_actions_ls")
+btv.lsp.enable("gh_actions_ls")
 ```
 
 Default config:
@@ -5297,7 +5297,7 @@ Default config:
   ```
 - `init_options`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 - `root_dir`: [../lsp/gh_actions_ls.lua:24](../lsp/gh_actions_ls.lua#L24)
 
@@ -5313,7 +5313,7 @@ A library for building Haskell IDE tooling.
 Enable it:
 
 ```lua
-nx.lsp.enable("ghcide")
+btv.lsp.enable("ghcide")
 ```
 
 Default config:
@@ -5350,7 +5350,7 @@ A language server for VHDL, using ghdl as its backend.
 Enable it:
 
 ```lua
-nx.lsp.enable("ghdl_ls")
+btv.lsp.enable("ghdl_ls")
 ```
 
 Default config:
@@ -5382,7 +5382,7 @@ Install `ginko_ls` from https://github.com/Schottkyc137/ginko and add it to path
 Enable it:
 
 ```lua
-nx.lsp.enable("ginko_ls")
+btv.lsp.enable("ginko_ls")
 ```
 
 Default config:
@@ -5400,7 +5400,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -5417,7 +5417,7 @@ cargo install gitlab-ci-ls
 Enable it:
 
 ```lua
-nx.lsp.enable("gitlab_ci_ls")
+btv.lsp.enable("gitlab_ci_ls")
 ```
 
 Default config:
@@ -5460,16 +5460,16 @@ Setup:
 3. Enable inline completion in LspAttach event (see example below)
 
 NOTE: the server's headline feature — `textDocument/inlineCompletion`, the greyed-out
-suggestion accepted with a keypress — has no home in nxvim yet. `nx.complete` is a
+suggestion accepted with a keypress — has no home in bemtvi yet. `btv.complete` is a
 popup-menu engine; inline completion is a different surface (virtual text at the
-cursor, its own accept/cycle keys), and nxvim has no client for it. Sign-in, chat and
+cursor, its own accept/cycle keys), and bemtvi has no client for it. Sign-in, chat and
 the feature-state reporting below all work; the inline suggestions are requested by
 nothing. Closing this needs an inline-completion layer in the core.
 
 Enable it:
 
 ```lua
-nx.lsp.enable("gitlab_duo")
+btv.lsp.enable("gitlab_duo")
 ```
 
 Default config:
@@ -5514,10 +5514,10 @@ Default config:
 - `init_options`:
   ```lua
   {
-    editorInfo = { name = "nxvim", version = "nxvim 0.1.0" },
-    editorPluginInfo = { name = "nxvim LSP", version = "nxvim 0.1.0" },
-    extension = { name = "nxvim LSP Client", version = "nxvim 0.1.0" },
-    ide = { name = "nxvim", vendor = "nxvim", version = "nxvim 0.1.0" },
+    editorInfo = { name = "bemtvi", version = "bemtvi 0.1.0" },
+    editorPluginInfo = { name = "bemtvi LSP", version = "bemtvi 0.1.0" },
+    extension = { name = "bemtvi LSP Client", version = "bemtvi 0.1.0" },
+    ide = { name = "bemtvi", vendor = "bemtvi", version = "bemtvi 0.1.0" },
   }
   ```
 - `on_attach`: [../lsp/gitlab_duo.lua:398](../lsp/gitlab_duo.lua#L398)
@@ -5565,7 +5565,7 @@ cargo install glasgow
 Enable it:
 
 ```lua
-nx.lsp.enable("glasgow")
+btv.lsp.enable("glasgow")
 ```
 
 Default config:
@@ -5583,7 +5583,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -5599,7 +5599,7 @@ It comes with the Gleam compiler, for installation see: [Installing Gleam](https
 Enable it:
 
 ```lua
-nx.lsp.enable("gleam")
+btv.lsp.enable("gleam")
 ```
 
 Default config:
@@ -5634,7 +5634,7 @@ This configuration uses the local installation of `glint-language-server`
 To use a global installation of `glint-language-server`,
 set the `init_options.glint.useGlobal` to `true`.
 
-nx.lsp.config('glint', {
+btv.lsp.config('glint', {
   init_options = {
     glint = {
       useGlobal = true,
@@ -5645,7 +5645,7 @@ nx.lsp.config('glint', {
 Enable it:
 
 ```lua
-nx.lsp.enable("glint")
+btv.lsp.enable("glint")
 ```
 
 Default config:
@@ -5692,13 +5692,13 @@ Language server for GLSL
 Enable it:
 
 ```lua
-nx.lsp.enable("glsl_analyzer")
+btv.lsp.enable("glsl_analyzer")
 ```
 
 Default config:
 - `capabilities`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 - `cmd`:
   ```lua
@@ -5727,7 +5727,7 @@ via the `glsl-language-server` AUR package
 Enable it:
 
 ```lua
-nx.lsp.enable("glslls")
+btv.lsp.enable("glslls")
 ```
 
 Default config:
@@ -5763,7 +5763,7 @@ Fuchsia, and other projects.
 Enable it:
 
 ```lua
-nx.lsp.enable("gn_language_server")
+btv.lsp.enable("gn_language_server")
 ```
 
 Default config:
@@ -5800,7 +5800,7 @@ exec node ${GNLS_SRC_DIR}/build/server.js $@
 Enable it:
 
 ```lua
-nx.lsp.enable("gnls")
+btv.lsp.enable("gnls")
 ```
 
 Default config:
@@ -5837,7 +5837,7 @@ go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 Enable it:
 
 ```lua
-nx.lsp.enable("golangci_lint_ls")
+btv.lsp.enable("golangci_lint_ls")
 ```
 
 Default config:
@@ -5896,7 +5896,7 @@ by default. To maintain previous behavior, semantic tokens are enabled on client
 To disable this feature, set `semanticTokens` option to `false`.
 
 ```lua
-  nx.lsp.config('gopls', {
+  btv.lsp.config('gopls', {
     settings = {
       gopls = {
         semanticTokens = false
@@ -5908,7 +5908,7 @@ To disable this feature, set `semanticTokens` option to `false`.
 Enable it:
 
 ```lua
-nx.lsp.enable("gopls")
+btv.lsp.enable("gopls")
 ```
 
 Default config:
@@ -5939,7 +5939,7 @@ If you're setting this up manually, build vscode-gradle using `./gradlew install
 Enable it:
 
 ```lua
-nx.lsp.enable("gradle_ls")
+btv.lsp.enable("gradle_ls")
 ```
 
 Default config:
@@ -5977,7 +5977,7 @@ WARNING: Since this language server uses Grammarly's API, any document you open 
 Enable it:
 
 ```lua
-nx.lsp.enable("grammarly")
+btv.lsp.enable("grammarly")
 ```
 
 Default config:
@@ -6019,7 +6019,7 @@ Note that you must also have [the graphql package](https://github.com/graphql/gr
 Enable it:
 
 ```lua
-nx.lsp.enable("graphql")
+btv.lsp.enable("graphql")
 ```
 
 Default config:
@@ -6048,7 +6048,7 @@ Requirements:
 If you have installed groovy language server, you can set the `cmd` custom path as follow:
 
 ```lua
-nx.lsp.config("groovyls", {
+btv.lsp.config("groovyls", {
     -- Unix
     cmd = { "java", "-jar", "path/to/groovyls/groovy-language-server-all.jar" },
     ...
@@ -6058,7 +6058,7 @@ nx.lsp.config("groovyls", {
 Enable it:
 
 ```lua
-nx.lsp.enable("groovyls")
+btv.lsp.enable("groovyls")
 ```
 
 Default config:
@@ -6093,7 +6093,7 @@ Note: This LSP will start on `scheme.guile` filetype. You can set this file type
 Enable it:
 
 ```lua
-nx.lsp.enable("guile_ls")
+btv.lsp.enable("guile_ls")
 ```
 
 Default config:
@@ -6121,7 +6121,7 @@ Language server for hare.
 Enable it:
 
 ```lua
-nx.lsp.enable("hare_lsp")
+btv.lsp.enable("hare_lsp")
 ```
 
 Default config:
@@ -6154,7 +6154,7 @@ See our [documentation](https://writewithharper.com/docs/integrations/neovim) fo
 
 In short, they should look something like this:
 ```lua
-nx.lsp.config("harper_ls", {
+btv.lsp.config("harper_ls", {
   settings = {
     ["harper-ls"] = {
       userDictPath = "~/dict.txt"
@@ -6166,7 +6166,7 @@ nx.lsp.config("harper_ls", {
 Enable it:
 
 ```lua
-nx.lsp.enable("harper_ls")
+btv.lsp.enable("harper_ls")
 ```
 
 Default config:
@@ -6222,7 +6222,7 @@ Install using: `pip install hdl-checker --upgrade`
 Enable it:
 
 ```lua
-nx.lsp.enable("hdl_checker")
+btv.lsp.enable("hdl_checker")
 ```
 
 Default config:
@@ -6256,7 +6256,7 @@ If need Helm file highlight use [vim-helm](https://github.com/towolf/vim-helm) p
 Enable it:
 
 ```lua
-nx.lsp.enable("helm_ls")
+btv.lsp.enable("helm_ls")
 ```
 
 Default config:
@@ -6307,7 +6307,7 @@ yarn global add @herb-tools/language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("herb_ls")
+btv.lsp.enable("herb_ls")
 ```
 
 Default config:
@@ -6337,13 +6337,13 @@ https://docs.hhvm.com/hhvm/getting-started/getting-started
 Enable it:
 
 ```lua
-nx.lsp.enable("hhvm")
+btv.lsp.enable("hhvm")
 ```
 
 Default config:
 - `cmd`:
   ```lua
-  { "hh_client", "lsp", "--from", "nxvim" }
+  { "hh_client", "lsp", "--from", "bemtvi" }
   ```
 - `filetypes`:
   ```lua
@@ -6378,7 +6378,7 @@ init_options = {
 Enable it:
 
 ```lua
-nx.lsp.enable("hie")
+btv.lsp.enable("hie")
 ```
 
 Default config:
@@ -6406,7 +6406,7 @@ To learn how to configure the HLASM language server, see the [HLASM Language Sup
 Enable it:
 
 ```lua
-nx.lsp.enable("hlasm")
+btv.lsp.enable("hlasm")
 ```
 
 Default config:
@@ -6434,7 +6434,7 @@ Haskell Language Server
 If you are using HLS 1.9.0.0, enable the language server to launch on Cabal files as well:
 
 ```lua
-nx.lsp.config('hls', {
+btv.lsp.config('hls', {
   filetypes = { 'haskell', 'lhaskell', 'cabal' },
 })
 ```
@@ -6442,7 +6442,7 @@ nx.lsp.config('hls', {
 Enable it:
 
 ```lua
-nx.lsp.enable("hls")
+btv.lsp.enable("hls")
 ```
 
 Default config:
@@ -6479,7 +6479,7 @@ and extracting the VSCode "Home Assistant Config Helper" extension
 Enable it:
 
 ```lua
-nx.lsp.enable("home_assistant")
+btv.lsp.enable("home_assistant")
 ```
 
 Default config:
@@ -6512,7 +6512,7 @@ Start the language server at the Urbit Dojo prompt with: `|start %language-serve
 Enable it:
 
 ```lua
-nx.lsp.enable("hoon_ls")
+btv.lsp.enable("hoon_ls")
 ```
 
 Default config:
@@ -6541,16 +6541,16 @@ npm i -g vscode-langservers-extracted
 ```
 
 `vscode-html-language-server` only provides completions when the client advertises
-snippet support, which nxvim's base capabilities do not — turn it on per server.
-nxvim expands the snippets itself (`nx.snippet`); no snippet plugin is needed.
+snippet support, which bemtvi's base capabilities do not — turn it on per server.
+bemtvi expands the snippets itself (`btv.snippet`); no snippet plugin is needed.
 
 The code-formatting feature of the lsp can be controlled with the `provideFormatter` option.
 
 ```lua
 -- Broadcast snippet support. A config's `capabilities` are deep-merged over
--- nxvim's base client capabilities, so this adds the one field rather than
+-- bemtvi's base client capabilities, so this adds the one field rather than
 -- rebuilding the whole table.
-nx.lsp.config('html', {
+btv.lsp.config('html', {
   capabilities = {
     textDocument = { completion = { completionItem = { snippetSupport = true } } },
   },
@@ -6560,7 +6560,7 @@ nx.lsp.config('html', {
 Enable it:
 
 ```lua
-nx.lsp.enable("html")
+btv.lsp.enable("html")
 ```
 
 Default config:
@@ -6583,7 +6583,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -6602,7 +6602,7 @@ Lsp is still very much work in progress and experimental. Use at your own risk.
 Enable it:
 
 ```lua
-nx.lsp.enable("htmx")
+btv.lsp.enable("htmx")
 ```
 
 Default config:
@@ -6674,7 +6674,7 @@ LSP for Hydra Python package config files.
 Enable it:
 
 ```lua
-nx.lsp.enable("hydra_lsp")
+btv.lsp.enable("hydra_lsp")
 ```
 
 Default config:
@@ -6702,7 +6702,7 @@ A language server for the Hylo programming language.
 Enable it:
 
 ```lua
-nx.lsp.enable("hylo_ls")
+btv.lsp.enable("hylo_ls")
 ```
 
 Default config:
@@ -6720,7 +6720,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -6737,7 +6737,7 @@ go install github.com/hyprland-community/hyprls/cmd/hyprls@latest
 Enable it:
 
 ```lua
-nx.lsp.enable("hyprls")
+btv.lsp.enable("hyprls")
 ```
 
 Default config:
@@ -6790,7 +6790,7 @@ repo for the release of a compatible versioned branch.
 Enable it:
 
 ```lua
-nx.lsp.enable("idris2_lsp")
+btv.lsp.enable("idris2_lsp")
 ```
 
 Default config:
@@ -6836,7 +6836,7 @@ settings = {
 Enable it:
 
 ```lua
-nx.lsp.enable("intelephense")
+btv.lsp.enable("intelephense")
 ```
 
 Default config:
@@ -6868,7 +6868,7 @@ A Language Server Protocol implementation for Janet.
 Enable it:
 
 ```lua
-nx.lsp.enable("janet_lsp")
+btv.lsp.enable("janet_lsp")
 ```
 
 Default config:
@@ -6898,7 +6898,7 @@ Point `cmd` to `lang_server_linux.sh` or the equivalent script for macOS/Windows
 Enable it:
 
 ```lua
-nx.lsp.enable("java_language_server")
+btv.lsp.enable("java_language_server")
 ```
 
 Default config:
@@ -6916,7 +6916,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -6937,7 +6937,7 @@ and ensure that the `PATH` variable contains the `bin` directory of the extracte
 
 ```lua
   -- init.lua
-  nx.lsp.enable('jdtls')
+  btv.lsp.enable('jdtls')
 ```
 
 You can also pass extra custom jvm arguments with the JDTLS_JVM_ARGS environment variable as a space separated list of arguments,
@@ -6952,13 +6952,13 @@ For automatic installation you can use the following unofficial installers/launc
   - [jdtls-launcher](https://github.com/eruizc-dev/jdtls-launcher) (Includes lombok support by default)
     ```lua
       -- init.lua
-      nx.lsp.config('jdtls', { cmd = { 'jdtls' } })
+      btv.lsp.config('jdtls', { cmd = { 'jdtls' } })
     ```
 
 Enable it:
 
 ```lua
-nx.lsp.enable("jdtls")
+btv.lsp.enable("jdtls")
 ```
 
 Default config:
@@ -6969,7 +6969,7 @@ Default config:
   ```
 - `init_options`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 - `root_markers`:
   ```lua
@@ -6996,7 +6996,7 @@ https://github.com/pappasam/jedi-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("jedi_language_server")
+btv.lsp.enable("jedi_language_server")
 ```
 
 Default config:
@@ -7029,15 +7029,15 @@ jinja-lsp enhances minijinja development experience by providing Helix/Nvim user
 The file types are not detected automatically, you can register them manually (see below) or override the filetypes:
 
 ```lua
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = { "*.jinja", "*.jinja2", "*.j2" } }, function()
-  nx.bo.filetype = "jinja"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = { "*.jinja", "*.jinja2", "*.j2" } }, function()
+  btv.bo.filetype = "jinja"
 end)
 ```
 
 Enable it:
 
 ```lua
-nx.lsp.enable("jinja_lsp")
+btv.lsp.enable("jinja_lsp")
 ```
 
 Default config:
@@ -7077,7 +7077,7 @@ Or using the nvim-jls plugin which provides a managed installer:
 Enable it:
 
 ```lua
-nx.lsp.enable("jls")
+btv.lsp.enable("jls")
 ```
 
 Default config:
@@ -7104,7 +7104,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -7124,15 +7124,15 @@ cp $(go env GOPATH)/bin/jq-lsp /usr/local/bin
 Note: To activate properly nvim needs to know the jq filetype.
 You can add it via:
 ```lua
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.jq" }, function()
-  nx.bo.filetype = "jq"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.jq" }, function()
+  btv.bo.filetype = "jq"
 end)
 ```
 
 Enable it:
 
 ```lua
-nx.lsp.enable("jqls")
+btv.lsp.enable("jqls")
 ```
 
 Default config:
@@ -7163,14 +7163,14 @@ npm i -g vscode-langservers-extracted
 ```
 
 `vscode-json-language-server` only provides completions when the client advertises
-snippet support, which nxvim's base capabilities do not — turn it on per server.
-nxvim expands the snippets itself (`nx.snippet`); no snippet plugin is needed.
+snippet support, which bemtvi's base capabilities do not — turn it on per server.
+bemtvi expands the snippets itself (`btv.snippet`); no snippet plugin is needed.
 
 ```lua
 -- Broadcast snippet support. A config's `capabilities` are deep-merged over
--- nxvim's base client capabilities, so this adds the one field rather than
+-- bemtvi's base client capabilities, so this adds the one field rather than
 -- rebuilding the whole table.
-nx.lsp.config('jsonls', {
+btv.lsp.config('jsonls', {
   capabilities = {
     textDocument = { completion = { completionItem = { snippetSupport = true } } },
   },
@@ -7180,7 +7180,7 @@ nx.lsp.config('jsonls', {
 Enable it:
 
 ```lua
-nx.lsp.enable("jsonls")
+btv.lsp.enable("jsonls")
 ```
 
 Default config:
@@ -7206,7 +7206,7 @@ Default config:
 Enable it:
 
 ```lua
-nx.lsp.enable("jsonnet_ls")
+btv.lsp.enable("jsonnet_ls")
 ```
 
 Default config:
@@ -7258,7 +7258,7 @@ folder of `$JULIA_DEPOT_PATH` entries. By default this simply `~/.julia/environm
 Enable it:
 
 ```lua
-nx.lsp.enable("julials")
+btv.lsp.enable("julials")
 ```
 
 Default config:
@@ -7324,7 +7324,7 @@ https://github.com/terror/just-lsp
 Enable it:
 
 ```lua
-nx.lsp.enable("just")
+btv.lsp.enable("just")
 ```
 
 Default config:
@@ -7349,7 +7349,7 @@ Default config:
 Enable it:
 
 ```lua
-nx.lsp.enable("kakehashi")
+btv.lsp.enable("kakehashi")
 ```
 
 Default config:
@@ -7373,7 +7373,7 @@ Language server for the KCL configuration and policy language.
 Enable it:
 
 ```lua
-nx.lsp.enable("kcl")
+btv.lsp.enable("kcl")
 ```
 
 Default config:
@@ -7401,7 +7401,7 @@ Language server for the KDL document language.
 Enable it:
 
 ```lua
-nx.lsp.enable("kdl_lsp")
+btv.lsp.enable("kdl_lsp")
 ```
 
 Default config:
@@ -7428,7 +7428,7 @@ Koka is a functional programming language with effect types and handlers.
 Enable it:
 
 ```lua
-nx.lsp.enable("koka")
+btv.lsp.enable("koka")
 ```
 
 Default config:
@@ -7468,7 +7468,7 @@ in the init_options. The default is your home directory.
 Enable it:
 
 ```lua
-nx.lsp.enable("kotlin_language_server")
+btv.lsp.enable("kotlin_language_server")
 ```
 
 Default config:
@@ -7504,7 +7504,7 @@ The server is based on IntelliJ IDEA and the IntelliJ IDEA Kotlin Plugin impleme
 Enable it:
 
 ```lua
-nx.lsp.enable("kotlin_lsp")
+btv.lsp.enable("kotlin_lsp")
 ```
 
 Default config:
@@ -7539,7 +7539,7 @@ A minimal language server for HTTP syntax.
 Enable it:
 
 ```lua
-nx.lsp.enable("kulala_ls")
+btv.lsp.enable("kulala_ls")
 ```
 
 Default config:
@@ -7569,7 +7569,7 @@ The default `cmd` assumes that the `laravel-ls` binary can be found in `$PATH`.
 Enable it:
 
 ```lua
-nx.lsp.enable("laravel_ls")
+btv.lsp.enable("laravel_ls")
 ```
 
 Default config:
@@ -7607,7 +7607,7 @@ and you shouldn't set up `lean3ls` both with it and `lspconfig`.
 Enable it:
 
 ```lua
-nx.lsp.enable("lean3ls")
+btv.lsp.enable("lean3ls")
 ```
 
 Default config:
@@ -7649,7 +7649,7 @@ cargo install --features="lsp" lelwel
 Enable it:
 
 ```lua
-nx.lsp.enable("lelwel_ls")
+btv.lsp.enable("lelwel_ls")
 ```
 
 Default config:
@@ -7679,7 +7679,7 @@ NOTE to macOS users: Binaries from unidentified developers are blocked by defaul
 Enable it:
 
 ```lua
-nx.lsp.enable("lemminx")
+btv.lsp.enable("lemminx")
 ```
 
 Default config:
@@ -7710,7 +7710,7 @@ Ensure to point `cmd` to the generated `_build/dev/package/lexical/start_lexical
 Enable it:
 
 ```lua
-nx.lsp.enable("lexical")
+btv.lsp.enable("lexical")
 ```
 
 Default config:
@@ -7744,7 +7744,7 @@ completion/code actions. See the [wiki docs](https://github.com/SilasMarvin/lsp-
 Enable it:
 
 ```lua
-nx.lsp.enable("lsp_ai")
+btv.lsp.enable("lsp_ai")
 ```
 
 Default config:
@@ -7754,13 +7754,13 @@ Default config:
   ```
 - `filetypes`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 - `init_options`:
   ```lua
   {
-    memory = { file_store = nx.json.empty_object() },
-    models = nx.json.empty_object(),
+    memory = { file_store = btv.json.empty_object() },
+    models = btv.json.empty_object(),
   }
   ```
 
@@ -7787,15 +7787,15 @@ This server accepts configuration via the `settings` key.
 To support org files or R sweave, users can define a custom filetype autocommand (or use a plugin which defines these filetypes):
 
 ```lua
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.org" }, function()
-  nx.bo.filetype = "org"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.org" }, function()
+  btv.bo.filetype = "org"
 end)
 ```
 
 Enable it:
 
 ```lua
-nx.lsp.enable("ltex")
+btv.lsp.enable("ltex")
 ```
 
 Default config:
@@ -7877,15 +7877,15 @@ This server accepts configuration via the `settings` key.
 To support org files or R sweave, users can define a custom filetype autocommand (or use a plugin which defines these filetypes):
 
 ```lua
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.org" }, function()
-  nx.bo.filetype = "org"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.org" }, function()
+  btv.bo.filetype = "org"
 end)
 ```
 
 Enable it:
 
 ```lua
-nx.lsp.enable("ltex_plus")
+btv.lsp.enable("ltex_plus")
 ```
 
 Default config:
@@ -7964,38 +7964,38 @@ Lua language server.
 
 The default `cmd` assumes that the `lua-language-server` binary can be found in `$PATH`.
 
-## Editing your nxvim config or a plugin
+## Editing your bemtvi config or a plugin
 
-Point the server at the Lua nxvim actually runs, and tell it about `nx` — otherwise
-every `nx.*` call in your config is flagged as an undefined global.
+Point the server at the Lua bemtvi actually runs, and tell it about `btv` — otherwise
+every `btv.*` call in your config is flagged as an undefined global.
 
 ```lua
-nx.lsp.config('lua_ls', {
+btv.lsp.config('lua_ls', {
   settings = {
     Lua = {
-      -- nxvim's Lua is PUC 5.4, NOT LuaJIT (which nxvim dropped).
+      -- bemtvi's Lua is PUC 5.4, NOT LuaJIT (which bemtvi dropped).
       runtime = {
         version = 'Lua 5.4',
-        -- Resolve `require("mod")` the way nxvim's runtimepath does.
+        -- Resolve `require("mod")` the way bemtvi's runtimepath does.
         path = { 'lua/?.lua', 'lua/?/init.lua' },
       },
       diagnostics = {
-        -- `nx` is the plugin API; `vim` is the bounded compat surface.
-        globals = { 'nx', 'vim' },
+        -- `btv` is the plugin API; `vim` is the bounded compat surface.
+        globals = { 'btv', 'vim' },
       },
       workspace = {
         checkThirdParty = false,
         -- Every `lua/` directory on the runtimepath, so a plugin's modules
         -- resolve. This can be slow on a large plugin set.
-        library = nx.runtime_file('lua', true),
+        library = btv.runtime_file('lua', true),
       },
     },
   },
 })
 ```
 
-There is no on-disk copy of the `nx.*` API to add to `workspace.library` — the
-prelude is compiled into the editor — so `nx` is declared a global rather than
+There is no on-disk copy of the `btv.*` API to add to `workspace.library` — the
+prelude is compiled into the editor — so `btv` is declared a global rather than
 type-checked. The rendered API reference is in the book and at `:help`.
 
 See `lua-language-server`'s [documentation](https://luals.github.io/wiki/settings/) for an explanation of the above fields:
@@ -8005,7 +8005,7 @@ See `lua-language-server`'s [documentation](https://luals.github.io/wiki/setting
 Enable it:
 
 ```lua
-nx.lsp.enable("lua_ls")
+btv.lsp.enable("lua_ls")
 ```
 
 Default config:
@@ -8060,7 +8060,7 @@ autocmd BufRead,BufNewFile *.luau setf luau
 Enable it:
 
 ```lua
-nx.lsp.enable("luau_lsp")
+btv.lsp.enable("luau_lsp")
 ```
 
 Default config:
@@ -8089,7 +8089,7 @@ For manual installation, utilize the official [NPM package](https://www.npmjs.co
 Then, configure `cmd` to run the Node script at the unpacked location:
 
 ```lua
-nx.lsp.config("lwc_ls", {
+btv.lsp.config("lwc_ls", {
   cmd = {
     'node',
     '/path/to/node_modules/@salesforce/lwc-language-server/bin/lwc-language-server.js',
@@ -8101,7 +8101,7 @@ nx.lsp.config("lwc_ls", {
 Enable it:
 
 ```lua
-nx.lsp.enable("lwc_ls")
+btv.lsp.enable("lwc_ls")
 ```
 
 Default config:
@@ -8136,16 +8136,16 @@ Language server for Motorola 68000 family assembly
 npm install -g m68k-lsp-server
 ```
 
-Ensure you are using the 68k asm syntax variant in nxvim.
+Ensure you are using the 68k asm syntax variant in bemtvi.
 
 ```lua
-nx.g.asmsyntax = 'asm68k'
+btv.g.asmsyntax = 'asm68k'
 ```
 
 Enable it:
 
 ```lua
-nx.lsp.enable("m68k")
+btv.lsp.enable("m68k")
 ```
 
 Default config:
@@ -8178,7 +8178,7 @@ Check the readme to see how to properly setup.
 Enable it:
 
 ```lua
-nx.lsp.enable("markdown_oxide")
+btv.lsp.enable("markdown_oxide")
 ```
 
 Default config:
@@ -8212,7 +8212,7 @@ npm i -g @marko/language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("marko-js")
+btv.lsp.enable("marko-js")
 ```
 
 Default config:
@@ -8244,7 +8244,7 @@ Pre-built binaries can be downloaded from https://github.com/artempyanykh/marksm
 Enable it:
 
 ```lua
-nx.lsp.enable("marksman")
+btv.lsp.enable("marksman")
 ```
 
 Default config:
@@ -8283,7 +8283,7 @@ settings = {
 Enable it:
 
 ```lua
-nx.lsp.enable("matlab_ls")
+btv.lsp.enable("matlab_ls")
 ```
 
 Default config:
@@ -8319,7 +8319,7 @@ https://github.com/mdx-js/mdx-analyzer
 Enable it:
 
 ```lua
-nx.lsp.enable("mdx_analyzer")
+btv.lsp.enable("mdx_analyzer")
 ```
 
 Default config:
@@ -8334,7 +8334,7 @@ Default config:
   ```
 - `init_options`:
   ```lua
-  { typescript = nx.json.empty_object() }
+  { typescript = btv.json.empty_object() }
   ```
 - `root_markers`:
   ```lua
@@ -8342,7 +8342,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -8356,7 +8356,7 @@ An unofficial, unendorsed language server for meson written in C++
 Enable it:
 
 ```lua
-nx.lsp.enable("mesonlsp")
+btv.lsp.enable("mesonlsp")
 ```
 
 Default config:
@@ -8389,7 +8389,7 @@ To install Metals, make sure to have [coursier](https://get-coursier.io/docs/cli
 Enable it:
 
 ```lua
-nx.lsp.enable("metals")
+btv.lsp.enable("metals")
 ```
 
 Default config:
@@ -8435,18 +8435,18 @@ Install with
 ```sh
 cargo install microcad-lsp
 ```
-nxvim does not detect µcad filetype automatically, so you will need to add the following to your
+bemtvi does not detect µcad filetype automatically, so you will need to add the following to your
 
 ```lua
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.µcad" }, function()
-  nx.bo.filetype = "microcad"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.µcad" }, function()
+  btv.bo.filetype = "microcad"
 end)
 ```
 
 Enable it:
 
 ```lua
-nx.lsp.enable("microcad_lsp")
+btv.lsp.enable("microcad_lsp")
 ```
 
 Default config:
@@ -8485,7 +8485,7 @@ To use with nvim:
 Enable it:
 
 ```lua
-nx.lsp.enable("millet")
+btv.lsp.enable("millet")
 ```
 
 Default config:
@@ -8514,7 +8514,7 @@ The language server is included since version 0.12.0.
 Enable it:
 
 ```lua
-nx.lsp.enable("mint")
+btv.lsp.enable("mint")
 ```
 
 Default config:
@@ -8544,7 +8544,7 @@ The Language Server for the LLVM MLIR language
 Enable it:
 
 ```lua
-nx.lsp.enable("mlir_lsp_server")
+btv.lsp.enable("mlir_lsp_server")
 ```
 
 Default config:
@@ -8574,7 +8574,7 @@ The Language Server for the LLVM PDLL language
 Enable it:
 
 ```lua
-nx.lsp.enable("mlir_pdll_lsp_server")
+btv.lsp.enable("mlir_pdll_lsp_server")
 ```
 
 Default config:
@@ -8605,7 +8605,7 @@ and available on the `PATH`.
 Enable it:
 
 ```lua
-nx.lsp.enable("mm0_ls")
+btv.lsp.enable("mm0_ls")
 ```
 
 Default config:
@@ -8635,7 +8635,7 @@ Mojo is a new programming language that bridges the gap between research and pro
 Enable it:
 
 ```lua
-nx.lsp.enable("mojo")
+btv.lsp.enable("mojo")
 ```
 
 Default config:
@@ -8663,7 +8663,7 @@ Language server for the Motoko programming language.
 Enable it:
 
 ```lua
-nx.lsp.enable("motoko_lsp")
+btv.lsp.enable("motoko_lsp")
 ```
 
 Default config:
@@ -8703,7 +8703,7 @@ See [`move-analyzer`'s doc](https://github.com/move-language/move/blob/1b258a06e
 Enable it:
 
 ```lua
-nx.lsp.enable("move_analyzer")
+btv.lsp.enable("move_analyzer")
 ```
 
 Default config:
@@ -8731,7 +8731,7 @@ Markdown Preview Language Server
 Enable it:
 
 ```lua
-nx.lsp.enable("mpls")
+btv.lsp.enable("mpls")
 ```
 
 Default config:
@@ -8766,38 +8766,38 @@ MSBuild Project Tools Server can be installed by following the README.MD on the 
 
 Example config:
 ```lua
-nx.lsp.config('msbuild_project_tools_server', {
+btv.lsp.config('msbuild_project_tools_server', {
   cmd = {'dotnet', '/path/to/server/MSBuildProjectTools.LanguageServer.Host.dll'}
 })
 ```
 
 There's no builtin filetypes for msbuild files, would require some filetype aliases:
 
-nxvim has no filetype-table API; a filetype is set by `:setfiletype` from an
+bemtvi has no filetype-table API; a filetype is set by `:setfiletype` from an
 autocmd, whose `pattern` is a glob matched against the buffer's path:
 
 ```lua
-nx.autocmd.create({ 'BufReadPost', 'BufNewFile' }, {
+btv.autocmd.create({ 'BufReadPost', 'BufNewFile' }, {
   pattern = { '*.props', '*.tasks', '*.targets', '*proj' },
   callback = function()
-    nx.cmd('setfiletype msbuild')
+    btv.cmd('setfiletype msbuild')
   end,
 })
 ```
 
 For syntax highlighting, set the filetype to `xml` instead and let the msbuild
 server attach anyway — this config declares `msbuild`, so add `xml` to its
-filetypes rather than aliasing the grammar (nxvim has no filetype-to-grammar
+filetypes rather than aliasing the grammar (bemtvi has no filetype-to-grammar
 alias table):
 
 ```lua
-nx.lsp.config('msbuild_project_tools_server', { filetypes = { 'msbuild', 'xml' } })
+btv.lsp.config('msbuild_project_tools_server', { filetypes = { 'msbuild', 'xml' } })
 ```
 
 Enable it:
 
 ```lua
-nx.lsp.enable("msbuild_project_tools_server")
+btv.lsp.enable("msbuild_project_tools_server")
 ```
 
 Default config:
@@ -8811,7 +8811,7 @@ Default config:
   ```
 - `init_options`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 - `root_dir`: [../lsp/msbuild_project_tools_server.lua:42](../lsp/msbuild_project_tools_server.lua#L42)
 
@@ -8824,7 +8824,7 @@ https://muon.build
 Enable it:
 
 ```lua
-nx.lsp.enable("muon")
+btv.lsp.enable("muon")
 ```
 
 Default config:
@@ -8853,7 +8853,7 @@ pip install mutt-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("mutt_ls")
+btv.lsp.enable("mutt_ls")
 ```
 
 Default config:
@@ -8871,7 +8871,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -8882,7 +8882,7 @@ Default config:
 Enable it:
 
 ```lua
-nx.lsp.enable("nelua_lsp")
+btv.lsp.enable("nelua_lsp")
 ```
 
 Default config:
@@ -8904,13 +8904,13 @@ https://github.com/neocmakelsp/neocmakelsp
 CMake LSP Implementation
 
 `neocmakelsp` only offers completions when the client advertises snippet support.
-nxvim expands snippet completions natively (`nx.snippet`), but does not advertise
+bemtvi expands snippet completions natively (`btv.snippet`), but does not advertise
 `snippetSupport` in its base capabilities, so ask for it in this server's config.
-`capabilities` is deep-merged OVER nxvim's base set, so this adds to it rather
+`capabilities` is deep-merged OVER bemtvi's base set, so this adds to it rather
 than replacing it:
 
 ```lua
-nx.lsp.config("neocmake", {
+btv.lsp.config("neocmake", {
   capabilities = {
     textDocument = { completion = { completionItem = { snippetSupport = true } } },
   },
@@ -8920,7 +8920,7 @@ nx.lsp.config("neocmake", {
 Enable it:
 
 ```lua
-nx.lsp.enable("neocmake")
+btv.lsp.enable("neocmake")
 ```
 
 Default config:
@@ -8951,7 +8951,7 @@ Requirements:
 If you have installed nextflow language server, you can set the `cmd` custom path as follow:
 
 ```lua
-nx.lsp.config("nextflow_ls", {
+btv.lsp.config("nextflow_ls", {
     cmd = { 'nextflow-language-server' },
     filetypes = { 'nextflow' },
     settings = {
@@ -8967,7 +8967,7 @@ nx.lsp.config("nextflow_ls", {
 Enable it:
 
 ```lua
-nx.lsp.enable("nextflow_ls")
+btv.lsp.enable("nextflow_ls")
 ```
 
 Default config:
@@ -9001,7 +9001,7 @@ https://github.com/elixir-tools/next-ls
 Enable it:
 
 ```lua
-nx.lsp.enable("nextls")
+btv.lsp.enable("nextls")
 ```
 
 Default config:
@@ -9033,7 +9033,7 @@ pip install -U nginx-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("nginx_language_server")
+btv.lsp.enable("nginx_language_server")
 ```
 
 Default config:
@@ -9081,7 +9081,7 @@ install the [Nickel vim plugin](https://github.com/nickel-lang/vim-nickel).
 Enable it:
 
 ```lua
-nx.lsp.enable("nickel_ls")
+btv.lsp.enable("nickel_ls")
 ```
 
 Default config:
@@ -9114,7 +9114,7 @@ _See an example config at https://github.com/oxalica/nil/blob/main/dev/nvim-lsp.
 Enable it:
 
 ```lua
-nx.lsp.enable("nil_ls")
+btv.lsp.enable("nil_ls")
 ```
 
 Default config:
@@ -9146,7 +9146,7 @@ nimble install nimlangserver
 Enable it:
 
 ```lua
-nx.lsp.enable("nim_langserver")
+btv.lsp.enable("nim_langserver")
 ```
 
 Default config:
@@ -9175,7 +9175,7 @@ nimble install nimlsp
 Enable it:
 
 ```lua
-nx.lsp.enable("nimls")
+btv.lsp.enable("nimls")
 ```
 
 Default config:
@@ -9203,7 +9203,7 @@ Check the repository README for more information.
 Enable it:
 
 ```lua
-nx.lsp.enable("nixd")
+btv.lsp.enable("nixd")
 ```
 
 Default config:
@@ -9233,7 +9233,7 @@ Add the executable to your system or vim PATH and it will be set to go.
 No configuration option is needed unless you choose not to add `nomad-lsp` executable to the PATH. You should know what you are doing if you choose so.
 
 ```lua
-nx.lsp.enable('nomad_lsp')
+btv.lsp.enable('nomad_lsp')
 ```
 
 However, a `hcl.nomad` or `nomad` filetype should be defined.
@@ -9243,7 +9243,7 @@ Description of your jobs should be written in `.nomad` files for the LSP client 
 Enable it:
 
 ```lua
-nx.lsp.enable("nomad_lsp")
+btv.lsp.enable("nomad_lsp")
 ```
 
 Default config:
@@ -9263,9 +9263,9 @@ Default config:
 
 https://github.com/nokia/ntt
 Installation instructions can be found [here](https://github.com/nokia/ntt#Install).
-Can be configured by passing a "settings" object to nx.lsp.config("ntt"):
+Can be configured by passing a "settings" object to btv.lsp.config("ntt"):
 ```lua
-nx.lsp.config("ntt", {
+btv.lsp.config("ntt", {
     settings = {
       ntt = {
       }
@@ -9276,7 +9276,7 @@ nx.lsp.config("ntt", {
 Enable it:
 
 ```lua
-nx.lsp.enable("ntt")
+btv.lsp.enable("ntt")
 ```
 
 Default config:
@@ -9304,7 +9304,7 @@ Nushell built-in language server.
 Enable it:
 
 ```lua
-nx.lsp.enable("nushell")
+btv.lsp.enable("nushell")
 ```
 
 Default config:
@@ -9334,7 +9334,7 @@ npm i -g nxls
 Enable it:
 
 ```lua
-nx.lsp.enable("nxls")
+btv.lsp.enable("nxls")
 ```
 
 Default config:
@@ -9367,7 +9367,7 @@ opam install ocaml-lsp-server
 Enable it:
 
 ```lua
-nx.lsp.enable("ocamllsp")
+btv.lsp.enable("ocamllsp")
 ```
 
 Default config:
@@ -9408,7 +9408,7 @@ https://github.com/DanielGavin/ols
 Enable it:
 
 ```lua
-nx.lsp.enable("ols")
+btv.lsp.enable("ols")
 ```
 
 Default config:
@@ -9439,7 +9439,7 @@ For `go_to_definition` to work fully, extended `textDocument/definition` handler
 Enable it:
 
 ```lua
-nx.lsp.enable("omnisharp")
+btv.lsp.enable("omnisharp")
 ```
 
 Default config:
@@ -9454,16 +9454,16 @@ Default config:
   ```
 - `init_options`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 - `root_dir`: [../lsp/omnisharp.lua:34](../lsp/omnisharp.lua#L34)
 - `settings`:
   ```lua
   {
     FormattingOptions = { EnableEditorConfigSupport = true },
-    MsBuild = nx.json.empty_object(),
-    RenameOptions = nx.json.empty_object(),
-    RoslynExtensionsOptions = nx.json.empty_object(),
+    MsBuild = btv.json.empty_object(),
+    RenameOptions = btv.json.empty_object(),
+    RoslynExtensionsOptions = btv.json.empty_object(),
     Sdk = { IncludePrereleases = true },
   }
   ```
@@ -9481,7 +9481,7 @@ Prebuilt binaries are available for Linux, macOS and Windows [here](https://gith
 Enable it:
 
 ```lua
-nx.lsp.enable("opencl_ls")
+btv.lsp.enable("opencl_ls")
 ```
 
 Default config:
@@ -9516,8 +9516,8 @@ Vim does not have built-in syntax for the `openscad` filetype currently.
 This can be added via an autocmd:
 
 ```lua
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.scad" }, function()
-  nx.bo.filetype = "openscad"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.scad" }, function()
+  btv.bo.filetype = "openscad"
 end)
 ```
 
@@ -9526,7 +9526,7 @@ or by installing a filetype plugin such as https://github.com/sirtaj/vim-opensca
 Enable it:
 
 ```lua
-nx.lsp.enable("openscad_ls")
+btv.lsp.enable("openscad_ls")
 ```
 
 Default config:
@@ -9559,7 +9559,7 @@ cargo install openscad-lsp
 Enable it:
 
 ```lua
-nx.lsp.enable("openscad_lsp")
+btv.lsp.enable("openscad_lsp")
 ```
 
 Default config:
@@ -9598,8 +9598,8 @@ autocmd BufNewFile,BufRead *.polar set filetype=polar
 or
 
 ```lua
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.polar" }, function()
-  nx.bo.filetype = "polar"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.polar" }, function()
+  btv.bo.filetype = "polar"
 end)
 
 Alternatively, you may use a syntax plugin like https://github.com/osohq/polar.vim
@@ -9607,7 +9607,7 @@ Alternatively, you may use a syntax plugin like https://github.com/osohq/polar.v
 Enable it:
 
 ```lua
-nx.lsp.enable("oso")
+btv.lsp.enable("oso")
 ```
 
 Default config:
@@ -9628,7 +9628,7 @@ Default config:
 Enable it:
 
 ```lua
-nx.lsp.enable("oxfmt")
+btv.lsp.enable("oxfmt")
 ```
 
 Default config:
@@ -9669,7 +9669,7 @@ Default config:
 Enable it:
 
 ```lua
-nx.lsp.enable("oxlint")
+btv.lsp.enable("oxlint")
 ```
 
 Default config:
@@ -9691,7 +9691,7 @@ Default config:
 - `root_dir`: [../lsp/oxlint.lua:45](../lsp/oxlint.lua#L45)
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 - `workspace_required`:
   ```lua
@@ -9709,7 +9709,7 @@ The Pact language server
 Enable it:
 
 ```lua
-nx.lsp.enable("pact_ls")
+btv.lsp.enable("pact_ls")
 ```
 
 Default config:
@@ -9743,7 +9743,7 @@ or via your system package manager (`nixpkgs`, AUR, `pipx install panache-cli`,
 Enable it:
 
 ```lua
-nx.lsp.enable("panache")
+btv.lsp.enable("panache")
 ```
 
 Default config:
@@ -9788,7 +9788,7 @@ export FPCTARGETCPU='x86_64'          # Target CPU for cross compiling.
 Enable it:
 
 ```lua
-nx.lsp.enable("pasls")
+btv.lsp.enable("pasls")
 ```
 
 Default config:
@@ -9820,7 +9820,7 @@ pbls is a Language Server for protobuf
 Enable it:
 
 ```lua
-nx.lsp.enable("pbls")
+btv.lsp.enable("pbls")
 ```
 
 Default config:
@@ -9850,7 +9850,7 @@ To use the language server, ensure that you have Perl::LanguageServer installed 
 Enable it:
 
 ```lua
-nx.lsp.enable("perlls")
+btv.lsp.enable("perlls")
 ```
 
 Default config:
@@ -9913,7 +9913,7 @@ settings have a reasonable default, but, at minimum, you may want to point `perl
 Enable it:
 
 ```lua
-nx.lsp.enable("perlnavigator")
+btv.lsp.enable("perlnavigator")
 ```
 
 Default config:
@@ -9944,7 +9944,7 @@ To use the language server, ensure that you have PLS installed and that it is in
 Enable it:
 
 ```lua
-nx.lsp.enable("perlpls")
+btv.lsp.enable("perlpls")
 ```
 
 Default config:
@@ -9978,7 +9978,7 @@ Language server for pest grammars.
 Enable it:
 
 ```lua
-nx.lsp.enable("pest_ls")
+btv.lsp.enable("pest_ls")
 ```
 
 Default config:
@@ -10006,7 +10006,7 @@ Installation: https://github.com/phan/phan#getting-started
 Enable it:
 
 ```lua
-nx.lsp.enable("phan")
+btv.lsp.enable("phan")
 ```
 
 Default config:
@@ -10042,7 +10042,7 @@ Installation: https://phpactor.readthedocs.io/en/master/usage/standalone.html#gl
 Enable it:
 
 ```lua
-nx.lsp.enable("phpactor")
+btv.lsp.enable("phpactor")
 ```
 
 Default config:
@@ -10074,7 +10074,7 @@ Installation: https://github.com/AJenbo/phpantom_lsp/blob/main/docs/SETUP.md
 Enable it:
 
 ```lua
-nx.lsp.enable("phpantom_lsp")
+btv.lsp.enable("phpantom_lsp")
 ```
 
 Default config:
@@ -10116,7 +10116,7 @@ settings = {
 Enable it:
 
 ```lua
-nx.lsp.enable("phptools")
+btv.lsp.enable("phptools")
 ```
 
 Default config:
@@ -10145,7 +10145,7 @@ Full language support for the PICO-8 dialect of Lua.
 Enable it:
 
 ```lua
-nx.lsp.enable("pico8_ls")
+btv.lsp.enable("pico8_ls")
 ```
 
 Default config:
@@ -10160,7 +10160,7 @@ Default config:
 - `root_dir`: [../lsp/pico8_ls.lua:12](../lsp/pico8_ls.lua#L12)
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -10176,7 +10176,7 @@ The `plz` binary will automatically install the LSP for you on first run
 Enable it:
 
 ```lua
-nx.lsp.enable("please")
+btv.lsp.enable("please")
 ```
 
 Default config:
@@ -10204,7 +10204,7 @@ To learn how to configure the PL/I language server, see the [PL/I Language Suppo
 Enable it:
 
 ```lua
-nx.lsp.enable("pli")
+btv.lsp.enable("pli")
 ```
 
 Default config:
@@ -10230,7 +10230,7 @@ Renamed to [pony_lsp](#pony_lsp)
 Enable it:
 
 ```lua
-nx.lsp.enable("pony_language_server")
+btv.lsp.enable("pony_language_server")
 ```
 
 Default config:
@@ -10251,8 +10251,8 @@ Default config:
   ```lua
   {
     ["pony-lsp"] = {
-      defines = nx.json.empty_object(),
-      ponypath = nx.json.empty_object(),
+      defines = btv.json.empty_object(),
+      ponypath = btv.json.empty_object(),
     },
   }
   ```
@@ -10268,7 +10268,7 @@ Language server for the Pony programming language
 Enable it:
 
 ```lua
-nx.lsp.enable("pony_lsp")
+btv.lsp.enable("pony_lsp")
 ```
 
 Default config:
@@ -10288,8 +10288,8 @@ Default config:
   ```lua
   {
     ["pony-lsp"] = {
-      defines = nx.json.empty_object(),
-      ponypath = nx.json.empty_object(),
+      defines = btv.json.empty_object(),
+      ponypath = btv.json.empty_object(),
     },
   }
   ```
@@ -10305,7 +10305,7 @@ Language server for poryscript (a high level scripting language for GBA-era Pok�
 Enable it:
 
 ```lua
-nx.lsp.enable("poryscript_pls")
+btv.lsp.enable("poryscript_pls")
 ```
 
 Default config:
@@ -10333,7 +10333,7 @@ A collection of language tools and a Language Server Protocol (LSP) implementati
 Enable it:
 
 ```lua
-nx.lsp.enable("postgres_lsp")
+btv.lsp.enable("postgres_lsp")
 ```
 
 Default config:
@@ -10362,7 +10362,7 @@ Default config:
 Enable it:
 
 ```lua
-nx.lsp.enable("powershell_es")
+btv.lsp.enable("powershell_es")
 ```
 
 Default config:
@@ -10390,7 +10390,7 @@ npm install -g @prisma/language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("prismals")
+btv.lsp.enable("prismals")
 ```
 
 Default config:
@@ -10422,7 +10422,7 @@ Language Server Protocol server for SWI-Prolog
 Enable it:
 
 ```lua
-nx.lsp.enable("prolog_ls")
+btv.lsp.enable("prolog_ls")
 ```
 
 Default config:
@@ -10462,7 +10462,7 @@ Please see the manual installation instructions: https://github.com/kitten/prose
 Enable it:
 
 ```lua
-nx.lsp.enable("prosemd_lsp")
+btv.lsp.enable("prosemd_lsp")
 ```
 
 Default config:
@@ -10495,7 +10495,7 @@ A Language Server for proto3 files. It uses tree-sitter and runs in single file 
 Enable it:
 
 ```lua
-nx.lsp.enable("protols")
+btv.lsp.enable("protols")
 ```
 
 Default config:
@@ -10526,7 +10526,7 @@ composer global require vimeo/psalm
 Enable it:
 
 ```lua
-nx.lsp.enable("psalm")
+btv.lsp.enable("psalm")
 ```
 
 Default config:
@@ -10556,7 +10556,7 @@ PugLSP can be installed via `go install github.com/opa-oz/pug-lsp@latest`, or ma
 Enable it:
 
 ```lua
-nx.lsp.enable("pug")
+btv.lsp.enable("pug")
 ```
 
 Default config:
@@ -10595,7 +10595,7 @@ Installation:
 Enable it:
 
 ```lua
-nx.lsp.enable("puppet")
+btv.lsp.enable("puppet")
 ```
 
 Default config:
@@ -10626,7 +10626,7 @@ The `purescript-language-server` can be added to your project and `$PATH` via
 Enable it:
 
 ```lua
-nx.lsp.enable("purescriptls")
+btv.lsp.enable("purescriptls")
 ```
 
 Default config:
@@ -10664,7 +10664,7 @@ Configuration options are documented [here](https://github.com/python-lsp/python
 In order to configure an option, it must be translated to a nested Lua table and included in the `settings` argument to the `config('pylsp', {})` function.
 For example, in order to set the `pylsp.plugins.pycodestyle.ignore` option:
 ```lua
-nx.lsp.config('pylsp', {
+btv.lsp.config('pylsp', {
   settings = {
     pylsp = {
       plugins = {
@@ -10683,7 +10683,7 @@ Note: This is a community fork of `pyls`.
 Enable it:
 
 ```lua
-nx.lsp.enable("pylsp")
+btv.lsp.enable("pylsp")
 ```
 
 Default config:
@@ -10723,7 +10723,7 @@ to the the path where you want to install it, e.g. `~/.erg`.
 Enable it:
 
 ```lua
-nx.lsp.enable("pylyzer")
+btv.lsp.enable("pylyzer")
 ```
 
 Default config:
@@ -10778,7 +10778,7 @@ Do not report issues for missing features in `pyre` to `lspconfig`.
 Enable it:
 
 ```lua
-nx.lsp.enable("pyre")
+btv.lsp.enable("pyre")
 ```
 
 Default config:
@@ -10809,7 +10809,7 @@ our issues page at https://github.com/facebook/pyrefly/issues.
 Enable it:
 
 ```lua
-nx.lsp.enable("pyrefly")
+btv.lsp.enable("pyrefly")
 ```
 
 Default config:
@@ -10849,7 +10849,7 @@ are usually too noisy (https://github.com/neovim/neovim/issues/30444), so
 they are disabled by default. To re-enable:
 
 ```lua
-nx.lsp.config('pyright', {
+btv.lsp.config('pyright', {
   settings = { pyright = { disableTaggedHints = false } },
 })
 ```
@@ -10857,7 +10857,7 @@ nx.lsp.config('pyright', {
 Enable it:
 
 ```lua
-nx.lsp.enable("pyright")
+btv.lsp.enable("pyright")
 ```
 
 Default config:
@@ -10917,7 +10917,7 @@ Features:
 Enable it:
 
 ```lua
-nx.lsp.enable("pytest_language_server")
+btv.lsp.enable("pytest_language_server")
 ```
 
 Default config:
@@ -10952,13 +10952,13 @@ Source in the [QtDeclarative repository](https://code.qt.io/cgit/qt/qtdeclarativ
 
 Note: On some distros, the cmd of qmlls is `qmlls6`. You can override `cmd`:
 ```lua
-nx.lsp.config("qmlls", { cmd = { 'qmlls6' } })
+btv.lsp.config("qmlls", { cmd = { 'qmlls6' } })
 ```
 
 Enable it:
 
 ```lua
-nx.lsp.enable("qmlls")
+btv.lsp.enable("qmlls")
 ```
 
 Default config:
@@ -10988,7 +10988,7 @@ See installation [instructions](https://quick-lint-js.com/install/)
 Enable it:
 
 ```lua
-nx.lsp.enable("quick_lint_js")
+btv.lsp.enable("quick_lint_js")
 ```
 
 Default config:
@@ -11022,7 +11022,7 @@ install.packages("languageserver")
 Enable it:
 
 ```lua
-nx.lsp.enable("r_language_server")
+btv.lsp.enable("r_language_server")
 ```
 
 Default config:
@@ -11051,7 +11051,7 @@ Install via `raco`: `raco pkg install racket-langserver`
 Enable it:
 
 ```lua
-nx.lsp.enable("racket_langserver")
+btv.lsp.enable("racket_langserver")
 ```
 
 Default config:
@@ -11074,7 +11074,7 @@ Default config:
 
 https://github.com/bscan/RakuNavigator
 A Raku language server
-**By default, raku_navigator doesn't have a `cmd` set.** This is because nxvim-lspconfig does not make assumptions about your path.
+**By default, raku_navigator doesn't have a `cmd` set.** This is because bemtvi-lspconfig does not make assumptions about your path.
 You have to install the language server manually.
 Clone the RakuNavigator repo, install based on the [instructions](https://github.com/bscan/raku_Navigator#installation-for-other-editors),
 and point `cmd` to `server.js` inside the `server/out` directory:
@@ -11095,13 +11095,13 @@ settings have a reasonable default, but, at minimum, you may want to point `raku
 Enable it:
 
 ```lua
-nx.lsp.enable("raku_navigator")
+btv.lsp.enable("raku_navigator")
 ```
 
 Default config:
 - `cmd`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 - `filetypes`:
   ```lua
@@ -11123,7 +11123,7 @@ You can install reason language server from [reason-language-server](https://git
 Enable it:
 
 ```lua
-nx.lsp.enable("reason_ls")
+btv.lsp.enable("reason_ls")
 ```
 
 Default config:
@@ -11156,7 +11156,7 @@ go install github.com/StyraInc/regal@latest
 Enable it:
 
 ```lua
-nx.lsp.enable("regal")
+btv.lsp.enable("regal")
 ```
 
 Default config:
@@ -11186,7 +11186,7 @@ go install github.com/kitagry/regols@latest
 Enable it:
 
 ```lua
-nx.lsp.enable("regols")
+btv.lsp.enable("regols")
 ```
 
 Default config:
@@ -11236,7 +11236,7 @@ npm install remark-preset-lint-recommended
 Enable it:
 
 ```lua
-nx.lsp.enable("remark_ls")
+btv.lsp.enable("remark_ls")
 ```
 
 Default config:
@@ -11278,7 +11278,7 @@ for init_options supported.
 
 For example, in order to disable the `inlayHints` option:
 ```lua
-nx.lsp.config("rescriptls", {
+btv.lsp.config("rescriptls", {
   settings = {
     rescript = {
       settings = {
@@ -11303,7 +11303,7 @@ capabilities = {
 Enable it:
 
 ```lua
-nx.lsp.enable("rescriptls")
+btv.lsp.enable("rescriptls")
 ```
 
 Default config:
@@ -11334,7 +11334,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -11352,7 +11352,7 @@ This server accepts configuration via the `settings` key.
 Enable it:
 
 ```lua
-nx.lsp.enable("rnix")
+btv.lsp.enable("rnix")
 ```
 
 Default config:
@@ -11366,12 +11366,12 @@ Default config:
   ```
 - `init_options`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 - `root_dir`: [../lsp/rnix.lua:16](../lsp/rnix.lua#L16)
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -11385,7 +11385,7 @@ RobotCode - Language Server Protocol implementation for Robot Framework.
 Enable it:
 
 ```lua
-nx.lsp.enable("robotcode")
+btv.lsp.enable("robotcode")
 ```
 
 Default config:
@@ -11414,7 +11414,7 @@ Language Server Protocol implementation for Robot Framework.
 Enable it:
 
 ```lua
-nx.lsp.enable("robotframework_ls")
+btv.lsp.enable("robotframework_ls")
 ```
 
 Default config:
@@ -11449,7 +11449,7 @@ The built-in language server for the Roc programming language.
 Enable it:
 
 ```lua
-nx.lsp.enable("roc_ls")
+btv.lsp.enable("roc_ls")
 ```
 
 Default config:
@@ -11483,7 +11483,7 @@ npm install [-g] rome
 Enable it:
 
 ```lua
-nx.lsp.enable("rome")
+btv.lsp.enable("rome")
 ```
 
 Default config:
@@ -11527,13 +11527,13 @@ Download and extract it (nuget's are zip files).
   },
   ```
   where `<my_folder>` has to be the folder you extracted the nuget package to.
-- for all other platforms put the extracted folder on `$PATH` (nxvim resolves the
-  server through it; `nx.env.get('PATH')` is what the editor sees)
+- for all other platforms put the extracted folder on `$PATH` (bemtvi resolves the
+  server through it; `btv.env.get('PATH')` is what the editor sees)
 
 Enable it:
 
 ```lua
-nx.lsp.enable("roslyn_ls")
+btv.lsp.enable("roslyn_ls")
 ```
 
 Default config:
@@ -11620,7 +11620,7 @@ pip install rpm-spec-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("rpmspec")
+btv.lsp.enable("rpmspec")
 ```
 
 Default config:
@@ -11638,7 +11638,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -11650,7 +11650,7 @@ https://github.com/rubocop/rubocop
 Enable it:
 
 ```lua
-nx.lsp.enable("rubocop")
+btv.lsp.enable("rubocop")
 ```
 
 Default config:
@@ -11686,7 +11686,7 @@ gem install ruby-lsp
 Enable it:
 
 ```lua
-nx.lsp.enable("ruby_lsp")
+btv.lsp.enable("ruby_lsp")
 ```
 
 Default config:
@@ -11727,7 +11727,7 @@ This is the new built-in language server written in Rust. It supports the same f
 Server settings can be provided via:
 
 ```lua
-nx.lsp.config("ruff", {
+btv.lsp.config("ruff", {
   init_options = {
     settings = {
       -- Server settings should go here
@@ -11741,7 +11741,7 @@ Refer to the [documentation](https://docs.astral.sh/ruff/editors/) for more deta
 Enable it:
 
 ```lua
-nx.lsp.enable("ruff")
+btv.lsp.enable("ruff")
 ```
 
 Default config:
@@ -11759,7 +11759,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -11779,7 +11779,7 @@ pip install ruff-lsp
 Extra CLI arguments for `ruff` can be provided via
 
 ```lua
-nx.lsp.config('ruff_lsp', {
+btv.lsp.config('ruff_lsp', {
   init_options = {
     settings = {
       -- Any extra CLI arguments for `ruff` go here.
@@ -11792,7 +11792,7 @@ nx.lsp.config('ruff_lsp', {
 Enable it:
 
 ```lua
-nx.lsp.enable("ruff_lsp")
+btv.lsp.enable("ruff_lsp")
 ```
 
 Default config:
@@ -11811,7 +11811,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -11825,7 +11825,7 @@ Markdown Linter and Formatter written in Rust.
 Enable it:
 
 ```lua
-nx.lsp.enable("rumdl")
+btv.lsp.enable("rumdl")
 ```
 
 Default config:
@@ -11854,7 +11854,7 @@ an embeddable dynamic programming language for Rust
 Enable it:
 
 ```lua
-nx.lsp.enable("rune_languageserver")
+btv.lsp.enable("rune_languageserver")
 ```
 
 Default config:
@@ -11882,7 +11882,7 @@ rust-analyzer (aka rls 2.0), a language server for Rust
 
 See [docs](https://rust-analyzer.github.io/book/configuration.html) for extra settings. The settings can be used like this:
 ```lua
-nx.lsp.config('rust_analyzer', {
+btv.lsp.config('rust_analyzer', {
   settings = {
     ['rust-analyzer'] = {
       diagnostics = {
@@ -11899,7 +11899,7 @@ https://github.com/rust-lang/rust-analyzer/blob/eb5da56d839ae0a9e9f50774fa3eb78e
 Enable it:
 
 ```lua
-nx.lsp.enable("rust_analyzer")
+btv.lsp.enable("rust_analyzer")
 ```
 
 Default config:
@@ -11965,7 +11965,7 @@ pip install salt-lsp
 Enable it:
 
 ```lua
-nx.lsp.enable("salt_ls")
+btv.lsp.enable("salt_ls")
 ```
 
 Default config:
@@ -11993,7 +11993,7 @@ And for nvim user, please add .sls to scheme file extension list.
 Enable it:
 
 ```lua
-nx.lsp.enable("scheme_langserver")
+btv.lsp.enable("scheme_langserver")
 ```
 
 Default config:
@@ -12026,7 +12026,7 @@ Crystal language server.
 Enable it:
 
 ```lua
-nx.lsp.enable("scry")
+btv.lsp.enable("scry")
 ```
 
 Default config:
@@ -12054,7 +12054,7 @@ https://github.com/antonk52/lua-3p-language-servers
 Enable it:
 
 ```lua
-nx.lsp.enable("selene3p_ls")
+btv.lsp.enable("selene3p_ls")
 ```
 
 Default config:
@@ -12083,7 +12083,7 @@ Download a binary from https://github.com/Pure-D/serve-d/releases and put it in 
 Enable it:
 
 ```lua
-nx.lsp.enable("serve_d")
+btv.lsp.enable("serve_d")
 ```
 
 Default config:
@@ -12115,7 +12115,7 @@ Note: This LSP already includes Theme Check so you don't need to use the `theme_
 Enable it:
 
 ```lua
-nx.lsp.enable("shopify_theme_ls")
+btv.lsp.enable("shopify_theme_ls")
 ```
 
 Default config:
@@ -12138,7 +12138,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -12157,7 +12157,7 @@ A lightning fast shell linter with LSP support for bash, zsh, posix, and mksh di
 Enable it:
 
 ```lua
-nx.lsp.enable("shuck")
+btv.lsp.enable("shuck")
 ```
 
 Default config:
@@ -12191,8 +12191,8 @@ Vim does not have built-in syntax for the `sixtyfps` filetype currently.
 This can be added via an autocmd:
 
 ```lua
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.60" }, function()
-  nx.bo.filetype = "sixtyfps"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.60" }, function()
+  btv.bo.filetype = "sixtyfps"
 end)
 ```
 
@@ -12201,7 +12201,7 @@ or by installing a filetype plugin such as https://github.com/RustemB/sixtyfps-v
 Enable it:
 
 ```lua
-nx.lsp.enable("sixtyfps")
+btv.lsp.enable("sixtyfps")
 ```
 
 Default config:
@@ -12230,7 +12230,7 @@ See [the docs](https://hudson-trading.github.io/slang-server/start/config/) for 
 Enable it:
 
 ```lua
-nx.lsp.enable("slang_server")
+btv.lsp.enable("slang_server")
 ```
 
 Default config:
@@ -12256,10 +12256,10 @@ https://github.com/shader-slang/slang
 The `slangd` binary can be downloaded as part of [slang releases](https://github.com/shader-slang/slang/releases) or
 by [building `slang` from source](https://github.com/shader-slang/slang/blob/master/docs/building.md).
 
-The server can be configured by passing a "settings" object to nx.lsp.config("slangd"):
+The server can be configured by passing a "settings" object to btv.lsp.config("slangd"):
 
 ```lua
-nx.lsp.config("slangd", {
+btv.lsp.config("slangd", {
   settings = {
     slang = {
       predefinedMacros = {"MY_VALUE_MACRO=1"},
@@ -12277,7 +12277,7 @@ or in more detail [here](https://github.com/shader-slang/slang-vscode-extension/
 Enable it:
 
 ```lua
-nx.lsp.enable("slangd")
+btv.lsp.enable("slangd")
 ```
 
 Default config:
@@ -12311,15 +12311,15 @@ Vim does not have built-in syntax for the `slint` filetype at this time.
 This can be added via an autocmd:
 
 ```lua
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.slint" }, function()
-  nx.bo.filetype = "slint"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.slint" }, function()
+  btv.bo.filetype = "slint"
 end)
 ```
 
 Enable it:
 
 ```lua
-nx.lsp.enable("slint_lsp")
+btv.lsp.enable("slint_lsp")
 ```
 
 Default config:
@@ -12353,7 +12353,7 @@ npm i -g vscode-smarty-langserver-extracted
 Enable it:
 
 ```lua
-nx.lsp.enable("smarty_ls")
+btv.lsp.enable("smarty_ls")
 ```
 
 Default config:
@@ -12367,14 +12367,14 @@ Default config:
   ```
 - `init_options`:
   ```lua
-  { storageDir = nx.json.null }
+  { storageDir = btv.json.null }
   ```
 - `root_dir`: [../lsp/smarty_ls.lua:18](../lsp/smarty_ls.lua#L18)
 - `settings`:
   ```lua
   {
     css = { validate = true },
-    smarty = { pluginDirs = nx.json.empty_object() },
+    smarty = { pluginDirs = btv.json.empty_object() },
   }
   ```
 
@@ -12405,7 +12405,7 @@ Installation:
 Enable it:
 
 ```lua
-nx.lsp.enable("smithy_ls")
+btv.lsp.enable("smithy_ls")
 ```
 
 Default config:
@@ -12449,7 +12449,7 @@ npm install -g @snakeskin/cli
 Enable it:
 
 ```lua
-nx.lsp.enable("snakeskin_ls")
+btv.lsp.enable("snakeskin_ls")
 ```
 
 Default config:
@@ -12495,7 +12495,7 @@ The Snyk Language Server provides real-time security scanning for:
 Snyk requires you to trust directories before scanning them. To avoid being prompted every time:
 
 ```lua
-nx.lsp.config('snyk_ls', {
+btv.lsp.config('snyk_ls', {
   init_options = {
     trustedFolders = {
       '/Users/yourname/projects',  -- Trust your projects directory
@@ -12523,7 +12523,7 @@ For **non-default multi-tenant or single-tenant setups**, you may need to specif
 Enable it:
 
 ```lua
-nx.lsp.enable("snyk_ls")
+btv.lsp.enable("snyk_ls")
 ```
 
 Default config:
@@ -12572,10 +12572,10 @@ Default config:
     activateSnykCode = "false",
     activateSnykIac = "true",
     activateSnykOpenSource = "true",
-    integrationName = "nxvim",
-    integrationVersion = "nxvim 0.1.0",
-    token = nx.json.null,
-    trustedFolders = nx.json.empty_object(),
+    integrationName = "bemtvi",
+    integrationVersion = "bemtvi 0.1.0",
+    token = btv.json.null,
+    trustedFolders = btv.json.empty_object(),
   }
   ```
 - `root_markers`:
@@ -12584,7 +12584,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -12605,7 +12605,7 @@ There is currently no support for completion, goto definition, references, or ot
 Enable it:
 
 ```lua
-nx.lsp.enable("solang")
+btv.lsp.enable("solang")
 ```
 
 Default config:
@@ -12639,7 +12639,7 @@ gem install --user-install solargraph
 Enable it:
 
 ```lua
-nx.lsp.enable("solargraph")
+btv.lsp.enable("solargraph")
 ```
 
 Default config:
@@ -12675,7 +12675,7 @@ solc is the native language server for the Solidity language.
 Enable it:
 
 ```lua
-nx.lsp.enable("solc")
+btv.lsp.enable("solc")
 ```
 
 Default config:
@@ -12729,7 +12729,7 @@ You can omit the node_modules as well.
 Enable it:
 
 ```lua
-nx.lsp.enable("solidity")
+btv.lsp.enable("solidity")
 ```
 
 Default config:
@@ -12748,7 +12748,7 @@ Default config:
 - `settings`:
   ```lua
   {
-    solidity = { includePath = "", remapping = nx.json.empty_object() },
+    solidity = { includePath = "", remapping = btv.json.empty_object() },
   }
   ```
 
@@ -12769,7 +12769,7 @@ npm install -g vscode-solidity-server
 Enable it:
 
 ```lua
-nx.lsp.enable("solidity_ls")
+btv.lsp.enable("solidity_ls")
 ```
 
 Default config:
@@ -12813,7 +12813,7 @@ A language server for the Solidity programming language, built by the Nomic Foun
 Enable it:
 
 ```lua
-nx.lsp.enable("solidity_ls_nomicfoundation")
+btv.lsp.enable("solidity_ls_nomicfoundation")
 ```
 
 Default config:
@@ -12863,7 +12863,7 @@ The language server provides:
 Enable it:
 
 ```lua
-nx.lsp.enable("somesass_ls")
+btv.lsp.enable("somesass_ls")
 ```
 
 Default config:
@@ -12906,7 +12906,7 @@ gem install sorbet
 Enable it:
 
 ```lua
-nx.lsp.enable("sorbet")
+btv.lsp.enable("sorbet")
 ```
 
 Default config:
@@ -12934,7 +12934,7 @@ Language server for Swift and C/C++/Objective-C.
 Enable it:
 
 ```lua
-nx.lsp.enable("sourcekit")
+btv.lsp.enable("sourcekit")
 ```
 
 Default config:
@@ -12966,7 +12966,7 @@ Default config:
 Enable it:
 
 ```lua
-nx.lsp.enable("spade_ls")
+btv.lsp.enable("spade_ls")
 ```
 
 Default config:
@@ -12999,7 +12999,7 @@ See [vscode-spectral](https://github.com/stoplightio/vscode-spectral#extension-s
 Enable it:
 
 ```lua
-nx.lsp.enable("spectral")
+btv.lsp.enable("spectral")
 ```
 
 Default config:
@@ -13052,7 +13052,7 @@ This is automatically done by [CrystalAlpha358/vim-mcfunction](https://github.co
 Enable it:
 
 ```lua
-nx.lsp.enable("spyglassmc_language_server")
+btv.lsp.enable("spyglassmc_language_server")
 ```
 
 Default config:
@@ -13080,7 +13080,7 @@ This LSP can be installed via  `npm`. Find further instructions on manual instal
 Enable it:
 
 ```lua
-nx.lsp.enable("sqlls")
+btv.lsp.enable("sqlls")
 ```
 
 Default config:
@@ -13098,7 +13098,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -13108,7 +13108,7 @@ Default config:
 https://github.com/sqls-server/sqls
 
 ```lua
-nx.lsp.config("sqls", {
+btv.lsp.config("sqls", {
   cmd = {"path/to/command", "-config", "path/to/config.yml"};
   ...
 })
@@ -13118,7 +13118,7 @@ Sqls can be installed via `go install github.com/sqls-server/sqls@latest`. Instr
 Enable it:
 
 ```lua
-nx.lsp.enable("sqls")
+btv.lsp.enable("sqls")
 ```
 
 Default config:
@@ -13136,7 +13136,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -13150,7 +13150,7 @@ https://github.com/quarylabs/sqruff
 Enable it:
 
 ```lua
-nx.lsp.enable("sqruff")
+btv.lsp.enable("sqruff")
 ```
 
 Default config:
@@ -13178,7 +13178,7 @@ Language server for the Stan probabilistic programming language.
 Enable it:
 
 ```lua
-nx.lsp.enable("stan_ls")
+btv.lsp.enable("stan_ls")
 ```
 
 Default config:
@@ -13196,7 +13196,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -13210,7 +13210,7 @@ Ruby Style Guide, with linter & automatic code fixer.
 Enable it:
 
 ```lua
-nx.lsp.enable("standardrb")
+btv.lsp.enable("standardrb")
 ```
 
 Default config:
@@ -13242,7 +13242,7 @@ It can be installed with cargo: https://crates.io/crates/starlark
 Enable it:
 
 ```lua
-nx.lsp.enable("starlark_rust")
+btv.lsp.enable("starlark_rust")
 ```
 
 Default config:
@@ -13270,7 +13270,7 @@ https://github.com/withered-magic/starpls
 Enable it:
 
 ```lua
-nx.lsp.enable("starpls")
+btv.lsp.enable("starpls")
 ```
 
 Default config:
@@ -13298,7 +13298,7 @@ lints and suggestions for the nix programming language
 Enable it:
 
 ```lua
-nx.lsp.enable("statix")
+btv.lsp.enable("statix")
 ```
 
 Default config:
@@ -13328,7 +13328,7 @@ You need `Steepfile` to make it work. Generate it with `steep init`.
 Enable it:
 
 ```lua
-nx.lsp.enable("steep")
+btv.lsp.enable("steep")
 ```
 
 Default config:
@@ -13366,7 +13366,7 @@ yarn global add stimulus-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("stimulus_ls")
+btv.lsp.enable("stimulus_ls")
 ```
 
 Default config:
@@ -13395,7 +13395,7 @@ https://github.com/stylelint/vscode-stylelint/tree/main/packages/language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("stylelint_lsp")
+btv.lsp.enable("stylelint_lsp")
 ```
 
 Default config:
@@ -13430,7 +13430,7 @@ A deterministic code formatter for Lua 5.1, 5.2, 5.3, 5.4, LuaJIT, Luau and CfxL
 Enable it:
 
 ```lua
-nx.lsp.enable("stylua")
+btv.lsp.enable("stylua")
 ```
 
 Default config:
@@ -13458,7 +13458,7 @@ https://github.com/antonk52/lua-3p-language-servers
 Enable it:
 
 ```lua
-nx.lsp.enable("stylua3p_ls")
+btv.lsp.enable("stylua3p_ls")
 ```
 
 Default config:
@@ -13490,7 +13490,7 @@ If you want to disable HTML support for another HTML LSP, add the following
 to your configuration:
 
 ```lua
-nx.lsp.config("superhtml", {
+btv.lsp.config("superhtml", {
   filetypes = { 'superhtml' }
 })
 ```
@@ -13498,7 +13498,7 @@ nx.lsp.config("superhtml", {
 Enable it:
 
 ```lua
-nx.lsp.enable("superhtml")
+btv.lsp.enable("superhtml")
 ```
 
 Default config:
@@ -13531,7 +13531,7 @@ npm install [-g] svelte-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("svelte")
+btv.lsp.enable("svelte")
 ```
 
 Default config:
@@ -13575,7 +13575,7 @@ $ npm install -g @imc-trading/svlangserver
 Enable it:
 
 ```lua
-nx.lsp.enable("svlangserver")
+btv.lsp.enable("svlangserver")
 ```
 
 Default config:
@@ -13615,7 +13615,7 @@ Language server for verilog and SystemVerilog
 Enable it:
 
 ```lua
-nx.lsp.enable("svls")
+btv.lsp.enable("svls")
 ```
 
 Default config:
@@ -13643,7 +13643,7 @@ Meson language server written in Swift
 Enable it:
 
 ```lua
-nx.lsp.enable("swift_mesonls")
+btv.lsp.enable("swift_mesonls")
 ```
 
 Default config:
@@ -13680,7 +13680,7 @@ gem install syntax_tree
 Enable it:
 
 ```lua
-nx.lsp.enable("syntax_tree")
+btv.lsp.enable("syntax_tree")
 ```
 
 Default config:
@@ -13706,7 +13706,7 @@ Renamed to [systemd_lsp](#systemd_lsp)
 Enable it:
 
 ```lua
-nx.lsp.enable("systemd_ls")
+btv.lsp.enable("systemd_ls")
 ```
 
 Default config:
@@ -13740,7 +13740,7 @@ A language server implementation for Systemd unit files made in Rust.
 Enable it:
 
 ```lua
-nx.lsp.enable("systemd_lsp")
+btv.lsp.enable("systemd_lsp")
 ```
 
 Default config:
@@ -13770,7 +13770,7 @@ npm install --global tabby-agent
 Enable it:
 
 ```lua
-nx.lsp.enable("tabby_ml")
+btv.lsp.enable("tabby_ml")
 ```
 
 Default config:
@@ -13780,7 +13780,7 @@ Default config:
   ```
 - `filetypes`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 - `root_markers`:
   ```lua
@@ -13803,7 +13803,7 @@ https://github.com/tailwindlabs/tailwindcss-intellisense#tailwindcssexperimental
 Enable it:
 
 ```lua
-nx.lsp.enable("tailwindcss")
+btv.lsp.enable("tailwindcss")
 ```
 
 Default config:
@@ -13918,7 +13918,7 @@ cargo install --features lsp --locked taplo-cli
 Enable it:
 
 ```lua
-nx.lsp.enable("taplo")
+btv.lsp.enable("taplo")
 ```
 
 Default config:
@@ -13948,7 +13948,7 @@ The Language Server for the LLVM TableGen language
 Enable it:
 
 ```lua
-nx.lsp.enable("tblgen_lsp_server")
+btv.lsp.enable("tblgen_lsp_server")
 ```
 
 Default config:
@@ -13983,7 +13983,7 @@ pip install tclint
 Enable it:
 
 ```lua
-nx.lsp.enable("tclsp")
+btv.lsp.enable("tclsp")
 ```
 
 Default config:
@@ -14019,7 +14019,7 @@ Optional Command Args:
 Enable it:
 
 ```lua
-nx.lsp.enable("teal_ls")
+btv.lsp.enable("teal_ls")
 ```
 
 Default config:
@@ -14047,7 +14047,7 @@ The official language server for the templ HTML templating language.
 Enable it:
 
 ```lua
-nx.lsp.enable("templ")
+btv.lsp.enable("templ")
 ```
 
 Default config:
@@ -14075,7 +14075,7 @@ Language server for various bash scripts such as Arch PKGBUILD, Gentoo ebuild, T
 Enable it:
 
 ```lua
-nx.lsp.enable("termux_language_server")
+btv.lsp.enable("termux_language_server")
 ```
 
 Default config:
@@ -14120,7 +14120,7 @@ choice:
 Enable it:
 
 ```lua
-nx.lsp.enable("terraform_lsp")
+btv.lsp.enable("terraform_lsp")
 ```
 
 Default config:
@@ -14176,7 +14176,7 @@ Instead you should use `init_options` which passes the settings as part of the L
 Enable it:
 
 ```lua
-nx.lsp.enable("terraformls")
+btv.lsp.enable("terraformls")
 ```
 
 Default config:
@@ -14210,7 +14210,7 @@ https://github.com/gruntwork-io/terragrunt-ls
 Enable it:
 
 ```lua
-nx.lsp.enable("terragrunt_ls")
+btv.lsp.enable("terragrunt_ls")
 ```
 
 Default config:
@@ -14246,7 +14246,7 @@ and `LspTexlabChangeEnvironment`.
 Enable it:
 
 ```lua
-nx.lsp.enable("texlab")
+btv.lsp.enable("texlab")
 ```
 
 Default config:
@@ -14284,7 +14284,7 @@ Default config:
       chktex = { onEdit = false, onOpenAndSave = false },
       diagnosticsDelay = 300,
       formatterLineLength = 80,
-      forwardSearch = { args = nx.json.empty_object() },
+      forwardSearch = { args = btv.json.empty_object() },
       latexFormatter = "latexindent",
       latexindent = { modifyLineBreaks = false },
     },
@@ -14302,14 +14302,14 @@ It supports multiple text file formats, such as LaTeX, Org or txt.
 
 For the available text analyzer tools and their configuration, see the [GitHub](https://github.com/hangyav/textLSP) page.
 By default, all analyzers are disabled in textLSP, since most of them need special settings.
-For quick testing, LanguageTool is enabled in the default `nxvim-lspconfig` configuration.
+For quick testing, LanguageTool is enabled in the default `bemtvi-lspconfig` configuration.
 
 To install run: `pip install textLSP`
 
 Enable it:
 
 ```lua
-nx.lsp.enable("textlsp")
+btv.lsp.enable("textlsp")
 ```
 
 Default config:
@@ -14354,7 +14354,7 @@ Installation instructions can be found in https://github.com/terraform-linters/t
 Enable it:
 
 ```lua
-nx.lsp.enable("tflint")
+btv.lsp.enable("tflint")
 ```
 
 Default config:
@@ -14385,7 +14385,7 @@ https://github.com/Shopify/theme-check#installation
 If installed via Homebrew, `cmd` must be set to 'theme-check-liquid-server'
 
 ```lua
-nx.lsp.config('theme_check, {
+btv.lsp.config('theme_check, {
   cmd = { 'theme-check-liquid-server' }
 })
 ```
@@ -14393,7 +14393,7 @@ nx.lsp.config('theme_check, {
 Enable it:
 
 ```lua
-nx.lsp.enable("theme_check")
+btv.lsp.enable("theme_check")
 ```
 
 Default config:
@@ -14411,7 +14411,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -14425,7 +14425,7 @@ you can install thriftls by mason or download binary here: https://github.com/jo
 Enable it:
 
 ```lua
-nx.lsp.enable("thriftls")
+btv.lsp.enable("thriftls")
 ```
 
 Default config:
@@ -14459,7 +14459,7 @@ autocmd BufRead Tiltfile setf=tiltfile
 Enable it:
 
 ```lua
-nx.lsp.enable("tilt_ls")
+btv.lsp.enable("tilt_ls")
 ```
 
 Default config:
@@ -14493,7 +14493,7 @@ Currently some of Tinymist's workspace commands are supported, namely:
 Enable it:
 
 ```lua
-nx.lsp.enable("tinymist")
+btv.lsp.enable("tinymist")
 ```
 
 Default config:
@@ -14520,7 +14520,7 @@ Default config:
 Enable it:
 
 ```lua
-nx.lsp.enable("tofu_ls")
+btv.lsp.enable("tofu_ls")
 ```
 
 Default config:
@@ -14548,7 +14548,7 @@ Language server for Tombi, a TOML toolkit.
 Enable it:
 
 ```lua
-nx.lsp.enable("tombi")
+btv.lsp.enable("tombi")
 ```
 
 Default config:
@@ -14582,8 +14582,8 @@ npm install -g typescript typescript-language-server
 
 Some ts_ls refactors (extract function / extract type) finish by asking the editor
 to start a rename at the position they just created, through a server→client
-`_typescript.rename` request. nxvim does not route server-initiated requests into
-per-config `handlers` (`nx.lsp` warns about the key at load), so the refactor
+`_typescript.rename` request. bemtvi does not route server-initiated requests into
+per-config `handlers` (`btv.lsp` warns about the key at load), so the refactor
 applies and the rename prompt does not follow — run `:LspRename` on the new name.
 The interception is dropped rather than kept as code that cannot run.
 
@@ -14654,7 +14654,7 @@ Otherwise, attach at PROJECT ROOT, or the cwd if not found.
 Enable it:
 
 ```lua
-nx.lsp.enable("ts_ls")
+btv.lsp.enable("ts_ls")
 ```
 
 Default config:
@@ -14684,9 +14684,9 @@ Default config:
 ## ts_query_ls
 
 https://github.com/ribru17/ts_query_ls
-Can be configured by passing a "settings" object to `nx.lsp.config('ts_query_ls', {})`:
+Can be configured by passing a "settings" object to `btv.lsp.config('ts_query_ls', {})`:
 ```lua
-nx.lsp.config('ts_query_ls', {
+btv.lsp.config('ts_query_ls', {
   init_options = {
     parser_install_directories = {
       '/my/parser/install/dir',
@@ -14704,7 +14704,7 @@ nx.lsp.config('ts_query_ls', {
 Enable it:
 
 ```lua
-nx.lsp.enable("ts_query_ls")
+btv.lsp.enable("ts_query_ls")
 ```
 
 Default config:
@@ -14720,7 +14720,7 @@ Default config:
   ```lua
   {
     parser_aliases = { ecma = "javascript", jsx = "javascript", php_only = "php" },
-    parser_install_directories = { "/home/user/.local/share/nxvim/site/parser" },
+    parser_install_directories = { "/home/user/.local/share/bemtvi/site/parser" },
   }
   ```
 - `root_markers`:
@@ -14779,7 +14779,7 @@ Otherwise, attach at PROJECT ROOT, or the cwd if not found.
 Enable it:
 
 ```lua
-nx.lsp.enable("tsgo")
+btv.lsp.enable("tsgo")
 ```
 
 Default config:
@@ -14826,7 +14826,7 @@ npm install -g @typespec/compiler
 Enable it:
 
 ```lua
-nx.lsp.enable("tsp_server")
+btv.lsp.enable("tsp_server")
 ```
 
 Default config:
@@ -14852,7 +14852,7 @@ https://github.com/npezza93/ttags
 Enable it:
 
 ```lua
-nx.lsp.enable("ttags")
+btv.lsp.enable("ttags")
 ```
 
 Default config:
@@ -14890,7 +14890,7 @@ yarn global add turbo-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("turbo_ls")
+btv.lsp.enable("turbo_ls")
 ```
 
 Default config:
@@ -14921,7 +14921,7 @@ npm i -g turtle-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("turtle_ls")
+btv.lsp.enable("turtle_ls")
 ```
 
 Default config:
@@ -14949,7 +14949,7 @@ https://github.com/tqchen/ffi-navigator?tab=readme-ov-file#installation
 Enable it:
 
 ```lua
-nx.lsp.enable("tvm_ffi_navigator")
+btv.lsp.enable("tvm_ffi_navigator")
 ```
 
 Default config:
@@ -14980,7 +14980,7 @@ npm install -g twiggy-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("twiggy_language_server")
+btv.lsp.enable("twiggy_language_server")
 ```
 
 Default config:
@@ -15010,7 +15010,7 @@ For installation instructions, please refer to the [ty documentation](https://gi
 Enable it:
 
 ```lua
-nx.lsp.enable("ty")
+btv.lsp.enable("ty")
 ```
 
 Default config:
@@ -15045,7 +15045,7 @@ https://github.com/ruby/typeprof
 Enable it:
 
 ```lua
-nx.lsp.enable("typeprof")
+btv.lsp.enable("typeprof")
 ```
 
 Default config:
@@ -15076,7 +15076,7 @@ on GitHub: https://github.com/tekumara/typos-lsp/releases
 Enable it:
 
 ```lua
-nx.lsp.enable("typos_lsp")
+btv.lsp.enable("typos_lsp")
 ```
 
 Default config:
@@ -15096,7 +15096,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -15110,7 +15110,7 @@ Language server for Typst.
 Enable it:
 
 ```lua
-nx.lsp.enable("typst_lsp")
+btv.lsp.enable("typst_lsp")
 ```
 
 Default config:
@@ -15140,7 +15140,7 @@ The Uiua interpreter can be installed with `cargo install uiua`
 Enable it:
 
 ```lua
-nx.lsp.enable("uiua")
+btv.lsp.enable("uiua")
 ```
 
 Default config:
@@ -15172,7 +15172,7 @@ npm i ungrammar-languageserver -g
 Enable it:
 
 ```lua
-nx.lsp.enable("ungrammar_languageserver")
+btv.lsp.enable("ungrammar_languageserver")
 ```
 
 Default config:
@@ -15204,7 +15204,7 @@ https://github.com/unisonweb/unison/blob/trunk/docs/language-server.markdown
 Enable it:
 
 ```lua
-nx.lsp.enable("unison")
+btv.lsp.enable("unison")
 ```
 
 Default config:
@@ -15219,7 +15219,7 @@ Default config:
 - `root_dir`: [../lsp/unison.lua:10](../lsp/unison.lua#L10)
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -15236,7 +15236,7 @@ npm i unocss-language-server -g
 Enable it:
 
 ```lua
-nx.lsp.enable("unocss")
+btv.lsp.enable("unocss")
 ```
 
 Default config:
@@ -15302,15 +15302,15 @@ cargo install --path .
 Note: To activate properly nvim needs to know the uvl filetype.
 You can add it via:
 ```lua
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.uvl" }, function()
-  nx.bo.filetype = "uvl"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.uvl" }, function()
+  btv.bo.filetype = "uvl"
 end)
 ```
 
 Enable it:
 
 ```lua
-nx.lsp.enable("uvls")
+btv.lsp.enable("uvls")
 ```
 
 Default config:
@@ -15340,7 +15340,7 @@ V language server.
 Enable it:
 
 ```lua
-nx.lsp.enable("v_analyzer")
+btv.lsp.enable("v_analyzer")
 ```
 
 Default config:
@@ -15368,18 +15368,18 @@ You can install vacuum using mason or follow the instructions here: https://gith
 The file types are not detected automatically, you can register them manually (see below) or override the filetypes:
 
 ```lua
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*openapi*%.ya?ml" }, function()
-  nx.bo.filetype = "yaml.openapi"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*openapi*%.ya?ml" }, function()
+  btv.bo.filetype = "yaml.openapi"
 end)
-nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*openapi*%.json" }, function()
-  nx.bo.filetype = "json.openapi"
+btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*openapi*%.json" }, function()
+  btv.bo.filetype = "json.openapi"
 end)
 ```
 
 Enable it:
 
 ```lua
-nx.lsp.enable("vacuum")
+btv.lsp.enable("vacuum")
 ```
 
 Default config:
@@ -15405,7 +15405,7 @@ https://github.com/vala-lang/vala-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("vala_ls")
+btv.lsp.enable("vala_ls")
 ```
 
 Default config:
@@ -15430,7 +15430,7 @@ An implementation of the Language Server Protocol (LSP) for the Vale command-lin
 Enable it:
 
 ```lua
-nx.lsp.enable("vale_ls")
+btv.lsp.enable("vale_ls")
 ```
 
 Default config:
@@ -15458,7 +15458,7 @@ A Language Server Protocol implementation for VectorCode, a code repository inde
 Enable it:
 
 ```lua
-nx.lsp.enable("vectorcode_server")
+btv.lsp.enable("vectorcode_server")
 ```
 
 Default config:
@@ -15472,7 +15472,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -15491,7 +15491,7 @@ See https://github.com/chipsalliance/verible/tree/master/verilog/tools/ls/README
 Enable it:
 
 ```lua
-nx.lsp.enable("verible")
+btv.lsp.enable("verible")
 ```
 
 Default config:
@@ -15531,7 +15531,7 @@ cargo install --git https://github.com/vivekmalneedi/veridian.git
 Enable it:
 
 ```lua
-nx.lsp.enable("veridian")
+btv.lsp.enable("veridian")
 ```
 
 Default config:
@@ -15564,7 +15564,7 @@ Language server for Veryl
 Enable it:
 
 ```lua
-nx.lsp.enable("veryl_ls")
+btv.lsp.enable("veryl_ls")
 ```
 
 Default config:
@@ -15596,26 +15596,26 @@ This language server requires Java 17 or higher. You can build the jar from sour
 You can override the default command by manually configuring it like this:
 
 ```lua
-nx.lsp.config("vespa_ls", {
+btv.lsp.config("vespa_ls", {
   cmd = { 'java', '-jar', '/path/to/vespa-language-server.jar' },
 })
 ```
 
 The project root is determined based on the presence of a `.git` directory.
 
-To make nxvim recognize the proper filetypes, add the following setting in `init.lua`:
+To make bemtvi recognize the proper filetypes, add the following setting in `init.lua`:
 
-    nx.on({ "BufReadPost", "BufNewFile" }, { pattern = { "*.profile", "*.sd" } }, function()
-      nx.bo.filetype = "sd"
+    btv.on({ "BufReadPost", "BufNewFile" }, { pattern = { "*.profile", "*.sd" } }, function()
+      btv.bo.filetype = "sd"
     end)
-    nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.yql" }, function()
-      nx.bo.filetype = "yql"
+    btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.yql" }, function()
+      btv.bo.filetype = "yql"
     end)
 
 Enable it:
 
 ```lua
-nx.lsp.enable("vespa_ls")
+btv.lsp.enable("vespa_ls")
 ```
 
 Default config:
@@ -15666,7 +15666,7 @@ lib1.files = [
 Enable it:
 
 ```lua
-nx.lsp.enable("vhdl_ls")
+btv.lsp.enable("vhdl_ls")
 ```
 
 Default config:
@@ -15699,7 +15699,7 @@ cargo install vimdoc-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("vimdoc_ls")
+btv.lsp.enable("vimdoc_ls")
 ```
 
 Default config:
@@ -15734,7 +15734,7 @@ npm install -g vim-language-server
 Enable it:
 
 ```lua
-nx.lsp.enable("vimls")
+btv.lsp.enable("vimls")
 ```
 
 Default config:
@@ -15781,7 +15781,7 @@ For manual installation, download the .vsix archive file from the
 GitHub releases. Then, configure `cmd` to run the Node script at the unpacked location:
 
 ```lua
-nx.lsp.config("visualforce_ls", {
+btv.lsp.config("visualforce_ls", {
   cmd = {
     'node',
     '/path/to/unpacked/archive/extension/node_modules/@salesforce/salesforcedx-visualforce-language-server/out/src/visualforceServer.js',
@@ -15793,7 +15793,7 @@ nx.lsp.config("visualforce_ls", {
 Enable it:
 
 ```lua
-nx.lsp.enable("visualforce_ls")
+btv.lsp.enable("visualforce_ls")
 ```
 
 Default config:
@@ -15823,7 +15823,7 @@ V language server.
 Enable it:
 
 ```lua
-nx.lsp.enable("vls")
+btv.lsp.enable("vls")
 ```
 
 Default config:
@@ -15849,7 +15849,7 @@ Renamed to [vue_ls](#vue_ls)
 Enable it:
 
 ```lua
-nx.lsp.enable("volar")
+btv.lsp.enable("volar")
 ```
 
 Default config:
@@ -15876,7 +15876,7 @@ Renamed to [vsrocq](#vsrocq)
 Enable it:
 
 ```lua
-nx.lsp.enable("vscoqtop")
+btv.lsp.enable("vscoqtop")
 ```
 
 Default config:
@@ -15903,7 +15903,7 @@ https://github.com/rocq-prover/vsrocq
 Enable it:
 
 ```lua
-nx.lsp.enable("vsrocq")
+btv.lsp.enable("vsrocq")
 ```
 
 Default config:
@@ -15943,8 +15943,8 @@ Since v3.0.0, the Vue language server requires `vtsls` to support TypeScript.
 ```
 -- Point this at wherever @vue/language-server is installed. For a project-local
 -- copy, resolve it asynchronously rather than hard-coding a path:
---   local util = require('nxvim-lspconfig.util')
---   local dir = nx.await(util.find_upward(nx.buf.name(0), 'node_modules'))
+--   local util = require('bemtvi-lspconfig.util')
+--   local dir = btv.await(util.find_upward(btv.buf.name(0), 'node_modules'))
 local vue_language_server_path = '/path/to/@vue/language-server'
 local vue_plugin = {
   name = '@vue/typescript-plugin',
@@ -15952,7 +15952,7 @@ local vue_plugin = {
   languages = { 'vue' },
   configNamespace = 'typescript',
 }
-nx.lsp.config('vtsls', {
+btv.lsp.config('vtsls', {
   settings = {
     vtsls = {
       tsserver = {
@@ -15973,7 +15973,7 @@ nx.lsp.config('vtsls', {
 You must make sure the Vue language server is setup. For example,
 
 ```
-nx.lsp.enable('vue_ls')
+btv.lsp.enable('vue_ls')
 ```
 
 See `vue_ls` section and https://github.com/vuejs/language-tools/wiki/Neovim for more information.
@@ -15990,7 +15990,7 @@ This includes the same Deno-excluding logic from `ts_ls`. It is not recommended 
 Enable it:
 
 ```lua
-nx.lsp.enable("vtsls")
+btv.lsp.enable("vtsls")
 ```
 
 Default config:
@@ -16038,7 +16038,7 @@ NOTE: Since v3.0.0, the Vue Language Server [no longer supports takeover mode](h
 Enable it:
 
 ```lua
-nx.lsp.enable("vue_ls")
+btv.lsp.enable("vue_ls")
 ```
 
 Default config:
@@ -16068,7 +16068,7 @@ It also provides an out-of-the-box formatter (a.k.a. pretty printer) for WebAsse
 Enable it:
 
 ```lua
-nx.lsp.enable("wasm_language_tools")
+btv.lsp.enable("wasm_language_tools")
 ```
 
 Default config:
@@ -16141,7 +16141,7 @@ See the [configuration documentation](https://github.com/wc-toolkit/wc-language-
 Enable it:
 
 ```lua
-nx.lsp.enable("wc_language_server")
+btv.lsp.enable("wc_language_server")
 ```
 
 Default config:
@@ -16198,7 +16198,7 @@ cargo install --git https://github.com/wgsl-analyzer/wgsl-analyzer wgsl-analyzer
 Enable it:
 
 ```lua
-nx.lsp.enable("wgsl_analyzer")
+btv.lsp.enable("wgsl_analyzer")
 ```
 
 Default config:
@@ -16216,7 +16216,7 @@ Default config:
   ```
 - `settings`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 
 ---
@@ -16243,7 +16243,7 @@ PacletInstall["LSPServer"]
 Enable it:
 
 ```lua
-nx.lsp.enable("wolfram_lsp")
+btv.lsp.enable("wolfram_lsp")
 ```
 
 Default config:
@@ -16300,7 +16300,7 @@ the a glob pattern relative to the detected project root. Check `:LspInfo` to de
 root.
 
 ```lua
-nx.lsp.config('yamlls', {
+btv.lsp.config('yamlls', {
   ...
   settings = {
     yaml = {
@@ -16322,7 +16322,7 @@ Currently, kubernetes is special-cased in yammls, see the following upstream iss
 To override a schema to use a specific k8s schema version (for example, to use 1.18):
 
 ```lua
-nx.lsp.config('yamlls', {
+btv.lsp.config('yamlls', {
   ...
   settings = {
     yaml = {
@@ -16339,7 +16339,7 @@ nx.lsp.config('yamlls', {
 Enable it:
 
 ```lua
-nx.lsp.enable("yamlls")
+btv.lsp.enable("yamlls")
 ```
 
 Default config:
@@ -16377,7 +16377,7 @@ A Language Server for the YANG data modeling language.
 Enable it:
 
 ```lua
-nx.lsp.enable("yang_lsp")
+btv.lsp.enable("yang_lsp")
 ```
 
 Default config:
@@ -16409,7 +16409,7 @@ Language Server: https://github.com/avast/yls
 Enable it:
 
 ```lua
-nx.lsp.enable("yls")
+btv.lsp.enable("yls")
 ```
 
 Default config:
@@ -16437,7 +16437,7 @@ Language server for the Ziggy data serialization format
 Enable it:
 
 ```lua
-nx.lsp.enable("ziggy")
+btv.lsp.enable("ziggy")
 ```
 
 Default config:
@@ -16465,7 +16465,7 @@ Language server for schema files of the Ziggy data serialization format
 Enable it:
 
 ```lua
-nx.lsp.enable("ziggy_schema")
+btv.lsp.enable("ziggy_schema")
 ```
 
 Default config:
@@ -16499,7 +16499,7 @@ See `zizmor`'s [documentation](https://docs.zizmor.sh/) for additional documenta
 Enable it:
 
 ```lua
-nx.lsp.enable("zizmor")
+btv.lsp.enable("zizmor")
 ```
 
 Default config:
@@ -16519,7 +16519,7 @@ Default config:
   ```
 - `init_options`:
   ```lua
-  nx.json.empty_object()
+  btv.json.empty_object()
   ```
 - `root_dir`: [../lsp/zizmor.lua:20](../lsp/zizmor.lua#L20)
 
@@ -16534,7 +16534,7 @@ A plain text note-taking assistant
 Enable it:
 
 ```lua
-nx.lsp.enable("zk")
+btv.lsp.enable("zk")
 ```
 
 Default config:
@@ -16567,7 +16567,7 @@ Zig LSP implementation + Zig Language Server
 Enable it:
 
 ```lua
-nx.lsp.enable("zls")
+btv.lsp.enable("zls")
 ```
 
 Default config:
@@ -16599,7 +16599,7 @@ A high-performance Python Language Server and type checker implemented in Rust, 
 Enable it:
 
 ```lua
-nx.lsp.enable("zuban")
+btv.lsp.enable("zuban")
 ```
 
 Default config:

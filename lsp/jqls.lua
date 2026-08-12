@@ -13,8 +13,8 @@
 --- Note: To activate properly nvim needs to know the jq filetype.
 --- You can add it via:
 --- ```lua
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.jq" }, function()
----   nx.bo.filetype = "jq"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.jq" }, function()
+---   btv.bo.filetype = "jq"
 --- end)
 --- ```
 

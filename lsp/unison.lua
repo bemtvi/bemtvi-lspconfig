@@ -2,7 +2,7 @@
 ---
 --- https://github.com/unisonweb/unison/blob/trunk/docs/language-server.markdown
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "nc", "localhost", os.getenv("UNISON_LSP_PORT") or "5757" },

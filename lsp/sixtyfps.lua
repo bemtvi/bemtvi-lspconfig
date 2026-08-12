@@ -13,8 +13,8 @@
 --- This can be added via an autocmd:
 ---
 --- ```lua
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.60" }, function()
----   nx.bo.filetype = "sixtyfps"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.60" }, function()
+---   btv.bo.filetype = "sixtyfps"
 --- end)
 --- ```
 ---

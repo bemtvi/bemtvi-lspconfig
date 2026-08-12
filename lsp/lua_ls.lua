@@ -8,38 +8,38 @@
 ---
 --- The default `cmd` assumes that the `lua-language-server` binary can be found in `$PATH`.
 ---
---- ## Editing your nxvim config or a plugin
+--- ## Editing your bemtvi config or a plugin
 ---
---- Point the server at the Lua nxvim actually runs, and tell it about `nx` — otherwise
---- every `nx.*` call in your config is flagged as an undefined global.
+--- Point the server at the Lua bemtvi actually runs, and tell it about `btv` — otherwise
+--- every `btv.*` call in your config is flagged as an undefined global.
 ---
 --- ```lua
---- nx.lsp.config('lua_ls', {
+--- btv.lsp.config('lua_ls', {
 ---   settings = {
 ---     Lua = {
----       -- nxvim's Lua is PUC 5.4, NOT LuaJIT (which nxvim dropped).
+---       -- bemtvi's Lua is PUC 5.4, NOT LuaJIT (which bemtvi dropped).
 ---       runtime = {
 ---         version = 'Lua 5.4',
----         -- Resolve `require("mod")` the way nxvim's runtimepath does.
+---         -- Resolve `require("mod")` the way bemtvi's runtimepath does.
 ---         path = { 'lua/?.lua', 'lua/?/init.lua' },
 ---       },
 ---       diagnostics = {
----         -- `nx` is the plugin API; `vim` is the bounded compat surface.
----         globals = { 'nx', 'vim' },
+---         -- `btv` is the plugin API; `vim` is the bounded compat surface.
+---         globals = { 'btv', 'vim' },
 ---       },
 ---       workspace = {
 ---         checkThirdParty = false,
 ---         -- Every `lua/` directory on the runtimepath, so a plugin's modules
 ---         -- resolve. This can be slow on a large plugin set.
----         library = nx.runtime_file('lua', true),
+---         library = btv.runtime_file('lua', true),
 ---       },
 ---     },
 ---   },
 --- })
 --- ```
 ---
---- There is no on-disk copy of the `nx.*` API to add to `workspace.library` — the
---- prelude is compiled into the editor — so `nx` is declared a global rather than
+--- There is no on-disk copy of the `btv.*` API to add to `workspace.library` — the
+--- prelude is compiled into the editor — so `btv` is declared a global rather than
 --- type-checked. The rendered API reference is in the book and at `:help`.
 ---
 --- See `lua-language-server`'s [documentation](https://luals.github.io/wiki/settings/) for an explanation of the above fields:

@@ -41,8 +41,8 @@ return {
       showReferencesCommandId = "client.showReferences",
     },
   },
-  -- Upstream turns code lenses on per buffer here. nxvim has no code-lens surface at
-  -- all (no `nx.lsp.codelens`), so there is nothing to enable; the `showReferences`
+  -- Upstream turns code lenses on per buffer here. bemtvi has no code-lens surface at
+  -- all (no `btv.lsp.codelens`), so there is nothing to enable; the `showReferences`
   -- capability above is advertised and the server's lenses go unrendered. Closing this
   -- needs a code-lens layer in the core, not a call here.
 }

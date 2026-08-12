@@ -12,18 +12,18 @@
 ---
 ---
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   -- The binary ships under either spelling depending on how it was installed, and
   -- `--hostPID` is what lets OmniSharp exit when the editor does — both are lookups, so
   -- the argv is built per server rather than at load time.
-  cmd = nx.async(function()
+  cmd = btv.async(function()
     return {
-      nx.await(util.which("OmniSharp")) and "OmniSharp" or "omnisharp",
+      btv.await(util.which("OmniSharp")) and "OmniSharp" or "omnisharp",
       "-z", -- https://github.com/OmniSharp/omnisharp-vscode/pull/4300
       "--hostPID",
-      tostring(nx.pid()),
+      tostring(btv.pid()),
       "DotNet:enablePackageRestore=false",
       "--encoding",
       "utf-8",

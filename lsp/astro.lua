@@ -26,7 +26,7 @@
 ---       astro-language-server
 ---     ];
 ---     initLua = ''
----       nx.lsp.config('astro', {
+---       btv.lsp.config('astro', {
 ---         init_options = {
 ---           typescript = {
 ---             tsdk = '${pkgs.typescript}/lib/node_modules/typescript/lib',
@@ -34,14 +34,14 @@
 ---         },
 ---       })
 ---
----       nx.lsp.enable('astro')
+---       btv.lsp.enable('astro')
 ---
 ---       -- ...
 ---     '';
 ---   };
 --- }
 --- ```
---- The path can also be passed via a variable, like `nx.g.tsdk = "${pkgs.typescript}/lib/node_modules/typescript/lib"`, and then read from the Lua config.
+--- The path can also be passed via a variable, like `btv.g.tsdk = "${pkgs.typescript}/lib/node_modules/typescript/lib"`, and then read from the Lua config.
 ---
 --- WARNING: TypeScript 7.x dropped `tsserverlibrary.js` from its npm package, so
 --- `typescript.tsdk` cannot resolve from a local or global TS 7.x install. Pin to
@@ -52,12 +52,12 @@
 --- `util.get_typescript_server_path`, then fall back to `npm root -g`:
 ---
 --- ```lua
---- nx.lsp.config('astro', {
----   before_init = nx.async(function(_, config)
----     local util = require("nxvim-lspconfig.util")
----     local tsdk = nx.await(util.get_typescript_server_path(config.root_dir))
+--- btv.lsp.config('astro', {
+---   before_init = btv.async(function(_, config)
+---     local util = require("bemtvi-lspconfig.util")
+---     local tsdk = btv.await(util.get_typescript_server_path(config.root_dir))
 ---     if tsdk == '' then
----       local npm_root = nx.await(util.output({ 'npm', 'root', '-g' }))
+---       local npm_root = btv.await(util.output({ 'npm', 'root', '-g' }))
 ---       if npm_root then
 ---         tsdk = util.joinpath(npm_root, 'typescript/lib')
 ---       end
@@ -67,7 +67,7 @@
 ---     config.init_options.typescript.tsdk = tsdk
 ---   end),
 --- })
---- nx.lsp.enable('astro')
+--- btv.lsp.enable('astro')
 --- ```
 ---
 --- For other package managers, replace `npm root -g` with:
@@ -76,7 +76,7 @@
 --- - yarn classic: `yarn global dir` .. `/node_modules`
 --- - yarn berry (>=2): globals unsupported — use a workspace-local TS instead
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = util.node_cmd("astro-ls"),
@@ -85,14 +85,14 @@ return {
   init_options = {
     typescript = {},
   },
-  before_init = nx.async(function(_init_params, config)
+  before_init = btv.async(function(_init_params, config)
     if
       config.init_options
       and config.init_options.typescript
       and not config.init_options.typescript.tsdk
     then
       config.init_options.typescript.tsdk =
-        nx.await(util.get_typescript_server_path(config.root_dir))
+        btv.await(util.get_typescript_server_path(config.root_dir))
     end
   end),
 }

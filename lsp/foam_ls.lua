@@ -7,7 +7,7 @@
 --- npm install -g foam-language-server
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "foam-ls", "--stdio" },
@@ -16,13 +16,13 @@ return {
   -- none above the file does the enclosing repo — then the file's own directory — stand
   -- in. The marker is a nested path rather than a plain name, so this walks the
   -- ancestors itself instead of declaring `root_markers`.
-  root_dir = nx.async(function(bufnr)
+  root_dir = btv.async(function(bufnr)
     local fname = util.bufname(bufnr)
     for path in util.ancestors(fname) do
-      if nx.await(util.exists(util.joinpath(path, "system/controlDict"))) then
+      if btv.await(util.exists(util.joinpath(path, "system/controlDict"))) then
         return path
       end
     end
-    return nx.await(util.root(bufnr, { ".git" })) or util.dirname(fname)
+    return btv.await(util.root(bufnr, { ".git" })) or util.dirname(fname)
   end),
 }

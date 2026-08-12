@@ -17,8 +17,8 @@
 --- or
 ---
 --- ```lua
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.polar" }, function()
----   nx.bo.filetype = "polar"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.polar" }, function()
+---   btv.bo.filetype = "polar"
 --- end)
 ---
 --- Alternatively, you may use a syntax plugin like https://github.com/osohq/polar.vim

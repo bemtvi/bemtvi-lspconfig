@@ -9,7 +9,7 @@
 --- npm install [-g] svelte-language-server
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = util.node_cmd("svelteserver"),
@@ -32,21 +32,21 @@ return {
   root_dir = util.root_dir(function(bufnr, on_dir)
     local fname = util.bufname(bufnr)
     -- Svelte LSP only supports file:// schema. https://github.com/sveltejs/language-tools/issues/2777
-    if nx.await(util.exists(fname)) then
+    if btv.await(util.exists(fname)) then
       local root_markers =
         { "package-lock.json", "yarn.lock", "pnpm-lock.yaml", "bun.lockb", "bun.lock", "deno.lock" }
       root_markers = { root_markers, { ".git" } }
       -- We fallback to the current working directory if no project root is found
-      local project_root = nx.await(util.root(bufnr, root_markers)) or util.cwd()
+      local project_root = btv.await(util.root(bufnr, root_markers)) or util.cwd()
       on_dir(project_root)
     end
   end),
   on_attach = function(client, bufnr)
     -- Workaround to trigger reloading JS/TS files
     -- See https://github.com/sveltejs/language-tools/issues/2008
-    nx.autocmd.create("BufWritePost", {
+    btv.autocmd.create("BufWritePost", {
       pattern = { "*.js", "*.ts" },
-      group = nx.augroup.create("lspconfig.svelte", {}),
+      group = btv.augroup.create("lspconfig.svelte", {}),
       callback = function(ctx)
         -- internal API to sync changes that have not yet been saved to the file system
         ---@diagnostic disable-next-line: param-type-mismatch

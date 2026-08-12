@@ -12,30 +12,30 @@
 ---   specified as compile_commands.json, see https://clangd.llvm.org/installation#compile_commandsjson
 
 -- https://clangd.llvm.org/extensions.html#switch-between-sourceheader
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local function switch_source_header(bufnr, client)
   local method_name = "textDocument/switchSourceHeader"
   ---@diagnostic disable-next-line:param-type-mismatch
   if not client or not client:supports_method(method_name) then
-    return nx.notify(
+    return btv.notify(
       ("method %s is not supported by any servers active on the current buffer"):format(method_name)
     )
   end
-  local params = nx.lsp.text_document_params(bufnr)
+  local params = btv.lsp.text_document_params(bufnr)
   ---@diagnostic disable-next-line:param-type-mismatch
   client:request(method_name, params, function(err, result)
     if err then
       error(tostring(err))
     end
     if not result then
-      nx.notify("corresponding file cannot be determined")
+      btv.notify("corresponding file cannot be determined")
       return
     end
     -- The server answers with a URI, and `show_document` is the native open — it
     -- reuses the buffer already holding that file (even one opened under a
     -- cwd-relative name) instead of stranding a second one, and honors 'switchbuf'.
-    nx.lsp.show_document({ uri = result })
+    btv.lsp.show_document({ uri = result })
   end, bufnr)
 end
 
@@ -43,9 +43,9 @@ local function symbol_info(bufnr, client)
   local method_name = "textDocument/symbolInfo"
   ---@diagnostic disable-next-line:param-type-mismatch
   if not client or not client:supports_method(method_name) then
-    return nx.notify("Clangd client not found", nx.log.levels.ERROR)
+    return btv.notify("Clangd client not found", btv.log.levels.ERROR)
   end
-  local params = nx.lsp.position_params({ encoding = client.offset_encoding })
+  local params = btv.lsp.position_params({ encoding = client.offset_encoding })
   ---@diagnostic disable-next-line:param-type-mismatch
   client:request(method_name, params, function(err, res)
     if err or #res == 0 then
@@ -54,10 +54,10 @@ local function symbol_info(bufnr, client)
     end
     local container = string.format("container: %s", res[1].containerName) ---@type string
     local name = string.format("name: %s", res[1].name) ---@type string
-    -- Transient by construction: `nx.ui.float` without `persist` is dismissed by
+    -- Transient by construction: `btv.ui.float` without `persist` is dismissed by
     -- the next key and sizes itself to its contents, which is everything upstream's
     -- height / width / focusable arguments were arranging by hand.
-    nx.ui.float({ name, container }, { title = "Symbol Info" })
+    btv.ui.float({ name, container }, { title = "Symbol Info" })
   end, bufnr)
 end
 

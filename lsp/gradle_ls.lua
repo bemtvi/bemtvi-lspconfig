@@ -6,7 +6,7 @@
 ---
 --- If you're setting this up manually, build vscode-gradle using `./gradlew installDist` and point `cmd` to the `gradle-language-server` generated in the build directory
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 -- Installed as a `.bat` wrapper on Windows, a bare script elsewhere.
 local bin_name = util.exe("gradle-language-server", ".bat")

@@ -25,7 +25,7 @@
 --- Snyk requires you to trust directories before scanning them. To avoid being prompted every time:
 ---
 --- ```lua
---- nx.lsp.config('snyk_ls', {
+--- btv.lsp.config('snyk_ls', {
 ---   init_options = {
 ---     trustedFolders = {
 ---       '/Users/yourname/projects',  -- Trust your projects directory
@@ -90,11 +90,11 @@ return {
     activateSnykOpenSource = "true", -- Scan open source dependencies
     activateSnykCode = "false", -- Scan your code for vulnerabilities
     activateSnykIac = "true", -- Scan infrastructure as code
-    integrationName = "nxvim",
-    integrationVersion = nx.version(),
+    integrationName = "bemtvi",
+    integrationVersion = btv.version(),
     -- An absent token has to cross as an explicit null: `nil` would drop the key, which
     -- the server reads as "unchanged" rather than "none".
-    token = nx.env.get("SNYK_TOKEN") or nx.json.null,
+    token = btv.env.get("SNYK_TOKEN") or btv.json.null,
     trustedFolders = {}, -- Add your trusted directories here to avoid being prompted every time
   },
 }

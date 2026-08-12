@@ -4,7 +4,7 @@
 ---
 --- Markdown Preview Language Server
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = {
@@ -18,9 +18,9 @@ return {
   root_markers = { ".marksman.toml", ".git" },
   filetypes = { "markdown" },
   on_attach = function(client, bufnr)
-    nx.autocmd.create("BufEnter", {
+    btv.autocmd.create("BufEnter", {
       pattern = { "*.md" },
-      group = nx.augroup.create("lspconfig.mpls.focus", { clear = true }),
+      group = btv.augroup.create("lspconfig.mpls.focus", { clear = true }),
       callback = function(ctx)
         ---@diagnostic disable-next-line:param-type-mismatch
         client:notify("mpls/editorDidChangeFocus", { uri = ctx.match })

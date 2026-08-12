@@ -8,7 +8,7 @@
 --- nimble install nimlsp
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "nimlsp" },

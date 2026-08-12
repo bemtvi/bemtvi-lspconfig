@@ -13,8 +13,8 @@
 --- or
 ---
 --- ```lua
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.als" }, function()
----   nx.bo.filetype = "alloy"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.als" }, function()
+---   btv.bo.filetype = "alloy"
 --- end)
 --- ```
 ---

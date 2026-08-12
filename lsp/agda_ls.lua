@@ -4,7 +4,7 @@
 ---
 --- Language Server for Agda.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "als" },

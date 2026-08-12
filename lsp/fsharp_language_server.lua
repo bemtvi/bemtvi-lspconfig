@@ -13,7 +13,7 @@
 ---
 --- `autocmd BufNewFile,BufRead *.fs,*.fsx,*.fsi set filetype=fsharp`
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "dotnet", "FSharpLanguageServer.dll" },

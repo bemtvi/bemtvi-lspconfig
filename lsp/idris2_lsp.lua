@@ -29,7 +29,7 @@
 --- latest commit on the `master` branch, and set a reminder to check the Idris2-Lsp
 --- repo for the release of a compatible versioned branch.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "idris2-lsp" },

@@ -7,7 +7,7 @@
 --- `gitlab-ci-ls` can be installed via cargo:
 --- cargo install gitlab-ci-ls
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local cache_dir = util.joinpath(util.home(), ".cache/gitlab-ci-ls")
 

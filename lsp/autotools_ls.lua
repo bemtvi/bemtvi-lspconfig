@@ -9,7 +9,7 @@
 ---
 --- Language server for autoconf, automake and make using tree sitter in python.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local root_files = { "configure.ac", "Makefile", "Makefile.am", "*.mk" }
 

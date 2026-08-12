@@ -20,8 +20,8 @@ return {
     ".git",
   },
   on_exit = function(code, _, _)
-    nx.schedule(function()
-      nx.notify("Closing Pyrefly LSP exited with code: " .. code, nx.log.levels.INFO)
+    btv.schedule(function()
+      btv.notify("Closing Pyrefly LSP exited with code: " .. code, btv.log.levels.INFO)
     end)
   end,
 }

@@ -12,14 +12,14 @@
 --- npx flow lsp --help
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
-  cmd = nx.async(function(_dispatchers, config)
-    if nx.await(util.which("flow")) then
+  cmd = btv.async(function(_dispatchers, config)
+    if btv.await(util.which("flow")) then
       return { "flow", "lsp" }
     end
-    local flow_bin = nx.await(util.local_bin((config or {}).root_dir, "flow"))
+    local flow_bin = btv.await(util.local_bin((config or {}).root_dir, "flow"))
     if flow_bin then
       return { flow_bin, "lsp" }
     end

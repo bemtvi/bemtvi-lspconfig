@@ -15,10 +15,10 @@
 --- the languages you want it to attach to:
 ---
 --- ```lua
---- nx.lsp.config("ctags_lsp", {
+--- btv.lsp.config("ctags_lsp", {
 ---   filetypes = { 'lua', 'ruby', 'go' },
 --- })
---- nx.lsp.enable("ctags_lsp")
+--- btv.lsp.enable("ctags_lsp")
 --- ```
 
 return {

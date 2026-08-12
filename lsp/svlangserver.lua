@@ -10,7 +10,7 @@
 --- $ npm install -g @imc-trading/svlangserver
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "svlangserver" },
@@ -34,7 +34,7 @@ return {
       client:exec_cmd({
         title = "Build Index",
         command = "systemverilog.build_index",
-        arguments = { nx.expand("<cword>") },
+        arguments = { btv.expand("<cword>") },
       }, { bufnr = bufnr })
     end, {
       desc = "Generates hierarchy for the given module",

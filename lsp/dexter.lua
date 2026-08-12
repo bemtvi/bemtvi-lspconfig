@@ -33,14 +33,14 @@
 ---
 --- Configuration example:
 --- ```lua
---- nx.lsp.config("dexter", {
+--- btv.lsp.config("dexter", {
 ---   init_options = {
 ---     followDelegates = true,  -- jump through defdelegate to the target function
 ---     -- stdlibPath = "",      -- override Elixir stdlib path (auto-detected)
 ---     -- debug = false,        -- verbose logging to stderr (view with :LspLog)
 ---   },
 --- })
---- nx.lsp.enable("dexter")
+--- btv.lsp.enable("dexter")
 --- ```
 ---
 

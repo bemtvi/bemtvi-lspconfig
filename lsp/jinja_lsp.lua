@@ -5,8 +5,8 @@
 --- The file types are not detected automatically, you can register them manually (see below) or override the filetypes:
 ---
 --- ```lua
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = { "*.jinja", "*.jinja2", "*.j2" } }, function()
----   nx.bo.filetype = "jinja"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = { "*.jinja", "*.jinja2", "*.j2" } }, function()
+---   btv.bo.filetype = "jinja"
 --- end)
 --- ```
 

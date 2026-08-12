@@ -18,30 +18,30 @@
 --- 3. Enable inline completion in LspAttach event (see example below)
 ---
 --- NOTE: the server's headline feature — `textDocument/inlineCompletion`, the greyed-out
---- suggestion accepted with a keypress — has no home in nxvim yet. `nx.complete` is a
+--- suggestion accepted with a keypress — has no home in bemtvi yet. `btv.complete` is a
 --- popup-menu engine; inline completion is a different surface (virtual text at the
---- cursor, its own accept/cycle keys), and nxvim has no client for it. Sign-in, chat and
+--- cursor, its own accept/cycle keys), and bemtvi has no client for it. Sign-in, chat and
 --- the feature-state reporting below all work; the inline suggestions are requested by
 --- nothing. Closing this needs an inline-completion layer in the core.
 
 -- Configuration
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local config = {
   gitlab_url = "https://gitlab.com",
   -- This is a oauth application created from tachyons-gitlab account with `api` scope
   client_id = "00bb391f527d2e77b3467b0b6b900151cc6a28dcfb18fa1249871e43bc3e5832",
   scopes = "api",
-  token_file = util.joinpath(nx.stdpath("data"), "gitlab_duo_oauth.json"),
+  token_file = util.joinpath(btv.stdpath("data"), "gitlab_duo_oauth.json"),
 }
 
 -- An OAuth form POST. Upstream shells out to `curl` and `:wait()`s on it, blocking the
--- editor for a network round trip; `nx.http.fetch` is nxvim's own HTTP, promise-shaped,
+-- editor for a network round trip; `btv.http.fetch` is bemtvi's own HTTP, promise-shaped,
 -- and works identically over a daemon or in the browser. Resolves `{ status, body }`
 -- even on a transport failure (status 0), so every caller branches on the status
 -- instead of wrapping the call.
-local oauth_post = nx.async(function(url, data)
-  local res = nx.await(nx.http
+local oauth_post = btv.async(function(url, data)
+  local res = btv.await(btv.http
     .fetch(url, {
       method = "POST",
       headers = { ["Content-Type"] = "application/x-www-form-urlencoded" },
@@ -54,20 +54,20 @@ local oauth_post = nx.async(function(url, data)
 end)
 
 -- Token management
-local save_token = nx.async(function(token_data)
+local save_token = btv.async(function(token_data)
   token_data.saved_at = os.time()
-  local ok = pcall(nx.await, nx.fs.write(config.token_file, nx.json.encode(token_data)))
+  local ok = pcall(btv.await, btv.fs.write(config.token_file, btv.json.encode(token_data)))
   return ok
 end)
 
-local load_token = nx.async(function()
-  local blob = nx.await(nx.fs.read_text(config.token_file):catch(function()
+local load_token = btv.async(function()
+  local blob = btv.await(btv.fs.read_text(config.token_file):catch(function()
     return nil
   end))
   if type(blob) ~= "string" or blob == "" then
     return nil
   end
-  local ok, decoded = pcall(nx.json.decode, blob)
+  local ok, decoded = pcall(btv.json.decode, blob)
   return ok and decoded or nil
 end)
 
@@ -79,10 +79,10 @@ local function is_token_expired(token_data)
   return token_age >= (token_data.expires_in - 60) -- 60 second buffer
 end
 
-local refresh_access_token = nx.async(function(refresh_token)
-  nx.notify("Refreshing GitLab OAuth token...", nx.log.levels.INFO)
+local refresh_access_token = btv.async(function(refresh_token)
+  btv.notify("Refreshing GitLab OAuth token...", btv.log.levels.INFO)
 
-  local response = nx.await(
+  local response = btv.await(
     oauth_post(
       config.gitlab_url .. "/oauth/token",
       string.format(
@@ -94,26 +94,26 @@ local refresh_access_token = nx.async(function(refresh_token)
   )
 
   if response.status ~= 200 then
-    nx.notify(
+    btv.notify(
       "Failed to refresh token: " .. (response.body or "Unknown error"),
-      nx.log.levels.ERROR
+      btv.log.levels.ERROR
     )
     return nil
   end
 
-  local ok, body = pcall(nx.json.decode, response.body)
+  local ok, body = pcall(btv.json.decode, response.body)
   if not ok or not body.access_token then
-    nx.notify("Invalid refresh response", nx.log.levels.ERROR)
+    btv.notify("Invalid refresh response", btv.log.levels.ERROR)
     return nil
   end
 
-  nx.await(save_token(body))
-  nx.notify("Token refreshed successfully", nx.log.levels.INFO)
+  btv.await(save_token(body))
+  btv.notify("Token refreshed successfully", btv.log.levels.INFO)
   return body
 end)
 
-local get_valid_token = nx.async(function()
-  local token_data = nx.await(load_token())
+local get_valid_token = btv.async(function()
+  local token_data = btv.await(load_token())
 
   if not token_data then
     return { status = "no_token" }
@@ -121,7 +121,7 @@ local get_valid_token = nx.async(function()
 
   if is_token_expired(token_data) then
     if token_data.refresh_token then
-      local new_token_data = nx.await(refresh_access_token(token_data.refresh_token))
+      local new_token_data = btv.await(refresh_access_token(token_data.refresh_token))
       if new_token_data then
         return { token = new_token_data.access_token, status = "refreshed" }
       end
@@ -134,8 +134,8 @@ local get_valid_token = nx.async(function()
 end)
 
 -- OAuth Device Flow
-local device_authorization = nx.async(function()
-  local response = nx.await(
+local device_authorization = btv.async(function()
+  local response = btv.await(
     oauth_post(
       config.gitlab_url .. "/oauth/authorize_device",
       string.format("client_id=%s&scope=%s", config.client_id, config.scopes)
@@ -143,28 +143,28 @@ local device_authorization = nx.async(function()
   )
 
   if response.status ~= 200 then
-    nx.notify("Device authorization failed: " .. response.status, nx.log.levels.ERROR)
+    btv.notify("Device authorization failed: " .. response.status, btv.log.levels.ERROR)
     return nil
   end
 
-  local ok, data = pcall(nx.json.decode, response.body)
+  local ok, data = pcall(btv.json.decode, response.body)
   if not ok then
-    nx.notify("Failed to parse device authorization response", nx.log.levels.ERROR)
+    btv.notify("Failed to parse device authorization response", btv.log.levels.ERROR)
     return nil
   end
 
   return data
 end)
 
-local poll_for_token = nx.async(function(device_code, interval, client)
+local poll_for_token = btv.async(function(device_code, interval, client)
   local max_attempts = 60
   local attempts = 0
 
   local poll
-  poll = nx.async(function()
+  poll = btv.async(function()
     attempts = attempts + 1
 
-    local response = nx.await(
+    local response = btv.await(
       oauth_post(
         config.gitlab_url .. "/oauth/token",
         string.format(
@@ -175,15 +175,15 @@ local poll_for_token = nx.async(function(device_code, interval, client)
       )
     )
 
-    local ok, body = pcall(nx.json.decode, response.body)
+    local ok, body = pcall(btv.json.decode, response.body)
     if not ok then
-      nx.notify("Failed to parse token response", nx.log.levels.ERROR)
+      btv.notify("Failed to parse token response", btv.log.levels.ERROR)
       return
     end
 
     if response.status == 200 and body.access_token then
-      nx.await(save_token(body))
-      nx.notify("GitLab Duo authentication successful!", nx.log.levels.INFO)
+      btv.await(save_token(body))
+      btv.notify("GitLab Duo authentication successful!", btv.log.levels.INFO)
 
       client:notify("workspace/didChangeConfiguration", {
         settings = {
@@ -196,56 +196,56 @@ local poll_for_token = nx.async(function(device_code, interval, client)
 
     if body.error == "authorization_pending" then
       if attempts < max_attempts then
-        nx.timer(poll, interval * 1000)
+        btv.timer(poll, interval * 1000)
       else
-        nx.notify("Authorization timed out", nx.log.levels.ERROR)
+        btv.notify("Authorization timed out", btv.log.levels.ERROR)
       end
     elseif body.error == "slow_down" then
-      nx.timer(poll, (interval + 5) * 1000)
+      btv.timer(poll, (interval + 5) * 1000)
     elseif body.error == "access_denied" then
-      nx.notify("Authorization denied", nx.log.levels.ERROR)
+      btv.notify("Authorization denied", btv.log.levels.ERROR)
     elseif body.error == "expired_token" then
-      nx.notify("Device code expired. Please run :LspGitLabDuoSignIn again", nx.log.levels.ERROR)
+      btv.notify("Device code expired. Please run :LspGitLabDuoSignIn again", btv.log.levels.ERROR)
     else
-      nx.notify("OAuth error: " .. (body.error or "unknown"), nx.log.levels.ERROR)
+      btv.notify("OAuth error: " .. (body.error or "unknown"), btv.log.levels.ERROR)
     end
   end)
 
   -- Only the first attempt is awaited; a pending authorization re-arms itself on a
   -- timer, so the command returns while the user is still in the browser.
-  nx.await(poll())
+  btv.await(poll())
 end)
 
-local sign_in = nx.async(function(client)
-  nx.notify("Starting GitLab device authorization...", nx.log.levels.INFO)
+local sign_in = btv.async(function(client)
+  btv.notify("Starting GitLab device authorization...", btv.log.levels.INFO)
 
-  local auth_data = nx.await(device_authorization())
+  local auth_data = btv.await(device_authorization())
   if not auth_data then
     return
   end
 
-  nx.ui.open(auth_data.verification_uri .. "?user_code=" .. auth_data.user_code)
+  btv.ui.open(auth_data.verification_uri .. "?user_code=" .. auth_data.user_code)
 
-  nx.await(poll_for_token(auth_data.device_code, auth_data.interval or 5, client))
+  btv.await(poll_for_token(auth_data.device_code, auth_data.interval or 5, client))
 end)
 
-local sign_out = nx.async(function(client)
-  local ok = pcall(nx.await, nx.fs.remove(config.token_file))
+local sign_out = btv.async(function(client)
+  local ok = pcall(btv.await, btv.fs.remove(config.token_file))
   if ok then
-    nx.notify("Signed out. Token removed.", nx.log.levels.INFO)
+    btv.notify("Signed out. Token removed.", btv.log.levels.INFO)
     client:notify("workspace/didChangeConfiguration", {
       settings = { token = "" },
     })
   else
-    nx.notify("Failed to remove token file", nx.log.levels.ERROR)
+    btv.notify("Failed to remove token file", btv.log.levels.ERROR)
   end
 end)
 
-local show_status = nx.async(function()
-  local token_data = nx.await(load_token())
+local show_status = btv.async(function()
+  local token_data = btv.await(load_token())
 
   if not token_data then
-    nx.notify("Not signed in. Run :LspGitLabDuoSignIn to authenticate.", nx.log.levels.INFO)
+    btv.notify("Not signed in. Run :LspGitLabDuoSignIn to authenticate.", btv.log.levels.INFO)
     return
   end
 
@@ -268,7 +268,7 @@ local show_status = nx.async(function()
     end
   end
 
-  nx.notify(table.concat(info, "\n"), nx.log.levels.INFO)
+  btv.notify(table.concat(info, "\n"), btv.log.levels.INFO)
 end)
 
 return {
@@ -307,21 +307,21 @@ return {
   },
   init_options = {
     editorInfo = {
-      name = "nxvim",
-      version = nx.version(),
+      name = "bemtvi",
+      version = btv.version(),
     },
     editorPluginInfo = {
-      name = "nxvim LSP",
-      version = nx.version(),
+      name = "bemtvi LSP",
+      version = btv.version(),
     },
     ide = {
-      name = "nxvim",
-      version = nx.version(),
-      vendor = "nxvim",
+      name = "bemtvi",
+      version = btv.version(),
+      vendor = "bemtvi",
     },
     extension = {
-      name = "nxvim LSP Client",
-      version = nx.version(),
+      name = "bemtvi LSP Client",
+      version = btv.version(),
     },
   },
   settings = {
@@ -337,28 +337,28 @@ return {
       streamCodeGenerations = false,
     },
   },
-  on_init = nx.async(function(client)
+  on_init = btv.async(function(client)
     -- Handle token validation errors
     client.handlers["$/gitlab/token/check"] = function(_, result)
       if result and result.reason then
-        nx.notify(
+        btv.notify(
           string.format("GitLab Duo: %s - %s", result.reason, result.message or ""),
-          nx.log.levels.ERROR
+          btv.log.levels.ERROR
         )
 
         -- Try to refresh if possible
-        nx.async(function()
-          local token_data = nx.await(load_token())
+        btv.async(function()
+          local token_data = btv.await(load_token())
           if not (token_data and token_data.refresh_token) then
-            return nx.notify("Run :LspGitLabDuoSignIn to authenticate", nx.log.levels.WARN)
+            return btv.notify("Run :LspGitLabDuoSignIn to authenticate", btv.log.levels.WARN)
           end
-          local new_token_data = nx.await(refresh_access_token(token_data.refresh_token))
+          local new_token_data = btv.await(refresh_access_token(token_data.refresh_token))
           if new_token_data then
             client:notify("workspace/didChangeConfiguration", {
               settings = { token = new_token_data.access_token, baseUrl = config.gitlab_url },
             })
           else
-            nx.notify("Run :LspGitLabDuoSignIn to re-authenticate", nx.log.levels.WARN)
+            btv.notify("Run :LspGitLabDuoSignIn to re-authenticate", btv.log.levels.WARN)
           end
         end)()
       end
@@ -368,13 +368,13 @@ return {
     client.handlers["$/gitlab/featureStateChange"] = function(_, result)
       if result and result.state == "disabled" and result.checks then
         for _, check in ipairs(result.checks) do
-          nx.notify(string.format("GitLab Duo: %s", check.message or check.id), nx.log.levels.WARN)
+          btv.notify(string.format("GitLab Duo: %s", check.message or check.id), btv.log.levels.WARN)
         end
       end
     end
 
     -- Check authentication status
-    local auth = nx.await(get_valid_token())
+    local auth = btv.await(get_valid_token())
     local token, status = auth.token, auth.status
 
     if token then
@@ -387,12 +387,12 @@ return {
     end
 
     if not token then
-      nx.notify(
+      btv.notify(
         "GitLab Duo: Not authenticated. Run :LspGitLabDuoSignIn to sign in.",
-        nx.log.levels.WARN
+        btv.log.levels.WARN
       )
     elseif status == "refreshed" then
-      nx.notify("GitLab Duo: Token refreshed automatically", nx.log.levels.INFO)
+      btv.notify("GitLab Duo: Token refreshed automatically", btv.log.levels.INFO)
     end
   end),
   on_attach = function(client, bufnr)

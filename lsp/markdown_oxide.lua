@@ -9,10 +9,10 @@
 ---
 --- Check the readme to see how to properly setup.
 
----@param client nx.lsp.Client
+---@param client btv.lsp.Client
 ---@param bufnr integer
 ---@param cmd string
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local function command_factory(client, bufnr, cmd)
   return client:exec_cmd({

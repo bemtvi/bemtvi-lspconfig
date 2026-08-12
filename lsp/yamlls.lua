@@ -23,7 +23,7 @@
 --- root.
 ---
 --- ```lua
---- nx.lsp.config('yamlls', {
+--- btv.lsp.config('yamlls', {
 ---   ...
 ---   settings = {
 ---     yaml = {
@@ -45,7 +45,7 @@
 --- To override a schema to use a specific k8s schema version (for example, to use 1.18):
 ---
 --- ```lua
---- nx.lsp.config('yamlls', {
+--- btv.lsp.config('yamlls', {
 ---   ...
 ---   settings = {
 ---     yaml = {
@@ -59,7 +59,7 @@
 --- })
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = util.node_cmd("yaml-language-server"),

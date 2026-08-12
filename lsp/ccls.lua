@@ -9,7 +9,7 @@
 --- Customization options are passed to ccls at initialization time via init_options, a list of available options can be found [here](https://github.com/MaskRay/ccls/wiki/Customization#initialization-options). For example:
 ---
 --- ```lua
---- nx.lsp.config("ccls", {
+--- btv.lsp.config("ccls", {
 ---   init_options = {
 ---     compilationDatabaseDirectory = "build";
 ---     index = {
@@ -22,22 +22,22 @@
 --- })
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local function switch_source_header(client, bufnr)
   local method_name = "textDocument/switchSourceHeader"
-  local params = nx.lsp.text_document_params(bufnr)
+  local params = btv.lsp.text_document_params(bufnr)
   client:request(method_name, params, function(err, result)
     if err then
       error(tostring(err))
     end
     if not result then
-      nx.notify("corresponding file cannot be determined")
+      btv.notify("corresponding file cannot be determined")
       return
     end
     -- The native open: reuses the buffer already holding that file and honors
     -- 'switchbuf', rather than opening a second buffer for the same header.
-    nx.lsp.show_document({ uri = result })
+    btv.lsp.show_document({ uri = result })
   end, bufnr)
 end
 

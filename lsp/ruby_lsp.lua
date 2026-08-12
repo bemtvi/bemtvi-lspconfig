@@ -13,7 +13,7 @@
 --- ```
 
 return {
-  -- Run from the project root so the right Gemfile is in scope — nxvim's default.
+  -- Run from the project root so the right Gemfile is in scope — bemtvi's default.
   cmd = { "ruby-lsp" },
   filetypes = { "ruby", "eruby" },
   root_markers = { "Gemfile", ".git" },

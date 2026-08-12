@@ -5,28 +5,28 @@
 --- A plain text note-taking assistant
 
 ---List notes
----@param client nx.lsp.Client
+---@param client btv.lsp.Client
 ---@param bufnr integer
 ---@param opts table
 ---@param action fun(path: string, title: string)
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local function zk_list(client, bufnr, opts, action)
-  opts = nx.tbl.extend("keep", { select = { "path", "title" } }, opts or {})
+  opts = btv.tbl.extend("keep", { select = { "path", "title" } }, opts or {})
   client:exec_cmd({
     title = "ZkList",
     command = "zk.list",
     arguments = { util.bufname(bufnr), opts },
   }, { bufnr = bufnr }, function(err, result)
     if err ~= nil then
-      nx.echo({ { "zk.list error\n" }, { nx.inspect(err) } }, true, {})
+      btv.echo({ { "zk.list error\n" }, { btv.inspect(err) } }, true, {})
       return
     end
     if result == nil then
       return
     end
 
-    nx.ui.select(result, {
+    btv.ui.select(result, {
       format_item = function(item)
         return item.title
       end,
@@ -51,18 +51,18 @@ return {
         arguments = { util.bufname(bufnr) },
       }, { bufnr = bufnr }, function(err, result)
         if err ~= nil then
-          nx.echo({ { "zk.index error\n" }, { nx.inspect(err) } }, true, {})
+          btv.echo({ { "zk.index error\n" }, { btv.inspect(err) } }, true, {})
           return
         end
         if result ~= nil then
-          nx.echo({ { nx.inspect(result) } }, false, {})
+          btv.echo({ { btv.inspect(result) } }, false, {})
         end
       end)
     end, { desc = "ZkIndex" })
 
     util.buf_command(bufnr, "LspZkList", function()
       zk_list(client, bufnr, {}, function(path)
-        nx.cmd("edit " .. nx.fname.escape(path))
+        btv.cmd("edit " .. btv.fname.escape(path))
       end)
     end, { desc = "ZkList" })
 
@@ -73,21 +73,21 @@ return {
         arguments = { util.bufname(bufnr) },
       }, { bufnr = bufnr }, function(err, result)
         if err ~= nil then
-          nx.echo({ { "zk.tag.list error\n" }, { nx.inspect(err) } }, true, {})
+          btv.echo({ { "zk.tag.list error\n" }, { btv.inspect(err) } }, true, {})
           return
         end
         if result == nil then
           return
         end
 
-        nx.ui.select(result, {
+        btv.ui.select(result, {
           format_item = function(item)
             return item.name
           end,
         }, function(item)
           if item ~= nil then
             zk_list(client, bufnr, { tags = { item.name } }, function(path)
-              nx.cmd("edit " .. nx.fname.escape(path))
+              btv.cmd("edit " .. btv.fname.escape(path))
             end)
           end
         end)
@@ -106,11 +106,11 @@ return {
         },
       }, { bufnr = bufnr }, function(err, result)
         if err ~= nil then
-          nx.echo({ { "zk.new error\n" }, { nx.inspect(err) } }, true, {})
+          btv.echo({ { "zk.new error\n" }, { btv.inspect(err) } }, true, {})
           return
         end
 
-        nx.cmd("edit " .. nx.fname.escape(result.path))
+        btv.cmd("edit " .. btv.fname.escape(result.path))
       end)
     end, { desc = "ZkNew [title] [dir]", nargs = "*" })
   end,

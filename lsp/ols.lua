@@ -4,7 +4,7 @@
 ---
 --- `Odin Language Server`.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "ols" },

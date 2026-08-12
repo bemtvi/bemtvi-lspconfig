@@ -20,35 +20,35 @@
 --   },
 --   ```
 --   where `<my_folder>` has to be the folder you extracted the nuget package to.
--- - for all other platforms put the extracted folder on `$PATH` (nxvim resolves the
---   server through it; `nx.env.get('PATH')` is what the editor sees)
+-- - for all other platforms put the extracted folder on `$PATH` (bemtvi resolves the
+--   server through it; `btv.env.get('PATH')` is what the editor sees)
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
-local group = nx.augroup.create("lspconfig.roslyn_ls", { clear = true })
+local group = btv.augroup.create("lspconfig.roslyn_ls", { clear = true })
 
 -- Buffers whose refresh autocmd is already armed. `on_attach` runs once per (client,
 -- buffer), and a buffer served by two roslyn instances would otherwise pull its
 -- diagnostics twice per save.
 local armed = {}
 
----@param client nx.lsp.Client
+---@param client btv.lsp.Client
 ---@param target string
 local function on_init_sln(client, target)
-  nx.notify("Initializing: " .. target, nx.log.levels.TRACE, { title = "roslyn_ls" })
+  btv.notify("Initializing: " .. target, btv.log.levels.TRACE, { title = "roslyn_ls" })
   ---@diagnostic disable-next-line: param-type-mismatch
   client:notify("solution/open", {
     solution = util.uri_from_path(target),
   })
 end
 
----@param client nx.lsp.Client
+---@param client btv.lsp.Client
 ---@param project_files string[]
 local function on_init_project(client, project_files)
-  nx.notify("Initializing: projects", nx.log.levels.TRACE, { title = "roslyn_ls" })
+  btv.notify("Initializing: projects", btv.log.levels.TRACE, { title = "roslyn_ls" })
   ---@diagnostic disable-next-line: param-type-mismatch
   client:notify("project/open", {
-    projects = nx.tbl.map(function(file)
+    projects = btv.tbl.map(function(file)
       return util.uri_from_path(file)
     end, project_files),
   })
@@ -58,17 +58,17 @@ end
 ---them refresh after a save or after project initialization finishes.
 ---
 ---Upstream enumerates the server's dynamically-registered diagnostic identifiers and
----pulls once per identifier per attached buffer. nxvim does not model dynamic
+---pulls once per identifier per attached buffer. bemtvi does not model dynamic
 ---capability registration, so there is no identifier list to enumerate; the pull goes
 ---out without one, which is the request the server answers with its default set.
 ---@param client table
 local function refresh_diagnostics(client)
-  for _, buf in ipairs(nx.buf.list()) do
+  for _, buf in ipairs(btv.buf.list()) do
     local attached = false
-    for _, c in ipairs(nx.lsp.clients({ bufnr = buf, name = client.name })) do
+    for _, c in ipairs(btv.lsp.clients({ bufnr = buf, name = client.name })) do
       attached = attached or c.id == client.id
     end
-    if attached and nx.buf.is_loaded(buf) then
+    if attached and btv.buf.is_loaded(buf) then
       client:request("textDocument/diagnostic", {
         textDocument = { uri = util.uri_from_buf(buf) },
       })
@@ -79,22 +79,22 @@ end
 local function roslyn_handlers()
   return {
     ["workspace/projectInitializationComplete"] = function(_, _, ctx)
-      nx.notify(
+      btv.notify(
         "Roslyn project initialization complete",
-        nx.log.levels.INFO,
+        btv.log.levels.INFO,
         { title = "roslyn_ls" }
       )
-      local client = assert(nx.lsp.client_by_id(ctx.client_id))
+      local client = assert(btv.lsp.client_by_id(ctx.client_id))
       refresh_diagnostics(client)
-      return nx.json.null
+      return btv.json.null
     end,
     ["razor/provideDynamicFileInfo"] = function(_, _, _)
-      nx.notify(
+      btv.notify(
         "Razor is not supported.\nPlease use https://github.com/seblyng/roslyn.nvim",
-        nx.log.levels.WARN,
+        btv.log.levels.WARN,
         { title = "roslyn_ls" }
       )
-      return nx.json.null
+      return btv.json.null
     end,
   }
 end
@@ -112,34 +112,34 @@ local function is_decompiled(bufname)
   return bufname:find("[/\\]MetadataAsSource[/\\]") ~= nil
 end
 
----@param client nx.lsp.Client
+---@param client btv.lsp.Client
 ---@param action table
 local function apply_action(client, action)
   if action.edit then
-    nx.lsp.apply_workspace_edit(action.edit, { encoding = client.offset_encoding })
+    btv.lsp.apply_workspace_edit(action.edit, { encoding = client.offset_encoding })
   end
   if action.command then
     client:exec_cmd(action.command)
   end
 end
 
----@param client nx.lsp.Client
+---@param client btv.lsp.Client
 ---@param command table
 ---@param bufnr integer
 local function handle_fix_all_action(client, command, bufnr)
   local arg = command.arguments and command.arguments[1]
   if type(arg) ~= "table" then
-    nx.notify("roslyn_ls: invalid fixAllCodeAction arguments", nx.log.levels.ERROR)
+    btv.notify("roslyn_ls: invalid fixAllCodeAction arguments", btv.log.levels.ERROR)
     return
   end
 
   local flavors = arg.FixAllFlavors
-  if type(flavors) ~= "table" or nx.tbl.is_empty(flavors) then
-    nx.notify("roslyn_ls: fixAllCodeAction has no FixAllFlavors", nx.log.levels.WARN)
+  if type(flavors) ~= "table" or btv.tbl.is_empty(flavors) then
+    btv.notify("roslyn_ls: fixAllCodeAction has no FixAllFlavors", btv.log.levels.WARN)
     return
   end
 
-  nx.ui.select(flavors, {
+  btv.ui.select(flavors, {
     prompt = "Fix All Scope:",
   }, function(chosen_scope)
     if not chosen_scope then
@@ -152,9 +152,9 @@ local function handle_fix_all_action(client, command, bufnr)
       scope = chosen_scope,
     }, function(err, resolved)
       if err then
-        nx.notify(
+        btv.notify(
           "roslyn_ls: fixAllCodeAction resolve error: " .. (err.message or tostring(err)),
-          nx.log.levels.ERROR
+          btv.log.levels.ERROR
         )
         return
       end
@@ -169,9 +169,9 @@ return {
   name = "roslyn_ls",
   -- Installed either as the nuget's own binary or as the `roslyn-language-server` dotnet
   -- tool, so which one is present decides the argv.
-  cmd = nx.async(function()
+  cmd = btv.async(function()
     return {
-      nx.await(util.which("Microsoft.CodeAnalysis.LanguageServer"))
+      btv.await(util.which("Microsoft.CodeAnalysis.LanguageServer"))
           and "Microsoft.CodeAnalysis.LanguageServer"
         or "roslyn-language-server",
       "--stdio",
@@ -181,13 +181,13 @@ return {
   -- Fixes LSP navigation in decompiled files for systems with symlinked TMPDIR (macOS):
   -- the server writes the decompiled file under the resolved path and reports it under
   -- the symlinked one, so the editor opens a path the server has never heard of.
-  before_init = nx.async(function(_init_params, config)
-    local tmpdir = nx.env.get("TMPDIR")
+  before_init = btv.async(function(_init_params, config)
+    local tmpdir = btv.env.get("TMPDIR")
     if tmpdir and tmpdir ~= "" then
-      local real = nx.await(nx.fs.realpath(tmpdir):catch(function()
+      local real = btv.await(btv.fs.realpath(tmpdir):catch(function()
         return tmpdir
       end))
-      config.cmd_env = nx.tbl.extend("force", config.cmd_env or {}, { TMPDIR = real })
+      config.cmd_env = btv.tbl.extend("force", config.cmd_env or {}, { TMPDIR = real })
     end
   end),
 
@@ -196,7 +196,7 @@ return {
 
   commands = {
     ["roslyn.client.completionComplexEdit"] = function(command, ctx)
-      local client = assert(nx.lsp.client_by_id(ctx.client_id))
+      local client = assert(btv.lsp.client_by_id(ctx.client_id))
       local args = command.arguments or {}
       local uri, edit = args[1], args[2]
 
@@ -212,22 +212,22 @@ return {
             },
           },
         }
-        nx.lsp.apply_workspace_edit(workspace_edit, { encoding = client.offset_encoding })
+        btv.lsp.apply_workspace_edit(workspace_edit, { encoding = client.offset_encoding })
       ---@diagnostic enable: undefined-field
       else
-        nx.notify(
-          "roslyn_ls: completionComplexEdit args not understood: " .. nx.inspect(args),
-          nx.log.levels.WARN
+        btv.notify(
+          "roslyn_ls: completionComplexEdit args not understood: " .. btv.inspect(args),
+          btv.log.levels.WARN
         )
       end
     end,
 
     ["roslyn.client.nestedCodeAction"] = function(command, ctx)
-      local client = assert(nx.lsp.client_by_id(ctx.client_id))
+      local client = assert(btv.lsp.client_by_id(ctx.client_id))
       local arg = command.arguments and command.arguments[1]
 
       if type(arg) ~= "table" then
-        nx.notify("roslyn_ls: invalid nestedCodeAction arguments", nx.log.levels.ERROR)
+        btv.notify("roslyn_ls: invalid nestedCodeAction arguments", btv.log.levels.ERROR)
         return
       end
 
@@ -239,7 +239,7 @@ return {
         if action.data and not action.edit and not action.command then
           client:request("codeAction/resolve", action, function(err, resolved)
             if err then
-              nx.notify(err.message or tostring(err), nx.log.levels.ERROR)
+              btv.notify(err.message or tostring(err), btv.log.levels.ERROR)
               return
             end
             if resolved then
@@ -249,8 +249,8 @@ return {
           return
         end
 
-        local nested = nx.list.is_list(action) and action or action.NestedCodeActions
-        if type(nested) ~= "table" or nx.tbl.is_empty(nested) then
+        local nested = btv.list.is_list(action) and action or action.NestedCodeActions
+        if type(nested) ~= "table" or btv.tbl.is_empty(nested) then
           apply_action(client, action)
           return
         end
@@ -260,7 +260,7 @@ return {
           return
         end
 
-        nx.ui.select(nested, {
+        btv.ui.select(nested, {
           prompt = action.title or "Select code action",
           format_item = function(item)
             return item.title or (item.command and item.command.title) or "Unnamed action"
@@ -276,7 +276,7 @@ return {
     end,
 
     ["roslyn.client.fixAllCodeAction"] = function(command, ctx)
-      local client = assert(nx.lsp.client_by_id(ctx.client_id))
+      local client = assert(btv.lsp.client_by_id(ctx.client_id))
       handle_fix_all_action(client, command, ctx.bufnr)
     end,
   },
@@ -287,7 +287,7 @@ return {
     -- doesn't belong to any solution of its own — it was jumped into from one. Serve it
     -- from the server already running, and decline the buffer when there is none.
     if is_decompiled(bufname) then
-      local client = nx.lsp.clients({ name = "roslyn_ls" })[1]
+      local client = btv.lsp.clients({ name = "roslyn_ls" })[1]
       if client then
         cb(client.config.root_dir)
       end
@@ -296,15 +296,15 @@ return {
 
     -- A solution roots the server ahead of a bare project, wherever each is found:
     -- rooting at a nested .csproj inside a solution loses the cross-project references.
-    local root_dir = nx.await(util.root_pattern("*.sln", "*.slnx", "*.csproj")(bufname))
+    local root_dir = btv.await(util.root_pattern("*.sln", "*.slnx", "*.csproj")(bufname))
     if root_dir then
       cb(root_dir)
     end
   end),
   on_init = {
-    nx.async(function(client)
+    btv.async(function(client)
       local root_dir = client.config.root_dir
-      local entries = nx.await(nx.fs.readdir(root_dir):catch(function()
+      local entries = btv.await(btv.fs.readdir(root_dir):catch(function()
         return {}
       end))
 
@@ -312,10 +312,10 @@ return {
       local projects = {}
       for _, entry in ipairs(entries) do
         if entry.type == "file" then
-          if nx.str.endswith(entry.name, ".sln") or nx.str.endswith(entry.name, ".slnx") then
+          if btv.str.endswith(entry.name, ".sln") or btv.str.endswith(entry.name, ".slnx") then
             return on_init_sln(client, util.joinpath(root_dir, entry.name))
           end
-          if nx.str.endswith(entry.name, ".csproj") then
+          if btv.str.endswith(entry.name, ".csproj") then
             projects[#projects + 1] = util.joinpath(root_dir, entry.name)
           end
         end
@@ -337,7 +337,7 @@ return {
     end
     armed[bufnr] = true
 
-    nx.autocmd.create({ "BufWritePost", "InsertLeave" }, {
+    btv.autocmd.create({ "BufWritePost", "InsertLeave" }, {
       group = group,
       buffer = bufnr,
       callback = function()

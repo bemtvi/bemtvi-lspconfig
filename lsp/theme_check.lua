@@ -10,7 +10,7 @@
 --- If installed via Homebrew, `cmd` must be set to 'theme-check-liquid-server'
 ---
 --- ```lua
---- nx.lsp.config('theme_check, {
+--- btv.lsp.config('theme_check, {
 ---   cmd = { 'theme-check-liquid-server' }
 --- })
 --- ```

@@ -21,7 +21,7 @@
 --- Or you can modify the default `cmd` to include the full path to the Python interpreter.
 ---
 --- ```lua
---- nx.lsp.config("esbonio", {
+--- btv.lsp.config("esbonio", {
 ---   cmd = { '/path/to/virtualenv/bin/python', '-m', 'esbonio.server' }
 --- })
 --- ```
@@ -29,7 +29,7 @@
 --- Esbonio supports a number of config values passed as `init_options` on startup, for example.
 ---
 --- ```lua
---- nx.lsp.config("esbonio", {
+--- btv.lsp.config("esbonio", {
 ---   init_options = {
 ---     server = {
 ---       logLevel = "debug"

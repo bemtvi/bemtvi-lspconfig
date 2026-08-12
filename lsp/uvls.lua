@@ -12,8 +12,8 @@
 --- Note: To activate properly nvim needs to know the uvl filetype.
 --- You can add it via:
 --- ```lua
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.uvl" }, function()
----   nx.bo.filetype = "uvl"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.uvl" }, function()
+---   btv.bo.filetype = "uvl"
 --- end)
 --- ```
 

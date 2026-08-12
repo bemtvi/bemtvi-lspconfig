@@ -17,7 +17,7 @@
 --- ~ are not expanded) of your unzipped elixir-ls.
 ---
 --- ```lua
---- nx.lsp.config('elixirls', {
+--- btv.lsp.config('elixirls', {
 ---     -- Unix
 ---     cmd = { "/path/to/elixir-ls/language_server.sh" };
 ---     -- Windows
@@ -30,7 +30,7 @@
 --- directories upward, the second one (higher up) is chosen, with the assumption that it is the root of an umbrella
 --- app. Otherwise the directory containing the single mix.exs that was found is chosen.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "elixir-ls" },

@@ -31,8 +31,8 @@ return {
   root_markers = { "smithy-build.json", "build.gradle", "build.gradle.kts", ".git" },
   -- Upstream sets `message_level = 4` (LSP `MessageType.Log`) — a knob of its own
   -- deleted `lspconfig` framework, for how loud the server's `window/logMessage`
-  -- stream is in the client. nxvim logs every server message at one verbosity and has
-  -- no per-server dial, so the key is dropped rather than carried: `nx.lsp` doesn't
+  -- stream is in the client. bemtvi logs every server message at one verbosity and has
+  -- no per-server dial, so the key is dropped rather than carried: `btv.lsp` doesn't
   -- read it, and an unread key earns a "misspelled key?" warning on every buffer open.
   init_options = {
     statusBarProvider = "show-message",

@@ -4,7 +4,7 @@
 ---
 --- Installation: https://github.com/phan/phan#getting-started
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local cmd = {
   "phan",

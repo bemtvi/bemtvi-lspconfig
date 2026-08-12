@@ -8,7 +8,7 @@
 --- To manually set the config file or CSS entry-point, see:
 --- https://github.com/tailwindlabs/tailwindcss-intellisense#tailwindcssexperimentalconfigfile
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = util.node_cmd("tailwindcss-language-server"),
@@ -106,7 +106,7 @@ return {
     },
   },
   before_init = function(_init_params, config)
-    config.settings = nx.tbl.deep_extend("keep", config.settings, {
+    config.settings = btv.tbl.deep_extend("keep", config.settings, {
       editor = { tabSize = util.tabsize() },
     })
   end,
@@ -132,11 +132,11 @@ return {
       ".git",
     }
     local fname = util.bufname(bufnr)
-    root_files = nx.await(util.insert_package_json(root_files, "tailwindcss", fname))
-    root_files = nx.await(
+    root_files = btv.await(util.insert_package_json(root_files, "tailwindcss", fname))
+    root_files = btv.await(
       util.root_markers_with_field(root_files, { "mix.lock", "Gemfile.lock" }, "tailwind", fname)
     )
-    local found = nx.await(util.find_upward(fname, root_files))
+    local found = btv.await(util.find_upward(fname, root_files))
     if found then
       on_dir(util.dirname(found))
     end

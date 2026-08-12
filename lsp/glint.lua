@@ -14,7 +14,7 @@
 --- To use a global installation of `glint-language-server`,
 --- set the `init_options.glint.useGlobal` to `true`.
 ---
---- nx.lsp.config('glint', {
+--- btv.lsp.config('glint', {
 ---   init_options = {
 ---     glint = {
 ---       useGlobal = true,
@@ -22,15 +22,15 @@
 ---   },
 --- })
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
-  cmd = nx.async(function(_dispatchers, config)
+  cmd = btv.async(function(_dispatchers, config)
     config = config or {}
     ---@diagnostic disable-next-line: undefined-field
     local use_global = ((config.init_options or {}).glint or {}).useGlobal
     if not use_global then
-      local local_cmd = nx.await(util.local_bin(config.root_dir, "glint-language-server"))
+      local local_cmd = btv.await(util.local_bin(config.root_dir, "glint-language-server"))
       if local_cmd then
         return { local_cmd }
       end

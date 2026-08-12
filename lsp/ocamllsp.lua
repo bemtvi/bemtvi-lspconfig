@@ -10,13 +10,13 @@
 --- ```
 
 -- https://github.com/ocaml/ocaml-lsp/blob/master/ocaml-lsp-server/docs/ocamllsp/switchImplIntf-spec.md
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local function switch_impl_intf(bufnr, client)
   local method_name = "ocamllsp/switchImplIntf"
   ---@diagnostic disable-next-line:param-type-mismatch
   if not client or not client:supports_method(method_name) then
-    return nx.notify(
+    return btv.notify(
       ("method %s is not supported by any servers active on the current buffer"):format(method_name)
     )
   end
@@ -25,7 +25,7 @@ local function switch_impl_intf(bufnr, client)
   -- the method is about, so ask for it directly.
   local uri = util.uri_from_buf(bufnr)
   if uri == "" then
-    return nx.notify("could not get URI for current buffer")
+    return btv.notify("could not get URI for current buffer")
   end
   local params = { uri }
   ---@diagnostic disable-next-line:param-type-mismatch
@@ -34,16 +34,16 @@ local function switch_impl_intf(bufnr, client)
       error(tostring(err))
     end
     if not result or #result == 0 then
-      nx.notify("corresponding file cannot be determined")
+      btv.notify("corresponding file cannot be determined")
     elseif #result == 1 then
-      nx.lsp.show_document({ uri = result[1] })
+      btv.lsp.show_document({ uri = result[1] })
     else
-      nx.ui.select(result, {
+      btv.ui.select(result, {
         prompt = "Select an implementation/interface:",
         format_item = util.uri_to_path,
       }, function(choice)
         if choice then
-          nx.lsp.show_document({ uri = choice })
+          btv.lsp.show_document({ uri = choice })
         end
       end)
     end
@@ -69,7 +69,7 @@ local get_language_id = function(bufnr, ftype)
   if ftype == "ocaml" then
     -- `.mli` / `.mll` / `.mly` all arrive as filetype `ocaml`, and the server needs
     -- them told apart — so the extension, not the filetype, decides the languageId.
-    local ext = nx.fname.modify(util.bufname(bufnr), ":e")
+    local ext = btv.fname.modify(util.bufname(bufnr), ":e")
     return language_id_of_ext[ext] or language_id_of.ocaml
   else
     return language_id_of[ftype]

@@ -14,7 +14,7 @@
 ---
 --- ```lua
 ---   -- init.lua
----   nx.lsp.enable('jdtls')
+---   btv.lsp.enable('jdtls')
 --- ```
 ---
 --- You can also pass extra custom jvm arguments with the JDTLS_JVM_ARGS environment variable as a space separated list of arguments,
@@ -29,13 +29,13 @@
 ---   - [jdtls-launcher](https://github.com/eruizc-dev/jdtls-launcher) (Includes lombok support by default)
 ---     ```lua
 ---       -- init.lua
----       nx.lsp.config('jdtls', { cmd = { 'jdtls' } })
+---       btv.lsp.config('jdtls', { cmd = { 'jdtls' } })
 ---     ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local function get_jdtls_cache_dir()
-  return util.joinpath(nx.stdpath("cache"), "jdtls")
+  return util.joinpath(btv.stdpath("cache"), "jdtls")
 end
 
 local function get_jdtls_workspace_dir()
@@ -44,7 +44,7 @@ end
 
 local function get_jdtls_jvm_args()
   local args = {}
-  for a in string.gmatch(nx.env.get("JDTLS_JVM_ARGS") or "", "%S+") do
+  for a in string.gmatch(btv.env.get("JDTLS_JVM_ARGS") or "", "%S+") do
     table.insert(args, string.format("--jvm-arg=%s", a))
   end
   return args
@@ -80,9 +80,9 @@ return {
     end
 
     -- `$JDTLS_JVM_ARGS` becomes one `--jvm-arg=` per entry. Upstream splices them with
-    -- `unpack()`, which Lua 5.4 (nxvim's only backend) spells `table.unpack`; appending
+    -- `unpack()`, which Lua 5.4 (bemtvi's only backend) spells `table.unpack`; appending
     -- the list is the same result without depending on which one is in scope.
-    return nx.list.extend({ "jdtls", "-data", data_dir }, get_jdtls_jvm_args())
+    return btv.list.extend({ "jdtls", "-data", data_dir }, get_jdtls_jvm_args())
   end,
   filetypes = { "java" },
   root_markers = { root_markers1, root_markers2 },

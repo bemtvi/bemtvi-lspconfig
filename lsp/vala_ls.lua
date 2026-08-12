@@ -2,13 +2,13 @@
 ---
 --- https://github.com/vala-lang/vala-language-server
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 ---Does `dir` hold the meson.build that DECLARES the project? A meson tree has a
 ---`meson.build` in every subdirectory, but only the top one opens with `project()` —
 ---the rest are includes. The first non-blank, non-comment statement decides it.
-local declares_project = nx.async(function(dir)
-  local text = nx.await(nx.fs.read_text(util.joinpath(dir, "meson.build")):catch(function()
+local declares_project = btv.async(function(dir)
+  local text = btv.await(btv.fs.read_text(util.joinpath(dir, "meson.build")):catch(function()
     return nil
   end))
   if type(text) ~= "string" then
@@ -29,13 +29,13 @@ end)
 return {
   cmd = { "vala-language-server" },
   filetypes = { "vala", "genie" },
-  root_dir = nx.async(function(bufnr)
+  root_dir = btv.async(function(bufnr)
     local fname = util.bufname(bufnr)
     for dir in util.ancestors(fname) do
-      if nx.await(declares_project(dir)) then
+      if btv.await(declares_project(dir)) then
         return dir
       end
     end
-    return nx.await(util.root_of_path(fname, { ".git" }))
+    return btv.await(util.root_of_path(fname, { ".git" }))
   end),
 }

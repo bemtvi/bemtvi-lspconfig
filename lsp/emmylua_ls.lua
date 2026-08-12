@@ -15,24 +15,24 @@
 --- See the emmylua_ls [configuration guide](https://github.com/EmmyLuaLs/emmylua-analyzer-rust/blob/main/docs/config/emmyrc_json_EN.md)
 --- for settings documentation.
 ---
---- ## Editing your nxvim config or a plugin
+--- ## Editing your bemtvi config or a plugin
 ---
---- Point the server at the Lua nxvim actually runs, and tell it about `nx` — otherwise
---- every `nx.*` call in your config is flagged as an undefined global. A project that
+--- Point the server at the Lua bemtvi actually runs, and tell it about `btv` — otherwise
+--- every `btv.*` call in your config is flagged as an undefined global. A project that
 --- ships its own `.emmyrc.json` overrides all of this, so there is nothing to guard.
 ---
 --- ```lua
---- nx.lsp.config('emmylua_ls', {
+--- btv.lsp.config('emmylua_ls', {
 ---   settings = {
 ---     emmylua = {
----       -- nxvim's Lua is PUC 5.4, NOT LuaJIT (which nxvim dropped).
+---       -- bemtvi's Lua is PUC 5.4, NOT LuaJIT (which bemtvi dropped).
 ---       runtime = { version = 'Lua 5.4' },
----       -- `nx` is the plugin API; `vim` is the bounded compat surface.
----       diagnostics = { globals = { 'nx', 'vim' } },
+---       -- `btv` is the plugin API; `vim` is the bounded compat surface.
+---       diagnostics = { globals = { 'btv', 'vim' } },
 ---       workspace = {
 ---         -- Every `lua/` directory on the runtimepath, so a plugin's modules
 ---         -- resolve. This can be slow on a large plugin set.
----         library = nx.runtime_file('lua', true),
+---         library = btv.runtime_file('lua', true),
 ---       },
 ---     },
 ---   },

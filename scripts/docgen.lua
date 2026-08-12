@@ -1,12 +1,12 @@
 -- Generate doc/configs.md + doc/configs.txt — the per-server reference — from the
 -- 407 files in lsp/.
 --
---     nxvim --lua scripts/docgen.lua        # from the repo root
+--     bemtvi --lua scripts/docgen.lua        # from the repo root
 --     bash scripts/gen-configs.sh           # …or the wrapper, which finds the root
 --
 -- Ported from upstream nvim-lspconfig's `scripts/docgen.lua`, which ran under
--- `nvim -l` against `vim.fs` / `vim.inspect` / `vim.version`. This runs under nxvim
--- itself, against `nx.*` — the same rule the configs it documents follow.
+-- `nvim -l` against `vim.fs` / `vim.inspect` / `vim.version`. This runs under bemtvi
+-- itself, against `btv.*` — the same rule the configs it documents follow.
 --
 -- Why it exists at all: each `lsp/<name>.lua` carries a `---@brief` block saying how
 -- to install that server, what its settings mean, and what its config assumes.
@@ -16,23 +16,23 @@
 -- ## Determinism
 --
 -- A config table is rendered by LOADING it, and a handful of configs read host facts
--- at load time (`nx.stdpath`, `nx.version`, `nx.env.get`, `~`). Left alone, the
+-- at load time (`btv.stdpath`, `btv.version`, `btv.env.get`, `~`). Left alone, the
 -- generated page would carry the generating machine's home directory and version —
 -- different on every developer's checkout, so the committed file could never be
 -- checked for freshness, and `/home/<someone>` would ship in the docs. So those
 -- facts are frozen to fixed placeholders for the duration of the load. Upstream hit
 -- the same wall and stubbed `vim.fn.getpid` / `vim.version` the same way.
 --
--- Table rendering is ours rather than `nx.inspect`, for two reasons: `nx.inspect`
+-- Table rendering is ours rather than `btv.inspect`, for two reasons: `btv.inspect`
 -- prints a list as `{ 1 = "x" }`, which is not valid Lua on a page people copy from,
 -- and it does not promise a key order — and an unstable key order is the same
 -- freshness problem in a different coat.
 
-local root = nx.cwd()
-if not nx.await(nx.fs.exists(root .. "/lsp")) then
+local root = btv.cwd()
+if not btv.await(btv.fs.exists(root .. "/lsp")) then
   error("docgen: run me from the repo root (no lsp/ under " .. root .. ")")
 end
-nx._add_rtp(root)
+btv._add_rtp(root)
 
 -- ----- deterministic host facts ----------------------------------------------
 
@@ -41,52 +41,52 @@ nx._add_rtp(root)
 -- someone should type.
 local FAKE = {
   home = "/home/user",
-  data = "/home/user/.local/share/nxvim",
-  cache = "/home/user/.cache/nxvim",
-  state = "/home/user/.local/state/nxvim",
-  config = "/home/user/.config/nxvim",
-  log = "/home/user/.local/state/nxvim",
+  data = "/home/user/.local/share/bemtvi",
+  cache = "/home/user/.cache/bemtvi",
+  state = "/home/user/.local/state/bemtvi",
+  config = "/home/user/.config/bemtvi",
+  log = "/home/user/.local/state/bemtvi",
   cwd = "/home/user/project",
-  version = "nxvim 0.1.0",
+  version = "bemtvi 0.1.0",
   pid = 12345,
 }
 
 -- Swap the host facts for placeholders, returning a function that puts them back.
--- `nx.env.get` answers nil throughout: a config's *default* is what it does with no
+-- `btv.env.get` answers nil throughout: a config's *default* is what it does with no
 -- environment set, and that is exactly what this page documents.
 local function freeze_host()
   local real = {
-    stdpath = nx.stdpath,
-    version = nx.version,
-    pid = nx.pid,
-    cwd = nx.cwd,
-    env_get = nx.env.get,
-    expanduser = nx.utils.expanduser,
+    stdpath = btv.stdpath,
+    version = btv.version,
+    pid = btv.pid,
+    cwd = btv.cwd,
+    env_get = btv.env.get,
+    expanduser = btv.utils.expanduser,
   }
-  nx.stdpath = function(what)
+  btv.stdpath = function(what)
     return FAKE[what] or (FAKE.data .. "/" .. tostring(what))
   end
-  nx.version = function()
+  btv.version = function()
     return FAKE.version
   end
-  nx.pid = function()
+  btv.pid = function()
     return FAKE.pid
   end
-  nx.cwd = function()
+  btv.cwd = function()
     return FAKE.cwd
   end
-  nx.env.get = function()
+  btv.env.get = function()
     return nil
   end
-  nx.utils.expanduser = function(p)
+  btv.utils.expanduser = function(p)
     if type(p) ~= "string" then
       return p
     end
     return (p:gsub("^~", FAKE.home))
   end
   return function()
-    nx.stdpath, nx.version, nx.pid, nx.cwd = real.stdpath, real.version, real.pid, real.cwd
-    nx.env.get, nx.utils.expanduser = real.env_get, real.expanduser
+    btv.stdpath, btv.version, btv.pid, btv.cwd = real.stdpath, real.version, real.pid, real.cwd
+    btv.env.get, btv.utils.expanduser = real.env_get, real.expanduser
   end
 end
 
@@ -180,11 +180,11 @@ render_value = function(v, depth)
   end
   -- The two JSON values Lua cannot express as themselves. Rendered under the names
   -- a config would actually write, since `{}` here would be a lie in both cases.
-  if v == nx.json.null then
-    return "nx.json.null"
+  if v == btv.json.null then
+    return "btv.json.null"
   end
   if next(v) == nil then
-    return "nx.json.empty_object()"
+    return "btv.json.empty_object()"
   end
   local parts = {}
   if is_list(v) then
@@ -320,7 +320,7 @@ local function section(name, cfg, err, text, markdown)
       "Enable it:",
       "",
       "```lua",
-      ("nx.lsp.enable(%q)"):format(name),
+      ("btv.lsp.enable(%q)"):format(name),
       "```",
       "",
       body,
@@ -339,7 +339,7 @@ local function section(name, cfg, err, text, markdown)
     "",
     brief ~= "" and (brief .. "\n") or "",
     "Enable it: >lua",
-    ("  nx.lsp.enable(%q)"):format(name),
+    ("  btv.lsp.enable(%q)"):format(name),
     "<",
     "",
     body,
@@ -349,7 +349,7 @@ end
 
 -- ----- drive --------------------------------------------------------------------
 
-local entries = nx.await(nx.fs.readdir(root .. "/lsp"))
+local entries = btv.await(btv.fs.readdir(root .. "/lsp"))
 local names = {}
 for _, e in ipairs(entries) do
   local n = e.name:match("^(.*)%.lua$")
@@ -364,7 +364,7 @@ local md, txt = {}, {}
 local toc = {}
 for _, name in ipairs(names) do
   local path = root .. "/lsp/" .. name .. ".lua"
-  local text = nx.await(nx.fs.read_text(path))
+  local text = btv.await(btv.fs.read_text(path))
   local chunk, load_err = loadfile(path)
   local cfg, err
   if chunk then
@@ -393,13 +393,13 @@ Every language server this plugin ships a config for, with its install notes and
 defaults it sets. Read it in the editor with `:help lspconfig-all`, or jump straight
 to one server with `:help lspconfig-<name>` (e.g. `:help lspconfig-clangd`).
 
-Enable any of them with `nx.lsp.enable("<name>")`; override with `nx.lsp.config`. See
-[nxvim-lspconfig.md](./nxvim-lspconfig.md) for the plugin itself.
+Enable any of them with `btv.lsp.enable("<name>")`; override with `btv.lsp.config`. See
+[bemtvi-lspconfig.md](./bemtvi-lspconfig.md) for the plugin itself.
 
 ]]
 
 local TXT_HEADER = [[
-*configs.txt*                    Every language server config nxvim-lspconfig ships
+*configs.txt*                    Every language server config bemtvi-lspconfig ships
 
                                                                 *lspconfig-all*
 
@@ -408,8 +408,8 @@ the defaults it sets. Jump to one with `:help lspconfig-<name>`, e.g.
 >
     :help lspconfig-clangd
 <
-Enable any of them with `nx.lsp.enable("<name>")`; override with `nx.lsp.config`.
-See |nxvim-lspconfig| for the plugin itself.
+Enable any of them with `btv.lsp.enable("<name>")`; override with `btv.lsp.config`.
+See |bemtvi-lspconfig| for the plugin itself.
 
                                       Type |gO| to see the table of contents.
 
@@ -428,14 +428,14 @@ local function clean(s)
   return (s:gsub("[ \t]+\n", "\n"))
 end
 
-nx.await(
-  nx.fs.write(
+btv.await(
+  btv.fs.write(
     root .. "/doc/configs.md",
     clean(MD_HEADER .. table.concat(toc, "\n") .. "\n\n" .. table.concat(md, "\n"))
   )
 )
-nx.await(
-  nx.fs.write(
+btv.await(
+  btv.fs.write(
     root .. "/doc/configs.txt",
     clean(TXT_HEADER .. table.concat(txt, "\n") .. TXT_FOOTER)
   )

@@ -8,10 +8,10 @@
 ---
 --- The preferred way to install csharp-ls is with `dotnet tool install --global csharp-ls`.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
-  -- csharp-ls locates the sln / slnx / csproj from its working directory, which nxvim
+  -- csharp-ls locates the sln / slnx / csproj from its working directory, which bemtvi
   -- already sets to the resolved root for every server it spawns.
   cmd = { "csharp-ls" },
   root_dir = function(bufnr, on_dir)

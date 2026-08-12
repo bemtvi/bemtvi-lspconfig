@@ -9,12 +9,12 @@
 --- detected automatically; register it manually (see below) or override the filetypes:
 ---
 --- ```lua
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = { "buf.yaml", "buf.gen.yaml", "buf.policy.yaml", "buf.lock" } }, function()
----   nx.bo.filetype = "buf-config"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = { "buf.yaml", "buf.gen.yaml", "buf.policy.yaml", "buf.lock" } }, function()
+---   btv.bo.filetype = "buf-config"
 --- end)
 --- ```
 ---
---- Buf config files are YAML. nxvim has no filetype-to-grammar alias, so they are not
+--- Buf config files are YAML. bemtvi has no filetype-to-grammar alias, so they are not
 --- highlighted under the `buf-config` filetype; `:setf yaml` in such a buffer gives
 --- YAML highlighting for that session.
 

@@ -13,7 +13,7 @@
 ---
 --- or used as a part of Vite+ through `fmt` field in `vite.config.ts`: https://github.com/oxc-project/oxc/pull/20197
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = util.node_cmd("oxfmt", { "--lsp" }),
@@ -43,7 +43,7 @@ return {
     -- Oxfmt resolves configuration by walking upward and using the nearest config file
     -- to the file being processed. We therefore compute the root directory by locating
     -- the closest `.oxfmtrc.json` / `.oxfmtrc.jsonc` / `oxfmt.config.ts` (or `package.json` fallback) above the buffer.
-    local root_markers = nx.await(
+    local root_markers = btv.await(
       util.insert_package_json(
         { ".oxfmtrc.json", ".oxfmtrc.jsonc", "oxfmt.config.ts" },
         { "oxfmt", "vite%-plus" },
@@ -51,7 +51,7 @@ return {
       )
     )
     -- find vite plus config with fmt field
-    root_markers = nx.await(
+    root_markers = btv.await(
       util.root_markers_with_field(
         root_markers,
         { "vite.config.ts" },
@@ -60,7 +60,7 @@ return {
         "all"
       )
     )
-    local found = nx.await(util.find_upward(fname, root_markers))
+    local found = btv.await(util.find_upward(fname, root_markers))
     if found then
       on_dir(util.dirname(found))
     end

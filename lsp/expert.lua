@@ -9,7 +9,7 @@
 --- is the root of an umbrella app. Otherwise the directory containing the single mix.exs that was
 --- found is chosen.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   filetypes = { "elixir", "eelixir", "heex", "surface" },

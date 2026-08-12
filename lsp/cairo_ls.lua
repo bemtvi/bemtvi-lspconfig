@@ -6,7 +6,7 @@
 ---
 --- Then enable Cairo Language Server in your Lua configuration.
 --- ```lua
---- nx.lsp.enable("cairo_ls")
+--- btv.lsp.enable("cairo_ls")
 --- ```
 ---
 --- *cairo-language-server is still under active development, some features might not work yet !*

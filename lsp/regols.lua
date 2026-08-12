@@ -9,7 +9,7 @@
 --- go install github.com/kitagry/regols@latest
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "regols" },

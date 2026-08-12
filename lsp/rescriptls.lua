@@ -12,7 +12,7 @@
 ---
 --- For example, in order to disable the `inlayHints` option:
 --- ```lua
---- nx.lsp.config("rescriptls", {
+--- btv.lsp.config("rescriptls", {
 ---   settings = {
 ---     rescript = {
 ---       settings = {

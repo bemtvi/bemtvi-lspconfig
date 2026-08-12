@@ -8,7 +8,7 @@
 ---
 --- Note: On some distros, the cmd of qmlls is `qmlls6`. You can override `cmd`:
 --- ```lua
---- nx.lsp.config("qmlls", { cmd = { 'qmlls6' } })
+--- btv.lsp.config("qmlls", { cmd = { 'qmlls6' } })
 --- ```
 
 return {

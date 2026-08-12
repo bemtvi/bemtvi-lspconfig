@@ -5,10 +5,10 @@
 --- The `slangd` binary can be downloaded as part of [slang releases](https://github.com/shader-slang/slang/releases) or
 --- by [building `slang` from source](https://github.com/shader-slang/slang/blob/master/docs/building.md).
 ---
---- The server can be configured by passing a "settings" object to nx.lsp.config("slangd"):
+--- The server can be configured by passing a "settings" object to btv.lsp.config("slangd"):
 ---
 --- ```lua
---- nx.lsp.config("slangd", {
+--- btv.lsp.config("slangd", {
 ---   settings = {
 ---     slang = {
 ---       predefinedMacros = {"MY_VALUE_MACRO=1"},

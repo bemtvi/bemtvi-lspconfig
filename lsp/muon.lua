@@ -2,7 +2,7 @@
 ---
 --- https://muon.build
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "muon", "analyze", "lsp" },
@@ -12,16 +12,16 @@ return {
     local cmd = { "muon", "analyze", "root-for", fname }
     util.system(cmd):next(function(output)
       if output.code ~= 0 then
-        return nx.notify(
+        return btv.notify(
           ("[muon] cmd failed with code %d: %s\n%s"):format(
             output.code,
-            nx.inspect(cmd),
+            btv.inspect(cmd),
             output.stderr
           ),
-          nx.log.levels.ERROR
+          btv.log.levels.ERROR
         )
       end
-      on_dir(output.stdout and nx.str.trim(output.stdout) or nil)
+      on_dir(output.stdout and btv.str.trim(output.stdout) or nil)
     end)
   end,
 }

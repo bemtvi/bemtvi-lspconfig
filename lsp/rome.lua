@@ -10,7 +10,7 @@
 --- npm install [-g] rome
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = util.node_cmd("rome", { "lsp-proxy" }),

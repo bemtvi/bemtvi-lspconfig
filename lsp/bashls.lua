@@ -20,7 +20,7 @@ return {
       -- directly in the home directory (e.g. ~/foo.sh).
       --
       -- Default upstream pattern is "**/*@(.sh|.inc|.bash|.command)".
-      globPattern = nx.env.get("GLOB_PATTERN") or "*@(.sh|.inc|.bash|.command)",
+      globPattern = btv.env.get("GLOB_PATTERN") or "*@(.sh|.inc|.bash|.command)",
     },
   },
   filetypes = { "bash", "sh" },

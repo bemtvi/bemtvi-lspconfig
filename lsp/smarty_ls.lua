@@ -10,7 +10,7 @@
 --- npm i -g vscode-smarty-langserver-extracted
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "smarty-language-server", "--stdio" },
@@ -32,6 +32,6 @@ return {
     },
   },
   init_options = {
-    storageDir = nx.json.null,
+    storageDir = btv.json.null,
   },
 }

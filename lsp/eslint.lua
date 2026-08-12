@@ -11,13 +11,13 @@
 ---
 --- The default `on_attach` config provides the `LspEslintFixAll` command that can be used to format a document on save:
 --- ```lua
---- local base_on_attach = nx.lsp.get_config("eslint").on_attach
---- nx.lsp.config("eslint", {
+--- local base_on_attach = btv.lsp.get_config("eslint").on_attach
+--- btv.lsp.config("eslint", {
 ---   on_attach = function(client, bufnr)
 ---     if not base_on_attach then return end
 ---
 ---     base_on_attach(client, bufnr)
----     nx.autocmd.create("BufWritePre", {
+---     btv.autocmd.create("BufWritePre", {
 ---       buffer = bufnr,
 ---       command = "LspEslintFixAll",
 ---     })
@@ -45,7 +45,7 @@
 --- the [default behavior](https://eslint.org/blog/2023/10/flat-config-rollout-plans/), you'll need to set
 --- `experimental.useFlatConfig` accordingly:
 --- ```lua
---- nx.lsp.config("eslint", {
+--- btv.lsp.config("eslint", {
 ---   settings = {
 ---     experimental = {
 ---       -- If you want to use flat config on >= 8.21, < 9.0
@@ -57,7 +57,7 @@
 --- })
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local eslint_config_files = {
   ".eslintrc",
@@ -92,15 +92,15 @@ return {
     --
     -- Upstream drives this through eslint's private `eslint.applyAllFixes` command,
     -- carrying the document's version by hand and issuing it with a BLOCKING
-    -- `request_sync`. Both are neovim shapes: nxvim does no blocking I/O, and it has
+    -- `request_sync`. Both are neovim shapes: bemtvi does no blocking I/O, and it has
     -- no reason to hand-carry a version the engine already tracks.
     --
     -- The same operation is standard protocol: eslint advertises `source.fixAll.eslint`
     -- as a code-action kind, and `apply` runs a lone match without a chooser. Same
-    -- result, over the path nxvim already implements — and it stays correct if the
+    -- result, over the path bemtvi already implements — and it stays correct if the
     -- server ever renames its private command.
     util.buf_command(bufnr, "LspEslintFixAll", function()
-      nx.lsp.code_action({ context = { only = { "source.fixAll.eslint" } }, apply = true })
+      btv.lsp.code_action({ context = { only = { "source.fixAll.eslint" } }, apply = true })
     end, { desc = "Apply every eslint autofix in this buffer" })
   end,
   root_dir = util.root_dir(function(bufnr, on_dir)
@@ -114,12 +114,12 @@ return {
     root_markers = { root_markers, { ".git" } }
 
     -- exclude deno
-    if nx.await(util.root(bufnr, { "deno.json", "deno.jsonc", "deno.lock" })) then
+    if btv.await(util.root(bufnr, { "deno.json", "deno.jsonc", "deno.lock" })) then
       return
     end
 
     -- We fallback to the current working directory if no project root is found
-    local project_root = nx.await(util.root(bufnr, root_markers)) or util.cwd()
+    local project_root = btv.await(util.root(bufnr, root_markers)) or util.cwd()
 
     -- We know that the buffer is using ESLint if it has a config file
     -- in its directory tree.
@@ -128,9 +128,9 @@ return {
     -- We keep this for backward compatibility.
     local filename = util.bufname(bufnr)
     local eslint_config_files_with_package_json =
-      nx.await(util.insert_package_json(eslint_config_files, "eslintConfig", filename))
+      btv.await(util.insert_package_json(eslint_config_files, "eslintConfig", filename))
     local is_buffer_using_eslint =
-      nx.await(util.find_upward(filename, eslint_config_files_with_package_json, {
+      btv.await(util.find_upward(filename, eslint_config_files_with_package_json, {
         stop = util.dirname(project_root),
       }))
     if not is_buffer_using_eslint then
@@ -174,10 +174,10 @@ return {
     },
   },
   -- Async because the Yarn PnP probe below is two filesystem lookups, which upstream
-  -- does with a blocking `vim.uv.fs_stat`. `nx.lsp` awaits a `before_init` that
+  -- does with a blocking `vim.uv.fs_stat`. `btv.lsp` awaits a `before_init` that
   -- returns a promise before it spawns, so the decision still lands before the server
   -- sees its `initialize`.
-  before_init = nx.async(function(_, config)
+  before_init = btv.async(function(_, config)
     -- The "workspaceFolder" is a VSCode concept. It limits how far the
     -- server will traverse the file system when locating the ESLint config
     -- file (e.g., .eslintrc).
@@ -191,17 +191,17 @@ return {
       }
 
       -- Support Yarn2 (PnP) projects
-      local pnp_cjs = nx.await(util.exists(util.joinpath(root_dir, ".pnp.cjs")))
-      local pnp_js = nx.await(util.exists(util.joinpath(root_dir, ".pnp.js")))
+      local pnp_cjs = btv.await(util.exists(util.joinpath(root_dir, ".pnp.cjs")))
+      local pnp_js = btv.await(util.exists(util.joinpath(root_dir, ".pnp.js")))
       if type(config.cmd) == "table" and (pnp_cjs or pnp_js) then
-        config.cmd = nx.list.extend({ "yarn", "exec" }, config.cmd --[[@as table]])
+        config.cmd = btv.list.extend({ "yarn", "exec" }, config.cmd --[[@as table]])
       end
     end
   end),
   handlers = {
     ["eslint/openDoc"] = function(_, result)
       if result then
-        nx.ui.open(result.url)
+        btv.ui.open(result.url)
       end
       return {}
     end,
@@ -212,11 +212,11 @@ return {
       return 4 -- approved
     end,
     ["eslint/probeFailed"] = function()
-      nx.notify("[lspconfig] ESLint probe failed.", nx.log.levels.WARN)
+      btv.notify("[lspconfig] ESLint probe failed.", btv.log.levels.WARN)
       return {}
     end,
     ["eslint/noLibrary"] = function()
-      nx.notify("[lspconfig] Unable to find ESLint library.", nx.log.levels.WARN)
+      btv.notify("[lspconfig] Unable to find ESLint library.", btv.log.levels.WARN)
       return {}
     end,
   },

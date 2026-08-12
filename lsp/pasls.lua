@@ -15,7 +15,7 @@
 --- export FPCTARGETCPU='x86_64'          # Target CPU for cross compiling.
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "pasls" },

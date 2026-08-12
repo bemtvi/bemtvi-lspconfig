@@ -7,7 +7,7 @@
 --- npm install -g elm elm-test elm-format @elm-tooling/elm-language-server
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "elm-language-server" },
@@ -15,7 +15,7 @@ return {
   filetypes = { "elm" },
   root_dir = function(bufnr, on_dir)
     local fname = util.bufname(bufnr)
-    local filetype = nx.bo[bufnr].filetype
+    local filetype = btv.bo[bufnr].filetype
     if filetype == "elm" or (filetype == "json" and fname:match("elm%.json$")) then
       util.root_of_path(fname, { "elm.json" }):next(on_dir)
       return

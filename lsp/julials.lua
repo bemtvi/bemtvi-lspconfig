@@ -28,13 +28,13 @@
 --- Note: The julia programming language searches for global environments within the `environments/`
 --- folder of `$JULIA_DEPOT_PATH` entries. By default this simply `~/.julia/environments`
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local root_files = { "Project.toml", "JuliaProject.toml" }
 
-local activate_env = nx.async(function(args)
-  local bufnr = nx.buf.current()
-  local julials_clients = nx.lsp.clients({ bufnr = bufnr, name = "julials" })
+local activate_env = btv.async(function(args)
+  local bufnr = btv.buf.current()
+  local julials_clients = btv.lsp.clients({ bufnr = bufnr, name = "julials" })
   assert(
     #julials_clients > 0,
     "method julia/activateenvironment is not supported by any servers active on the current buffer"
@@ -45,21 +45,21 @@ local activate_env = nx.async(function(args)
         ---@diagnostic disable-next-line: param-type-mismatch
         julials_client:notify("julia/activateenvironment", { envPath = environment })
       end
-      nx.notify("Julia environment activated: \n`" .. environment .. "`", nx.log.levels.INFO)
+      btv.notify("Julia environment activated: \n`" .. environment .. "`", btv.log.levels.INFO)
     end
   end
   local path = args.args
   if path ~= nil and #path > 0 then
-    path = util.normalize(nx.fname.modify(nx.utils.expanduser(path), ":p"))
+    path = util.normalize(btv.fname.modify(btv.utils.expanduser(path), ":p"))
     local found_env = false
     for _, project_file in ipairs(root_files) do
-      if nx.await(util.exists(util.joinpath(path, project_file))) then
+      if btv.await(util.exists(util.joinpath(path, project_file))) then
         found_env = true
         break
       end
     end
     if not found_env then
-      nx.notify("Path is not a julia environment: \n`" .. path .. "`", nx.log.levels.WARN)
+      btv.notify("Path is not a julia environment: \n`" .. path .. "`", btv.log.levels.WARN)
       return
     end
     return _activate_env(path)
@@ -67,32 +67,32 @@ local activate_env = nx.async(function(args)
 
   -- Every environment the user could switch to: the project ones above this buffer,
   -- plus the global ones julia keeps in `environments/` under each depot.
-  local sep = nx.utils.is_windows() and ";" or ":"
-  local depot_paths = nx.env.get("JULIA_DEPOT_PATH")
-      and nx.str.split(nx.env.get("JULIA_DEPOT_PATH"), sep)
-    or { nx.utils.expanduser("~/.julia") }
+  local sep = btv.utils.is_windows() and ";" or ":"
+  local depot_paths = btv.env.get("JULIA_DEPOT_PATH")
+      and btv.str.split(btv.env.get("JULIA_DEPOT_PATH"), sep)
+    or { btv.utils.expanduser("~/.julia") }
 
   local environments = {}
-  for _, found in ipairs(nx.await(util.find_upward_all(util.bufname(nx.buf.current()), root_files))) do
+  for _, found in ipairs(btv.await(util.find_upward_all(util.bufname(btv.buf.current()), root_files))) do
     environments[#environments + 1] = util.dirname(found)
   end
   for _, depot_path in ipairs(depot_paths) do
     local depot_env = util.joinpath(util.normalize(depot_path), "environments")
     for _, entry in
-      ipairs(nx.await(nx.fs.readdir(depot_env):catch(function()
+      ipairs(btv.await(btv.fs.readdir(depot_env):catch(function()
         return {}
       end)))
     do
       local dir = util.joinpath(depot_env, entry.name)
       for _, project_file in ipairs(root_files) do
-        if nx.await(util.exists(util.joinpath(dir, project_file))) then
+        if btv.await(util.exists(util.joinpath(dir, project_file))) then
           environments[#environments + 1] = dir
           break
         end
       end
     end
   end
-  nx.ui.select(environments, { prompt = "Select a Julia environment" }, _activate_env)
+  btv.ui.select(environments, { prompt = "Select a Julia environment" }, _activate_env)
 end)
 
 local cmd = {

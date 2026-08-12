@@ -7,11 +7,11 @@
 --- The file types are not detected automatically, you can register them manually (see below) or override the filetypes:
 ---
 --- ```lua
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*openapi*%.ya?ml" }, function()
----   nx.bo.filetype = "yaml.openapi"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*openapi*%.ya?ml" }, function()
+---   btv.bo.filetype = "yaml.openapi"
 --- end)
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*openapi*%.json" }, function()
----   nx.bo.filetype = "json.openapi"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*openapi*%.json" }, function()
+---   btv.bo.filetype = "json.openapi"
 --- end)
 --- ```
 

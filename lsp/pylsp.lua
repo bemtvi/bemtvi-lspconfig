@@ -10,7 +10,7 @@
 --- In order to configure an option, it must be translated to a nested Lua table and included in the `settings` argument to the `config('pylsp', {})` function.
 --- For example, in order to set the `pylsp.plugins.pycodestyle.ignore` option:
 --- ```lua
---- nx.lsp.config('pylsp', {
+--- btv.lsp.config('pylsp', {
 ---   settings = {
 ---     pylsp = {
 ---       plugins = {

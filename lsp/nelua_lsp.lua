@@ -13,15 +13,15 @@
 ---
 --- in lua:
 --- ```lua
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.nelua" }, function()
----   nx.bo.filetype = "nelua"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.nelua" }, function()
+---   btv.bo.filetype = "nelua"
 --- end)
 --- ```
 ---
---- **By default, nelua-lsp doesn't have a `cmd` set.** This is because nxvim-lspconfig does not make assumptions about your path. You must add the following to your init.vim or init.lua to set `cmd` to the absolute path ($HOME and ~ are not expanded) of the unzipped run script or binary.
+--- **By default, nelua-lsp doesn't have a `cmd` set.** This is because bemtvi-lspconfig does not make assumptions about your path. You must add the following to your init.vim or init.lua to set `cmd` to the absolute path ($HOME and ~ are not expanded) of the unzipped run script or binary.
 ---
 --- ```lua
---- nx.lsp.config("nelua_lsp", {
+--- btv.lsp.config("nelua_lsp", {
 ---     cmd = { "nelua", "-L", "/path/to/nelua-lsp/", "--script", "/path/to/nelua-lsp/nelua-lsp.lua" },
 --- })
 --- ```

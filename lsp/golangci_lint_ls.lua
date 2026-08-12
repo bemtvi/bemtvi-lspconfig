@@ -13,7 +13,7 @@
 --- go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "golangci-lint-langserver" },
@@ -45,11 +45,11 @@ return {
     "go.mod",
     ".git",
   },
-  before_init = nx.async(function(_init_params, config)
+  before_init = btv.async(function(_init_params, config)
     -- Add support for golangci-lint V1 (in V2 `--out-format=json` was replaced by
     -- `--output.json.path=stdout`).
 
-    local exe = nx.await(util.which("golangci-lint"))
+    local exe = btv.await(util.which("golangci-lint"))
     if not exe then
       return
     end
@@ -57,17 +57,17 @@ return {
     local v1, v2 = false, false
     -- PERF: `golangci-lint version` is very slow (about 0.1 sec) so let's find
     -- version using `go version -m $(which golangci-lint) | grep '^\smod'`.
-    if nx.await(util.which("go")) then
-      local out = nx.await(util.output({ "go", "version", "-m", exe })) or ""
+    if btv.await(util.which("go")) then
+      local out = btv.await(util.output({ "go", "version", "-m", exe })) or ""
       v1 = string.match(out, "\tmod\tgithub.com/golangci/golangci%-lint\t")
       v2 = string.match(out, "\tmod\tgithub.com/golangci/golangci%-lint/v2\t")
     end
     if not v1 and not v2 then
       v1 =
-        string.match(nx.await(util.output({ "golangci-lint", "version" })) or "", "version v?1%.")
+        string.match(btv.await(util.output({ "golangci-lint", "version" })) or "", "version v?1%.")
     end
     if v1 then
-      config.init_options = nx.tbl.extend("force", config.init_options or {}, {
+      config.init_options = btv.tbl.extend("force", config.init_options or {}, {
         command = { "golangci-lint", "run", "--out-format", "json" },
       })
     end

@@ -9,21 +9,21 @@
 --
 -- The strong assertion is the third test: every `cmd` builder, `root_dir`,
 -- `before_init` and `get_language_id` in the repo is CALLED, against a real buffer,
--- **with the same arguments `nx.lsp` passes** (a copy of the config carrying the
+-- **with the same arguments `btv.lsp` passes** (a copy of the config carrying the
 -- resolved `root_dir`) — so a hook reading a field off `config` is exercised the way
 -- it really runs, not against a synthetic table that would make it fail here and
 -- work in the editor, or the reverse.
 
-local lspconfig = require("nxvim-lspconfig")
+local lspconfig = require("bemtvi-lspconfig")
 
--- Load one server's config table the way `nx.lsp` does, off the runtimepath.
+-- Load one server's config table the way `btv.lsp` does, off the runtimepath.
 local function load_config(name)
-  local paths = nx.runtime_file("lsp/" .. name .. ".lua", false)
+  local paths = btv.runtime_file("lsp/" .. name .. ".lua", false)
   local chunk = assert(loadfile(paths[1]), "no chunk for " .. name)
   return chunk()
 end
 
--- `nx.lsp`'s `start_cfg`: the config plus the resolved root, which is what both the
+-- `btv.lsp`'s `start_cfg`: the config plus the resolved root, which is what both the
 -- `cmd` builder and `before_init` receive as their `config` argument.
 local function start_cfg(cfg, root)
   local out = {}
@@ -42,8 +42,8 @@ local function is_deliberate_refusal(name, err)
   return tostring(err):find(name .. ": ", 1, true) ~= nil
 end
 
--- The keys `nx.lsp` reads, plus the two it knowingly does not act on. Anything else
--- earns a WARN at dispatch time (`nx.lsp` never silently drops a key), so an entry
+-- The keys `btv.lsp` reads, plus the two it knowingly does not act on. Anything else
+-- earns a WARN at dispatch time (`btv.lsp` never silently drops a key), so an entry
 -- outside this set is a real defect: `root_markers` misspelled means the server
 -- attaches at the wrong directory and nothing says so.
 local KNOWN = {
@@ -64,7 +64,7 @@ local KNOWN = {
   on_init = true,
   on_attach = true,
   on_exit = true,
-  -- Unsupported-but-modelled: nxvim does not route server-initiated messages into
+  -- Unsupported-but-modelled: bemtvi does not route server-initiated messages into
   -- Lua (`handlers`), and always reuses one client per (config name, root)
   -- (`reuse_client`). Both warn rather than erroring, so a config may still carry
   -- one; they are listed so the suite doesn't flag the warning as a typo.
@@ -73,7 +73,7 @@ local KNOWN = {
 }
 
 -- Servers upstream ships with NO default `cmd`: the binary has no conventional name
--- or location, so the user must supply one (`nx.lsp.config('bicep', { cmd = … })`).
+-- or location, so the user must supply one (`btv.lsp.config('bicep', { cmd = … })`).
 -- Named here rather than skipped by a blanket `if cfg.cmd then`, so the list is
 -- visible and a config that loses its `cmd` by accident still fails.
 local NO_DEFAULT_CMD = {
@@ -100,12 +100,12 @@ local ANY_FILETYPE = {
   vectorcode_server = true,
 }
 
-nx.test.describe("nxvim-lspconfig: the bundled configs", function()
-  nx.test.it("ships a config for every name it advertises", function()
-    nx.test.expect(#lspconfig.available() > 400).to_be(true)
+btv.test.describe("bemtvi-lspconfig: the bundled configs", function()
+  btv.test.it("ships a config for every name it advertises", function()
+    btv.test.expect(#lspconfig.available() > 400).to_be(true)
   end)
 
-  nx.test.it("loads every config, and each returns a table of known keys", function()
+  btv.test.it("loads every config, and each returns a table of known keys", function()
     local bad = {}
     for _, name in ipairs(lspconfig.available()) do
       local ok, cfg = pcall(load_config, name)
@@ -121,24 +121,24 @@ nx.test.describe("nxvim-lspconfig: the bundled configs", function()
         end
       end
     end
-    nx.test.expect(bad).to_equal({})
+    btv.test.expect(bad).to_equal({})
   end)
 
-  nx.test.it("runs every cmd builder, root_dir, before_init and get_language_id", function(t)
+  btv.test.it("runs every cmd builder, root_dir, before_init and get_language_id", function(t)
     -- A real buffer with a real path: the probes walk up from the buffer's file, so
     -- an unnamed buffer would take the "no path" early return in most of them and
     -- prove nothing.
-    local root = nx.test.tempdir()
-    local file = nx.utils.joinpath(root, "probe.txt")
-    nx.await(nx.fs.write(file, "x\n"))
+    local root = btv.test.tempdir()
+    local file = btv.utils.joinpath(root, "probe.txt")
+    btv.await(btv.fs.write(file, "x\n"))
     t:cmd("edit " .. file)
-    local bufnr = nx.buf.current()
+    local bufnr = btv.buf.current()
 
     local bad = {}
     local function run(name, what, fn, ...)
       local ok, res = pcall(fn, ...)
-      if ok and nx.promise.is_promise(res) then
-        ok, res = pcall(nx.await, res)
+      if ok and btv.promise.is_promise(res) then
+        ok, res = pcall(btv.await, res)
       end
       if not ok and not is_deliberate_refusal(name, res) then
         bad[#bad + 1] = name .. "." .. what .. " failed: " .. tostring(res)
@@ -168,11 +168,11 @@ nx.test.describe("nxvim-lspconfig: the bundled configs", function()
         end
       end
     end
-    nx.test.expect(bad).to_equal({})
+    btv.test.expect(bad).to_equal({})
   end)
 
-  nx.test.it("declares a cmd and filetypes, except where it deliberately can't", function()
-    -- Without either, `nx.lsp` has nothing to dispatch on or nothing to spawn and the
+  btv.test.it("declares a cmd and filetypes, except where it deliberately can't", function()
+    -- Without either, `btv.lsp` has nothing to dispatch on or nothing to spawn and the
     -- server simply never starts — the quietest possible failure.
     local bad = {}
     for _, name in ipairs(lspconfig.available()) do
@@ -184,6 +184,6 @@ nx.test.describe("nxvim-lspconfig: the bundled configs", function()
         bad[#bad + 1] = name .. ": no filetypes"
       end
     end
-    nx.test.expect(bad).to_equal({})
+    btv.test.expect(bad).to_equal({})
   end)
 end)

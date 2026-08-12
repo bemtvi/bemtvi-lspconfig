@@ -29,21 +29,21 @@ return {
     ---@param result any
     ---@param context lsp.HandlerContext
     local function typescriptHandler(_, result, context)
-      local ts_client = nx.lsp.clients({ bufnr = context.bufnr, name = "ts_ls" })[1]
-        or nx.lsp.clients({ bufnr = context.bufnr, name = "vtsls" })[1]
-        or nx.lsp.clients({ bufnr = context.bufnr, name = "typescript-tools" })[1]
+      local ts_client = btv.lsp.clients({ bufnr = context.bufnr, name = "ts_ls" })[1]
+        or btv.lsp.clients({ bufnr = context.bufnr, name = "vtsls" })[1]
+        or btv.lsp.clients({ bufnr = context.bufnr, name = "typescript-tools" })[1]
 
       if not ts_client then
         -- there can sometimes be a short delay until `ts_ls`/`vtsls` are attached so we retry for a few times until it is ready
         if retries <= 10 then
           retries = retries + 1
-          nx.timer(function()
+          btv.timer(function()
             typescriptHandler(_, result, context)
           end, 100)
         else
-          nx.notify(
+          btv.notify(
             "Could not find `ts_ls`, `vtsls`, or `typescript-tools` lsp client required by `vue_ls`.",
-            nx.log.levels.ERROR
+            btv.log.levels.ERROR
           )
         end
         return

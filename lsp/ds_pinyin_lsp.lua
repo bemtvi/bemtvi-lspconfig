@@ -7,7 +7,7 @@
 ---
 --- ```lua
 ---
---- nx.lsp.config('ds_pinyin_lsp', {
+--- btv.lsp.config('ds_pinyin_lsp', {
 ---     init_options = {
 ---         db_path = "your_path_to_database"
 ---     }
@@ -15,33 +15,33 @@
 ---
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local bin_name = util.exe("ds-pinyin-lsp")
 
 local function ds_pinyin_lsp_off(bufnr)
-  local ds_pinyin_lsp_client = nx.lsp.clients({ bufnr = bufnr, name = "ds_pinyin_lsp" })[1]
+  local ds_pinyin_lsp_client = btv.lsp.clients({ bufnr = bufnr, name = "ds_pinyin_lsp" })[1]
   if ds_pinyin_lsp_client then
     ---@diagnostic disable-next-line: param-type-mismatch
     ds_pinyin_lsp_client:notify("$/turn/completion", {
       ["completion_on"] = false,
     })
   else
-    nx.notify(
+    btv.notify(
       "notification $/turn/completion is not supported by any servers active on the current buffer"
     )
   end
 end
 
 local function ds_pinyin_lsp_on(bufnr)
-  local ds_pinyin_lsp_client = nx.lsp.clients({ bufnr = bufnr, name = "ds_pinyin_lsp" })[1]
+  local ds_pinyin_lsp_client = btv.lsp.clients({ bufnr = bufnr, name = "ds_pinyin_lsp" })[1]
   if ds_pinyin_lsp_client then
     ---@diagnostic disable-next-line: param-type-mismatch
     ds_pinyin_lsp_client:notify("$/turn/completion", {
       ["completion_on"] = true,
     })
   else
-    nx.notify(
+    btv.notify(
       "notification $/turn/completion is not supported by any servers active on the current buffer"
     )
   end

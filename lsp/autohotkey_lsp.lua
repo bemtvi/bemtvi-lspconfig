@@ -6,25 +6,25 @@
 ---
 --- NOTE: AutoHotkey is Windows-only.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "autohotkey_lsp", "--stdio" },
   filetypes = { "autohotkey" },
   root_markers = { "package.json" },
   -- Upstream sets `flags = { debounce_text_changes = 500 }` — a neovim CLIENT knob
-  -- for how long its own `didChange` sender coalesces. nxvim has no such key: it
+  -- for how long its own `didChange` sender coalesces. bemtvi has no such key: it
   -- batches the edits made during a tick and sends them once per sync, so the
   -- coalescing that asked for is already how the document is synced. Dropped rather
-  -- than carried, since a key `nx.lsp` doesn't read only earns a "misspelled key?"
+  -- than carried, since a key `btv.lsp` doesn't read only earns a "misspelled key?"
   -- warning on every buffer open.
   --capabilities = capabilities,
   --on_attach = custom_attach,
   -- `InterpreterPath` needs the AutoHotkey interpreter's real location, which is a
   -- `$PATH` lookup — I/O, so it is resolved once per server here rather than at load.
-  before_init = nx.async(function(_init_params, config)
-    config.init_options = nx.tbl.deep_extend("force", config.init_options or {}, {
-      InterpreterPath = nx.await(util.which(util.exe("autohotkey"))) or "",
+  before_init = btv.async(function(_init_params, config)
+    config.init_options = btv.tbl.deep_extend("force", config.init_options or {}, {
+      InterpreterPath = btv.await(util.which(util.exe("autohotkey"))) or "",
     })
   end),
   init_options = {

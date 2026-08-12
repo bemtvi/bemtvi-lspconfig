@@ -16,33 +16,33 @@
 --- You need to enable `:help lsp-inline-completion` to receive suggestions. For example, you can enable it in the LspAttach event:
 ---
 --- NOTE: the server's headline feature — `textDocument/inlineCompletion`, the greyed-out
---- suggestion accepted with a keypress — has no home in nxvim yet. `nx.complete` is a
+--- suggestion accepted with a keypress — has no home in bemtvi yet. `btv.complete` is a
 --- popup-menu engine; inline completion is a different surface (virtual text at the
---- cursor, its own accept/cycle keys), and nxvim has no client for it. The server
+--- cursor, its own accept/cycle keys), and bemtvi has no client for it. The server
 --- starts, `:LspCopilotSignIn` works, and the panel/chat commands work; the inline
 --- suggestions are requested by nothing. Closing this needs an inline-completion layer
 --- in the core, which is a feature rather than a config.
 
 ---@param bufnr integer,
----@param client nx.lsp.Client
-local util = require("nxvim-lspconfig.util")
+---@param client btv.lsp.Client
+local util = require("bemtvi-lspconfig.util")
 
 local function sign_in(bufnr, client)
   client:request(
     ---@diagnostic disable-next-line: param-type-mismatch
     "signIn",
-    nx.json.empty_object(),
+    btv.json.empty_object(),
     function(err, result)
       if err then
-        nx.notify(err.message, nx.log.levels.ERROR)
+        btv.notify(err.message, btv.log.levels.ERROR)
         return
       end
       if result.command then
         local code = result.userCode
         local command = result.command
-        nx.reg.set("+", code)
-        nx.reg.set("*", code)
-        nx.ui
+        btv.reg.set("+", code)
+        btv.reg.set("*", code)
+        btv.ui
           .confirm(
             "Copied your one-time code to clipboard.\n"
               .. "Open the browser to complete the sign-in process?"
@@ -53,40 +53,40 @@ local function sign_in(bufnr, client)
             end
             client:exec_cmd(command, { bufnr = bufnr }, function(cmd_err, cmd_result)
               if cmd_err then
-                nx.notify(cmd_err.message, nx.log.levels.ERROR)
+                btv.notify(cmd_err.message, btv.log.levels.ERROR)
                 return
               end
               if cmd_result.status == "OK" then
-                nx.notify("Signed in as " .. cmd_result.user .. ".")
+                btv.notify("Signed in as " .. cmd_result.user .. ".")
               end
             end)
           end)
       end
 
       if result.status == "PromptUserDeviceFlow" then
-        nx.notify(
+        btv.notify(
           "Enter your one-time code " .. result.userCode .. " in " .. result.verificationUri
         )
       elseif result.status == "AlreadySignedIn" then
-        nx.notify("Already signed in as " .. result.user .. ".")
+        btv.notify("Already signed in as " .. result.user .. ".")
       end
     end
   )
 end
 
----@param client nx.lsp.Client
+---@param client btv.lsp.Client
 local function sign_out(_, client)
   client:request(
     ---@diagnostic disable-next-line: param-type-mismatch
     "signOut",
-    nx.json.empty_object(),
+    btv.json.empty_object(),
     function(err, result)
       if err then
-        nx.notify(err.message, nx.log.levels.ERROR)
+        btv.notify(err.message, btv.log.levels.ERROR)
         return
       end
       if result.status == "NotSignedIn" then
-        nx.notify("Not signed in.")
+        btv.notify("Not signed in.")
       end
     end
   )
@@ -100,12 +100,12 @@ return {
   root_markers = { ".git" },
   init_options = {
     editorInfo = {
-      name = "nxvim",
-      version = nx.version(),
+      name = "bemtvi",
+      version = btv.version(),
     },
     editorPluginInfo = {
-      name = "nxvim",
-      version = nx.version(),
+      name = "bemtvi",
+      version = btv.version(),
     },
   },
   settings = {

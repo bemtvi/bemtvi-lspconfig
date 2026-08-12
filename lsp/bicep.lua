@@ -7,20 +7,20 @@
 ---
 --- Bicep language server requires the [dotnet-sdk](https://dotnet.microsoft.com/download) to be installed.
 ---
---- nxvim does not have built-in support for the bicep filetype which is required for lspconfig to automatically launch the language server.
+--- bemtvi does not have built-in support for the bicep filetype which is required for lspconfig to automatically launch the language server.
 ---
 --- Filetype detection can be added via an autocmd:
 --- ```lua
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.bicep" }, function()
----   nx.bo.filetype = "bicep"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.bicep" }, function()
+---   btv.bo.filetype = "bicep"
 --- end)
 --- ```
 ---
---- **By default, bicep language server does not have a `cmd` set.** This is because nxvim-lspconfig does not make assumptions about your path. You must add the following to your init.vim or init.lua to set `cmd` to the absolute path ($HOME and ~ are not expanded) of the unzipped run script or binary.
+--- **By default, bicep language server does not have a `cmd` set.** This is because bemtvi-lspconfig does not make assumptions about your path. You must add the following to your init.vim or init.lua to set `cmd` to the absolute path ($HOME and ~ are not expanded) of the unzipped run script or binary.
 ---
 --- ```lua
 --- local bicep_lsp_bin = "/path/to/bicep-langserver/Bicep.LangServer.dll"
---- nx.lsp.config("bicep", {
+--- btv.lsp.config("bicep", {
 ---     cmd = { "dotnet", bicep_lsp_bin };
 ---     ...
 --- })

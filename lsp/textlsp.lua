@@ -7,7 +7,7 @@
 ---
 --- For the available text analyzer tools and their configuration, see the [GitHub](https://github.com/hangyav/textLSP) page.
 --- By default, all analyzers are disabled in textLSP, since most of them need special settings.
---- For quick testing, LanguageTool is enabled in the default `nxvim-lspconfig` configuration.
+--- For quick testing, LanguageTool is enabled in the default `bemtvi-lspconfig` configuration.
 ---
 --- To install run: `pip install textLSP`
 

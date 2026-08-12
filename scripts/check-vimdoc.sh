@@ -3,7 +3,7 @@
 # push can't ship stale docs. Wire as a pre-push hook (see .pre-commit-config.yaml),
 # or run directly any time.
 #
-#   doc/nxvim-lspconfig.txt  ← authored doc/nxvim-lspconfig.md, via panvimdoc
+#   doc/bemtvi-lspconfig.txt  ← authored doc/bemtvi-lspconfig.md, via panvimdoc
 #   doc/configs.{md,txt}     ← the `---@brief` blocks in lsp/, via docgen.lua
 set -euo pipefail
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -13,17 +13,17 @@ command -v pandoc >/dev/null 2>&1 || { echo "error: pandoc (>= 3) is required" >
 
 bash scripts/gen-vimdoc.sh >/dev/null
 
-# The per-server reference needs nxvim itself to render the configs. Skip it rather
-# than fail when nxvim isn't on $PATH: a contributor editing prose shouldn't be
+# The per-server reference needs bemtvi itself to render the configs. Skip it rather
+# than fail when bemtvi isn't on $PATH: a contributor editing prose shouldn't be
 # blocked by not having a build, and CI has one.
-if command -v "${NXVIM:-nxvim}" >/dev/null 2>&1; then
+if command -v "${BEMTVI:-bemtvi}" >/dev/null 2>&1; then
   bash scripts/gen-configs.sh >/dev/null
 else
-  echo "note: ${NXVIM:-nxvim} not found — skipping doc/configs.* (set \$NXVIM to check them)" >&2
+  echo "note: ${BEMTVI:-bemtvi} not found — skipping doc/configs.* (set \$BEMTVI to check them)" >&2
 fi
 
 stale=()
-for f in doc/nxvim-lspconfig.txt doc/configs.md doc/configs.txt; do
+for f in doc/bemtvi-lspconfig.txt doc/configs.md doc/configs.txt; do
   if ! git diff --quiet -- "$f"; then
     stale+=("$f")
   fi

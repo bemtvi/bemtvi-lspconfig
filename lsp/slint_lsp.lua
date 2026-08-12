@@ -13,8 +13,8 @@
 --- This can be added via an autocmd:
 ---
 --- ```lua
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.slint" }, function()
----   nx.bo.filetype = "slint"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.slint" }, function()
+---   btv.bo.filetype = "slint"
 --- end)
 --- ```
 

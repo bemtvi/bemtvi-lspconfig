@@ -4,7 +4,7 @@
 ---
 --- Full language support for the PICO-8 dialect of Lua.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "pico8-ls", "--stdio" },

@@ -7,11 +7,11 @@
 --- ```sh
 --- cargo install microcad-lsp
 --- ```
---- nxvim does not detect µcad filetype automatically, so you will need to add the following to your
+--- bemtvi does not detect µcad filetype automatically, so you will need to add the following to your
 ---
 --- ```lua
---- nx.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.µcad" }, function()
----   nx.bo.filetype = "microcad"
+--- btv.on({ "BufReadPost", "BufNewFile" }, { pattern = "*.µcad" }, function()
+---   btv.bo.filetype = "microcad"
 --- end)
 --- ```
 

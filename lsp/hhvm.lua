@@ -7,9 +7,9 @@
 --- https://docs.hhvm.com/hhvm/getting-started/getting-started
 
 return {
-  -- The working directory has to be the project root rather than the editor's; nxvim
+  -- The working directory has to be the project root rather than the editor's; bemtvi
   -- spawns every server there already.
-  cmd = { "hh_client", "lsp", "--from", "nxvim" },
+  cmd = { "hh_client", "lsp", "--from", "bemtvi" },
 
   filetypes = { "php", "hack" },
   root_markers = { ".hhconfig" },

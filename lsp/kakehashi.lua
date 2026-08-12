@@ -10,11 +10,11 @@
 --- when `autoInstall` is enabled (the default). This requires the
 --- `tree-sitter` CLI, a C compiler, and Git.
 ---
---- **You must specify `filetypes` in your call to `nx.lsp.config`** to
+--- **You must specify `filetypes` in your call to `btv.lsp.config`** to
 --- restrict which files activate the server:
 ---
 --- ```lua
---- nx.lsp.config("kakehashi", {
+--- btv.lsp.config("kakehashi", {
 ---   filetypes = { 'markdown', 'lua', 'rust', 'python' },
 ---   init_options = {
 ---     autoInstall = true,

@@ -10,7 +10,7 @@
 ---
 --- See `zizmor`'s [documentation](https://docs.zizmor.sh/) for additional documentation.
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 return {
   cmd = { "zizmor", "--lsp" },
@@ -21,14 +21,14 @@ return {
     local bufname = util.bufname(bufnr)
     local parent = util.dirname(bufname)
     if
-      nx.str.endswith(parent, "/.github/workflows")
-      or nx.str.endswith(parent, "/.forgejo/workflows")
-      or nx.str.endswith(parent, "/.gitea/workflows")
-      or (nx.str.endswith(bufname, "/.github/dependabot.yml") or nx.str.endswith(
+      btv.str.endswith(parent, "/.github/workflows")
+      or btv.str.endswith(parent, "/.forgejo/workflows")
+      or btv.str.endswith(parent, "/.gitea/workflows")
+      or (btv.str.endswith(bufname, "/.github/dependabot.yml") or btv.str.endswith(
         bufname,
         "/.github/dependabot.yaml"
       ))
-      or (nx.str.endswith(bufname, "action.yml") or nx.str.endswith(bufname, "action.yaml")) -- Composite actions can live in any repository subdirectory
+      or (btv.str.endswith(bufname, "action.yml") or btv.str.endswith(bufname, "action.yaml")) -- Composite actions can live in any repository subdirectory
     then
       on_dir(parent)
     end

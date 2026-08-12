@@ -10,10 +10,10 @@
 --- npm install -g m68k-lsp-server
 --- ```
 ---
---- Ensure you are using the 68k asm syntax variant in nxvim.
+--- Ensure you are using the 68k asm syntax variant in bemtvi.
 ---
 --- ```lua
---- nx.g.asmsyntax = 'asm68k'
+--- btv.g.asmsyntax = 'asm68k'
 --- ```
 
 return {

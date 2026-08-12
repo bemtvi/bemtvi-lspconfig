@@ -10,26 +10,26 @@
 --- they are disabled by default. To re-enable:
 ---
 --- ```lua
---- nx.lsp.config('pyright', {
+--- btv.lsp.config('pyright', {
 ---   settings = { pyright = { disableTaggedHints = false } },
 --- })
 --- ```
 
-local util = require("nxvim-lspconfig.util")
+local util = require("bemtvi-lspconfig.util")
 
 local function set_python_path(command)
   local path = command.args
-  local clients = nx.lsp.clients({
-    bufnr = nx.buf.current(),
+  local clients = btv.lsp.clients({
+    bufnr = btv.buf.current(),
     name = "pyright",
   })
   for _, client in ipairs(clients) do
     if client.settings then
       client.settings.python =
-        nx.tbl.deep_extend("force", client.settings.python --[[@as table]], { pythonPath = path })
+        btv.tbl.deep_extend("force", client.settings.python --[[@as table]], { pythonPath = path })
     else
       client.config.settings =
-        nx.tbl.deep_extend("force", client.config.settings, { python = { pythonPath = path } })
+        btv.tbl.deep_extend("force", client.config.settings, { python = { pythonPath = path } })
     end
     client:notify("workspace/didChangeConfiguration", { settings = nil })
   end
