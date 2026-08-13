@@ -1,28 +1,28 @@
-*bemtvi-lspconfig.txt*       Ready-made btv.lsp configs for 407 language servers
+*bemtvi-lspconfig.txt*     Ready-made btv.lsp configs for 407 language servers
 
 ==============================================================================
-Table of Contents                          *bemtvi-lspconfig-table-of-contents*
+Table of Contents                         *bemtvi-lspconfig-table-of-contents*
 
-1. Install                                           |bemtvi-lspconfig-install|
-2. Enabling servers                         |bemtvi-lspconfig-enabling-servers|
-  - The native path         |bemtvi-lspconfig-enabling-servers-the-native-path|
-  - The setup() path       |bemtvi-lspconfig-enabling-servers-the-setup()-path|
-3. setup() options                           |bemtvi-lspconfig-setup()-options|
-4. API                                                   |bemtvi-lspconfig-api|
-5. Commands                                         |bemtvi-lspconfig-commands|
-6. Keymaps                                           |bemtvi-lspconfig-keymaps|
-7. Config fields                               |bemtvi-lspconfig-config-fields|
-  - Priority tiers              |bemtvi-lspconfig-config-fields-priority-tiers|
-  - Unsupported keys          |bemtvi-lspconfig-config-fields-unsupported-keys|
-8. Writing a config                         |bemtvi-lspconfig-writing-a-config|
-  - Paths and buffers     |bemtvi-lspconfig-writing-a-config-paths-and-buffers|
-  - The filesystem           |bemtvi-lspconfig-writing-a-config-the-filesystem|
-  - Programs and URIs     |bemtvi-lspconfig-writing-a-config-programs-and-uris|
-  - Declining a buffer   |bemtvi-lspconfig-writing-a-config-declining-a-buffer|
-9. What changed from upstream     |bemtvi-lspconfig-what-changed-from-upstream|
-10. Troubleshooting                          |bemtvi-lspconfig-troubleshooting|
-11. Development                                  |bemtvi-lspconfig-development|
-12. Credits                                          |bemtvi-lspconfig-credits|
+1. Install                                          |bemtvi-lspconfig-install|
+2. Enabling servers                        |bemtvi-lspconfig-enabling-servers|
+  - The native path        |bemtvi-lspconfig-enabling-servers-the-native-path|
+  - The setup() path      |bemtvi-lspconfig-enabling-servers-the-setup()-path|
+3. setup() options                          |bemtvi-lspconfig-setup()-options|
+4. API                                                  |bemtvi-lspconfig-api|
+5. Commands                                        |bemtvi-lspconfig-commands|
+6. Keymaps                                          |bemtvi-lspconfig-keymaps|
+7. Config fields                              |bemtvi-lspconfig-config-fields|
+  - Priority tiers             |bemtvi-lspconfig-config-fields-priority-tiers|
+  - Unsupported keys         |bemtvi-lspconfig-config-fields-unsupported-keys|
+8. Writing a config                        |bemtvi-lspconfig-writing-a-config|
+  - Paths and buffers    |bemtvi-lspconfig-writing-a-config-paths-and-buffers|
+  - The filesystem          |bemtvi-lspconfig-writing-a-config-the-filesystem|
+  - Programs and URIs    |bemtvi-lspconfig-writing-a-config-programs-and-uris|
+  - Declining a buffer  |bemtvi-lspconfig-writing-a-config-declining-a-buffer|
+9. What changed from upstream    |bemtvi-lspconfig-what-changed-from-upstream|
+10. Troubleshooting                         |bemtvi-lspconfig-troubleshooting|
+11. Development                                 |bemtvi-lspconfig-development|
+12. Credits                                         |bemtvi-lspconfig-credits|
 
 Ready-made `btv.lsp` configurations for **407 language servers** — a native
 port of nvim-lspconfig <https://github.com/neovim/nvim-lspconfig> to bemtvi
@@ -30,8 +30,8 @@ port of nvim-lspconfig <https://github.com/neovim/nvim-lspconfig> to bemtvi
 
 This is a **port, not a compatibility layer.** bemtvi runs no neovim plugins;
 upstream's configs were treated as a behavioral spec and rewritten against
-bemtvi's own `btv.*` surfaces. Everything that touches the filesystem or runs a
-program is asynchronous, because bemtvi does no blocking I/O on the editor
+bemtvi's own `btv.*` surfaces. Everything that touches the filesystem or runs
+a program is asynchronous, because bemtvi does no blocking I/O on the editor
 thread — ever.
 
 This plugin only _configures_ servers; it does not install them. Install the
@@ -42,7 +42,7 @@ loud — bemtvi never pretends a server that isn't running is working.
 
 
 ==============================================================================
-1. Install                                           *bemtvi-lspconfig-install*
+1. Install                                          *bemtvi-lspconfig-install*
 
 With the built-in package manager:
 
@@ -62,10 +62,10 @@ server is installed, it attaches.
 
 
 ==============================================================================
-2. Enabling servers                         *bemtvi-lspconfig-enabling-servers*
+2. Enabling servers                        *bemtvi-lspconfig-enabling-servers*
 
 
-THE NATIVE PATH             *bemtvi-lspconfig-enabling-servers-the-native-path*
+THE NATIVE PATH            *bemtvi-lspconfig-enabling-servers-the-native-path*
 
 `btv.lsp` reads each server's config straight off this plugin's runtimepath
 (`lsp/<name>.lua`), so once the plugin is installed there is nothing to require
@@ -92,7 +92,7 @@ Order does not matter: `btv.lsp.enable` may be called before or after
 `btv.lsp.config`, and a late `enable` serves buffers that are already open.
 
 
-THE SETUP() PATH           *bemtvi-lspconfig-enabling-servers-the-setup()-path*
+THE SETUP() PATH          *bemtvi-lspconfig-enabling-servers-the-setup()-path*
 
 `setup()` enables a batch, applies settings shared by every server, installs
 the extended keymap set, and takes per-server overrides inline:
@@ -115,7 +115,7 @@ name raises rather than enabling nothing.
 
 
 ==============================================================================
-3. setup() options                           *bemtvi-lspconfig-setup()-options*
+3. setup() options                          *bemtvi-lspconfig-setup()-options*
 
 >
     servers       "all" | a name | a list | a map name -> (override | false)
@@ -143,7 +143,7 @@ The `servers` value accepts five shapes:
 
 
 ==============================================================================
-4. API                                                   *bemtvi-lspconfig-api*
+4. API                                                  *bemtvi-lspconfig-api*
 
 >
     require("bemtvi-lspconfig")
@@ -161,7 +161,7 @@ override — not the preset file alone, so a filetype you added with
 
 
 ==============================================================================
-5. Commands                                         *bemtvi-lspconfig-commands*
+5. Commands                                        *bemtvi-lspconfig-commands*
 
 `:LspStart`, `:LspStop`, `:LspRestart` and `:LspLog` come from this plugin.
 Everything else is **native to bemtvi** and works without it — `:LspInfo`,
@@ -196,7 +196,7 @@ lists what is available where you are.
 
 
 ==============================================================================
-6. Keymaps                                           *bemtvi-lspconfig-keymaps*
+6. Keymaps                                          *bemtvi-lspconfig-keymaps*
 
 bemtvi installs the core maps itself, buffer-local, when a server attaches —
 `gd`, `gD`, `gr`, `K`, `<C-k>`. This plugin adds the rest of the standard set
@@ -227,7 +227,7 @@ key wins whether you set it before or after.
 
 
 ==============================================================================
-7. Config fields                               *bemtvi-lspconfig-config-fields*
+7. Config fields                              *bemtvi-lspconfig-config-fields*
 
 A config is a plain table. These are the fields `btv.lsp` reads:
 
@@ -264,7 +264,7 @@ generated companion page: `:help lspconfig-all`, or one server at a time with
 `:help lspconfig-clangd`.
 
 
-PRIORITY TIERS                  *bemtvi-lspconfig-config-fields-priority-tiers*
+PRIORITY TIERS                 *bemtvi-lspconfig-config-fields-priority-tiers*
 
 A flat `root_markers` list is one tier of equals — the nearest directory
 holding any of them wins. A list of lists is several tiers, and **each tier is
@@ -279,7 +279,7 @@ than at its own nested `.git`. The conventional trailing `".git"` is a
 _fallback_, not a competitor.
 
 
-UNSUPPORTED KEYS              *bemtvi-lspconfig-config-fields-unsupported-keys*
+UNSUPPORTED KEYS             *bemtvi-lspconfig-config-fields-unsupported-keys*
 
 A config carrying `handlers` or `reuse_client` gets a warning naming the key
 and what happens instead — bemtvi does not route server-initiated messages
@@ -289,11 +289,12 @@ simply not recognised is named too, because a silently-ignored `filetype`
 
 
 ==============================================================================
-8. Writing a config                         *bemtvi-lspconfig-writing-a-config*
+8. Writing a config                        *bemtvi-lspconfig-writing-a-config*
 
-`require("bemtvi-lspconfig.util")` is the helper surface every bundled config is
-written against — the native replacement for upstream's `lspconfig.util`.
-Everything that touches the filesystem or a subprocess returns a **promise**.
+`require("bemtvi-lspconfig.util")` is the helper surface every bundled config
+is written against — the native replacement for upstream's
+`lspconfig.util`. Everything that touches the filesystem or a subprocess
+returns a **promise**.
 
 >lua
     local util = require("bemtvi-lspconfig.util")
@@ -308,7 +309,7 @@ Everything that touches the filesystem or a subprocess returns a **promise**.
 <
 
 
-PATHS AND BUFFERS         *bemtvi-lspconfig-writing-a-config-paths-and-buffers*
+PATHS AND BUFFERS        *bemtvi-lspconfig-writing-a-config-paths-and-buffers*
 
 >
     util.joinpath / dirname / basename / normalize / relpath / ancestors
@@ -323,7 +324,7 @@ PATHS AND BUFFERS         *bemtvi-lspconfig-writing-a-config-paths-and-buffers*
 <
 
 
-THE FILESYSTEM               *bemtvi-lspconfig-writing-a-config-the-filesystem*
+THE FILESYSTEM              *bemtvi-lspconfig-writing-a-config-the-filesystem*
 
 >
     util.root(bufnr, markers)   promise of the root, with priority tiers
@@ -349,7 +350,7 @@ THE FILESYSTEM               *bemtvi-lspconfig-writing-a-config-the-filesystem*
 <
 
 
-PROGRAMS AND URIS         *bemtvi-lspconfig-writing-a-config-programs-and-uris*
+PROGRAMS AND URIS        *bemtvi-lspconfig-writing-a-config-programs-and-uris*
 
 >
     util.which(name)            promise of the absolute path, or nil
@@ -363,7 +364,7 @@ PROGRAMS AND URIS         *bemtvi-lspconfig-writing-a-config-programs-and-uris*
 <
 
 
-DECLINING A BUFFER       *bemtvi-lspconfig-writing-a-config-declining-a-buffer*
+DECLINING A BUFFER      *bemtvi-lspconfig-writing-a-config-declining-a-buffer*
 
 `root_dir` has three answers, and they are all different:
 
@@ -385,7 +386,7 @@ is how a config says another server owns this file.
 
 
 ==============================================================================
-9. What changed from upstream     *bemtvi-lspconfig-what-changed-from-upstream*
+9. What changed from upstream    *bemtvi-lspconfig-what-changed-from-upstream*
 
 **The require('lspconfig').server.setup{} framework is gone** — deleted, not
 aliased, along with `lua/lspconfig/`, `plugin/lspconfig.lua`, and the
@@ -414,7 +415,7 @@ cannot run. Each is documented in its own config's `---@brief`.
 
 
 ==============================================================================
-10. Troubleshooting                          *bemtvi-lspconfig-troubleshooting*
+10. Troubleshooting                         *bemtvi-lspconfig-troubleshooting*
 
 **The server doesn't start.** `:LspInfo` lists what is running and what is
 configured. The three usual causes are the binary not being on `$PATH` (check
@@ -440,10 +441,10 @@ you want: `btv.lsp.format({ name = "ruff" })`.
 
 
 ==============================================================================
-11. Development                                  *bemtvi-lspconfig-development*
+11. Development                                 *bemtvi-lspconfig-development*
 
-The plugin carries a Lua test suite on bemtvi's native `btv.test` harness. Run
-it from a checkout with:
+The plugin carries a Lua test suite on bemtvi's native `btv.test` harness.
+Run it from a checkout with:
 
 >sh
     bemtvi --test-plugin .
@@ -469,7 +470,7 @@ Lua is formatted with stylua <https://github.com/JohnnyMorganz/StyLua>: `stylua
 
 
 ==============================================================================
-12. Credits                                          *bemtvi-lspconfig-credits*
+12. Credits                                         *bemtvi-lspconfig-credits*
 
 A native bemtvi port of nvim-lspconfig
 <https://github.com/neovim/nvim-lspconfig> by the Neovim contributors, which
