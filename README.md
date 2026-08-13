@@ -2,7 +2,7 @@
 
 Ready-made `btv.lsp` configurations for **407 language servers** — a native port of
 [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) to
-[bemtvi](https://github.com/davidrios/bemtvi).
+[bemtvi](https://github.com/bemtvi/bemtvi).
 
 This is a **port, not a compatibility layer.** bemtvi runs no neovim plugins; upstream's
 configs were treated as a behavioral spec and rewritten against bemtvi's own `btv.*`
