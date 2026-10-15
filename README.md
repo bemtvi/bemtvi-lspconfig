@@ -43,6 +43,13 @@ require("bemtvi-lspconfig").setup({
 })
 ```
 
+To try it before touching your own config, `examples/` is a runnable demo with
+`lua_ls` (needs `lua-language-server` on `$PATH`):
+
+```sh
+BEMTVI_CONFIG=examples bemtvi examples/sample.lua
+```
+
 ## Documentation
 
 Full docs — enabling servers, `setup()` options, the `:Lsp*` commands, keymaps, the
@@ -60,8 +67,10 @@ generated from the configs themselves:
 
 ## Development
 
-Run the Lua test suite from a checkout with `bemtvi --test-plugin .`; format with
-`stylua .`.
+Run the Lua test suite from a checkout with `bemtvi --test-plugin .`, and the
+example's own spec with `bemtvi --test-plugin examples`. Format with `stylua .` and
+lint with `selene .` (a selene built with the Lua 5.4 grammar:
+`cargo install selene --features selene-lib/lua54`).
 
 Two generated files, neither of which is edited by hand:
 
@@ -72,8 +81,9 @@ Two generated files, neither of which is edited by hand:
   `lsp/<name>.lua`, by `scripts/docgen.lua` running under bemtvi itself:
   `bash scripts/gen-configs.sh`. **Edit the config's doc comment.**
 
-A pre-push hook (via [pre-commit](https://pre-commit.com)) verifies both are current
-— enable it once after cloning with `pre-commit install --hook-type pre-push`.
+[pre-commit](https://pre-commit.com) hooks run stylua and selene on each commit and,
+before a push, verify both generated files are current. Enable them once after
+cloning with `pre-commit install --hook-type pre-commit --hook-type pre-push`.
 
 ## License
 
