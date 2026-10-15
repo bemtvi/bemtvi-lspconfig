@@ -1,5 +1,7 @@
 std = "bemtvi"
-exclude = [".panvimdoc/**"]
+# examples/sample.lua references an undefined global on purpose: it is the
+# diagnostic the example asks the reader to look for.
+exclude = [".panvimdoc/**", "examples/sample.lua"]
 
 [lints]
 # `"\u{XXXX}"` is a valid 5.3+ escape, but the lua51 base std doesn't know it.
