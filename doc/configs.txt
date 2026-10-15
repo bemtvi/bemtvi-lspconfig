@@ -4337,7 +4337,7 @@ Default config:
     ide = { name = "bemtvi", vendor = "bemtvi", version = "bemtvi 0.1.0" },
   }
 <
-- on_attach (use "gF" to view): ../lsp/gitlab_duo.lua:398
+- on_attach (use "gF" to view): ../lsp/gitlab_duo.lua:401
 - on_init (use "gF" to view): ../lsp/gitlab_duo.lua:340
 - root_markers: >lua
   { ".git" }
@@ -5858,7 +5858,7 @@ Default config:
 - filetypes: >lua
   { "julia" }
 <
-- on_attach (use "gF" to view): ../lsp/julials.lua:142
+- on_attach (use "gF" to view): ../lsp/julials.lua:144
 - root_markers: >lua
   { "Project.toml", "JuliaProject.toml" }
 <
@@ -7846,8 +7846,8 @@ Enable it: >lua
 <
 
 Default config:
-- before_init (use "gF" to view): ../lsp/oxlint.lua:91
-- cmd (use "gF" to view): ../lsp/oxlint.lua:35
+- before_init (use "gF" to view): ../lsp/oxlint.lua:92
+- cmd (use "gF" to view): ../lsp/oxlint.lua:36
 - filetypes: >lua
   {
     "javascript",
@@ -7859,8 +7859,8 @@ Default config:
     "astro",
   }
 <
-- on_attach (use "gF" to view): ../lsp/oxlint.lua:71
-- root_dir (use "gF" to view): ../lsp/oxlint.lua:45
+- on_attach (use "gF" to view): ../lsp/oxlint.lua:72
+- root_dir (use "gF" to view): ../lsp/oxlint.lua:46
 - settings: >lua
   btv.json.empty_object()
 <
@@ -9715,7 +9715,7 @@ Enable it: >lua
 <
 
 Default config:
-- before_init (use "gF" to view): ../lsp/rust_analyzer.lua:154
+- before_init (use "gF" to view): ../lsp/rust_analyzer.lua:158
 - capabilities: >lua
   {
     experimental = {
@@ -9736,8 +9736,8 @@ Default config:
 - filetypes: >lua
   { "rust" }
 <
-- on_attach (use "gF" to view): ../lsp/rust_analyzer.lua:179
-- root_dir (use "gF" to view): ../lsp/rust_analyzer.lua:85
+- on_attach (use "gF" to view): ../lsp/rust_analyzer.lua:183
+- root_dir (use "gF" to view): ../lsp/rust_analyzer.lua:89
 - settings: >lua
   {
     ["rust-analyzer"] = {

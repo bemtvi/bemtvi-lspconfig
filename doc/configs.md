@@ -5520,7 +5520,7 @@ Default config:
     ide = { name = "bemtvi", vendor = "bemtvi", version = "bemtvi 0.1.0" },
   }
   ```
-- `on_attach`: [../lsp/gitlab_duo.lua:398](../lsp/gitlab_duo.lua#L398)
+- `on_attach`: [../lsp/gitlab_duo.lua:401](../lsp/gitlab_duo.lua#L401)
 - `on_init`: [../lsp/gitlab_duo.lua:340](../lsp/gitlab_duo.lua#L340)
 - `root_markers`:
   ```lua
@@ -7307,7 +7307,7 @@ Default config:
   ```lua
   { "julia" }
   ```
-- `on_attach`: [../lsp/julials.lua:142](../lsp/julials.lua#L142)
+- `on_attach`: [../lsp/julials.lua:144](../lsp/julials.lua#L144)
 - `root_markers`:
   ```lua
   { "Project.toml", "JuliaProject.toml" }
@@ -9673,8 +9673,8 @@ btv.lsp.enable("oxlint")
 ```
 
 Default config:
-- `before_init`: [../lsp/oxlint.lua:91](../lsp/oxlint.lua#L91)
-- `cmd`: [../lsp/oxlint.lua:35](../lsp/oxlint.lua#L35)
+- `before_init`: [../lsp/oxlint.lua:92](../lsp/oxlint.lua#L92)
+- `cmd`: [../lsp/oxlint.lua:36](../lsp/oxlint.lua#L36)
 - `filetypes`:
   ```lua
   {
@@ -9687,8 +9687,8 @@ Default config:
     "astro",
   }
   ```
-- `on_attach`: [../lsp/oxlint.lua:71](../lsp/oxlint.lua#L71)
-- `root_dir`: [../lsp/oxlint.lua:45](../lsp/oxlint.lua#L45)
+- `on_attach`: [../lsp/oxlint.lua:72](../lsp/oxlint.lua#L72)
+- `root_dir`: [../lsp/oxlint.lua:46](../lsp/oxlint.lua#L46)
 - `settings`:
   ```lua
   btv.json.empty_object()
@@ -11903,7 +11903,7 @@ btv.lsp.enable("rust_analyzer")
 ```
 
 Default config:
-- `before_init`: [../lsp/rust_analyzer.lua:154](../lsp/rust_analyzer.lua#L154)
+- `before_init`: [../lsp/rust_analyzer.lua:158](../lsp/rust_analyzer.lua#L158)
 - `capabilities`:
   ```lua
   {
@@ -11927,8 +11927,8 @@ Default config:
   ```lua
   { "rust" }
   ```
-- `on_attach`: [../lsp/rust_analyzer.lua:179](../lsp/rust_analyzer.lua#L179)
-- `root_dir`: [../lsp/rust_analyzer.lua:85](../lsp/rust_analyzer.lua#L85)
+- `on_attach`: [../lsp/rust_analyzer.lua:183](../lsp/rust_analyzer.lua#L183)
+- `root_dir`: [../lsp/rust_analyzer.lua:89](../lsp/rust_analyzer.lua#L89)
 - `settings`:
   ```lua
   {

@@ -15,6 +15,14 @@ command -v "$BEMTVI" >/dev/null 2>&1 || {
   exit 1
 }
 
+# Run against an empty config dir. `--lua` still sources the user's init.lua, and a
+# config that layers onto `btv.lsp.config("*", …)` (an `on_attach`, `root_markers`)
+# leaks into every config the generator resolves through `btv.lsp.get_config` —
+# the renamed-server aliases — so the page would document the generating machine's
+# setup rather than the plugin's defaults.
+EMPTY_CONFIG="$(mktemp -d)"
+trap 'rm -rf "$EMPTY_CONFIG"' EXIT
+
 # `--lua` takes a chunk of Lua, not a path, so hand it a dofile of the generator.
 # The generator resolves everything else off the cwd, which is the repo root here.
-"$BEMTVI" --lua "dofile('$ROOT/scripts/docgen.lua')"
+BEMTVI_CONFIG="$EMPTY_CONFIG" "$BEMTVI" --lua "dofile('$ROOT/scripts/docgen.lua')"
