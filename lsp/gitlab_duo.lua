@@ -368,7 +368,10 @@ return {
     client.handlers["$/gitlab/featureStateChange"] = function(_, result)
       if result and result.state == "disabled" and result.checks then
         for _, check in ipairs(result.checks) do
-          btv.notify(string.format("GitLab Duo: %s", check.message or check.id), btv.log.levels.WARN)
+          btv.notify(
+            string.format("GitLab Duo: %s", check.message or check.id),
+            btv.log.levels.WARN
+          )
         end
       end
     end

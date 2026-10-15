@@ -54,7 +54,8 @@ return {
     -- We know that the buffer is using Biome if it has a config file
     -- in its directory tree.
     local filename = util.bufname(bufnr)
-    biome_config_files = btv.await(util.insert_package_json(biome_config_files, "biomejs", filename))
+    biome_config_files =
+      btv.await(util.insert_package_json(biome_config_files, "biomejs", filename))
     local is_buffer_using_biome = btv.await(util.find_upward(filename, biome_config_files, {
       stop = util.dirname(project_root),
     }))

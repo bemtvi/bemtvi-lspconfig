@@ -40,8 +40,12 @@ end
 ---property of the toolchain, and `rustc --print sysroot` is a subprocess.
 local sysroot_src_cache = nil
 local sysroot_src = btv.async(function()
-  local cargo = btv.tbl.get(btv.lsp.get_config("rust_analyzer"), "settings", "rust-analyzer", "cargo")
-    or {}
+  local cargo = btv.tbl.get(
+    btv.lsp.get_config("rust_analyzer"),
+    "settings",
+    "rust-analyzer",
+    "cargo"
+  ) or {}
   if cargo.sysrootSrc then
     return cargo.sysrootSrc
   end

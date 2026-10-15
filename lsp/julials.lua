@@ -73,7 +73,9 @@ local activate_env = btv.async(function(args)
     or { btv.utils.expanduser("~/.julia") }
 
   local environments = {}
-  for _, found in ipairs(btv.await(util.find_upward_all(util.bufname(btv.buf.current()), root_files))) do
+  for _, found in
+    ipairs(btv.await(util.find_upward_all(util.bufname(btv.buf.current()), root_files)))
+  do
     environments[#environments + 1] = util.dirname(found)
   end
   for _, depot_path in ipairs(depot_paths) do

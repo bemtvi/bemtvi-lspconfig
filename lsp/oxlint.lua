@@ -25,9 +25,10 @@ local oxlint_conf_mentions_typescript = btv.async(function(root_dir)
   if not root_dir then
     return false
   end
-  local text = btv.await(btv.fs.read_text(util.joinpath(root_dir, ".oxlintrc.json")):catch(function()
-    return nil
-  end))
+  local text =
+    btv.await(btv.fs.read_text(util.joinpath(root_dir, ".oxlintrc.json")):catch(function()
+      return nil
+    end))
   return type(text) == "string" and text:find("typescript") ~= nil
 end)
 
