@@ -6,12 +6,8 @@
 -- hook installs the keymaps the steps tell you to press. What the server then
 -- answers (hover, rename, diagnostics) needs a real lua-language-server, so it is
 -- verified by running the example, not here. The spec never opens a Lua buffer,
--- so lua_ls is never spawned.
---
--- Step 7's `:Lsp*` commands are not checked either. `btv.plugins` sources a
--- plugin's `plugin/` scripts asynchronously, so they land after `btv.test` takes
--- its per-test baseline, and the restore before each case removes them as if a
--- test had added them.
+-- so lua_ls is never spawned. For the same reason step 7's `:LspStop` is checked
+-- with nothing running: the command is there and says so.
 
 local DIR = debug.getinfo(1, "S").source:match("^@(.*)/test/[^/]+$")
 
@@ -79,5 +75,14 @@ btv.test.describe("examples: bemtvi-lspconfig", function()
     for _, lhs in ipairs({ "grn", "grr", "gO", "<C-]>", " lh" }) do
       btv.test.expect(n[lhs] ~= nil).to_be(true)
     end
+  end)
+
+  btv.test.it("section 7: the :Lsp* commands are there", function(t)
+    local cmds = btv.user_command.get()
+    for _, name in ipairs({ "LspStart", "LspStop", "LspRestart", "LspLog" }) do
+      btv.test.expect(cmds[name] ~= nil).to_be(true)
+    end
+    t:cmd("LspStop")
+    btv.test.expect(t:message()).to_contain("no language server is running")
   end)
 end)
