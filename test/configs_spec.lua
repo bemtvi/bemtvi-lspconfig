@@ -187,3 +187,32 @@ btv.test.describe("bemtvi-lspconfig: the bundled configs", function()
     btv.test.expect(bad).to_equal({})
   end)
 end)
+
+btv.test.describe("bemtvi-lspconfig: copilot", function()
+  -- `:LspCopilotSignIn` copies the device-flow code to the clipboard before asking to
+  -- open the browser. A client that answers `signIn` with one, like the real server.
+  btv.test.it("sign-in puts the one-time code on the clipboard", function(t)
+    local cfg = load_config("copilot")
+    local client = {
+      request = function(_, method, _, cb)
+        if method == "signIn" then
+          cb(nil, {
+            status = "PromptUserDeviceFlow",
+            userCode = "ABCD-1234",
+            verificationUri = "https://github.com/login/device",
+            command = { command = "github.copilot.finishDeviceFlow" },
+          })
+        end
+      end,
+      exec_cmd = function() end,
+    }
+    cfg.on_attach(client, btv.buf.current())
+    t:cmd("LspCopilotSignIn")
+    btv.test
+      .expect(t:wait_for(function()
+        return btv.test.clipboard.peek() == "ABCD-1234"
+      end))
+      .to_be_truthy()
+    t:feed("<Esc>")
+  end)
+end)

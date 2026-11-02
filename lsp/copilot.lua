@@ -40,13 +40,18 @@ local function sign_in(bufnr, client)
       if result.command then
         local code = result.userCode
         local command = result.command
-        btv.reg.set("+", code)
-        btv.reg.set("*", code)
-        btv.ui
-          .confirm(
-            "Copied your one-time code to clipboard.\n"
-              .. "Open the browser to complete the sign-in process?"
-          )
+        -- The clipboard is the system's, written asynchronously (a browser can't do
+        -- it synchronously); without one, the code is in the prompt instead.
+        btv.clipboard
+          .write(code)
+          :next(function()
+            return "Copied your one-time code to clipboard."
+          end, function()
+            return "Your one-time code is " .. code .. " (no clipboard to copy it to)."
+          end)
+          :next(function(copied)
+            return btv.ui.confirm(copied .. "\nOpen the browser to complete the sign-in process?")
+          end)
           :next(function(yes)
             if not yes then
               return
