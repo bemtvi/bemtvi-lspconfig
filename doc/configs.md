@@ -2675,7 +2675,7 @@ Default config:
     editorPluginInfo = { name = "bemtvi", version = "bemtvi 0.1.0" },
   }
   ```
-- `on_attach`: [../lsp/copilot.lua:116](../lsp/copilot.lua#L116)
+- `on_attach`: [../lsp/copilot.lua:121](../lsp/copilot.lua#L121)
 - `root_markers`:
   ```lua
   { ".git" }

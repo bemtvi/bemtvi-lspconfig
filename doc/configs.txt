@@ -1936,7 +1936,7 @@ Default config:
     editorPluginInfo = { name = "bemtvi", version = "bemtvi 0.1.0" },
   }
 <
-- on_attach (use "gF" to view): ../lsp/copilot.lua:116
+- on_attach (use "gF" to view): ../lsp/copilot.lua:121
 - root_markers: >lua
   { ".git" }
 <
